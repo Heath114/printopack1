@@ -1,0 +1,348 @@
+/* Printopack System - Admin dashboard (v2).
+   Self-service CMS covering every section the client requested. Data persists in
+   the browser for this build; in production the same read/write layer points at
+   api.printopack.com.sa. */
+(function(){
+"use strict";
+var $=function(s,c){return (c||document).querySelector(s);};
+var root=document.getElementById('root');
+function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
+function uid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function today(){return new Date().toISOString().slice(0,10);}
+function fmtDate(d){if(!d)return '';var p=new Date(d);if(isNaN(p))return d;return p.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}
+function toast(m,t){var e=$('#toast');$('#toastText').textContent=m;e.className='toast show '+(t||'');clearTimeout(toast._t);toast._t=setTimeout(function(){e.className='toast';},2600);}
+
+var ICON={
+ dash:'<path d="M3 3h8v8H3zM13 3h8v5h-8zM13 10h8v11h-8zM3 13h8v8H3z"/>',
+ news:'<path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h5"/>',
+ products:'<path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v8l9 5 9-5V8"/>',
+ team:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><circle cx="17.5" cy="8.5" r="2.6"/><path d="M15.5 14.4c2.6.3 4.5 2.2 4.5 5"/>',
+ careers:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+ partners:'<circle cx="7" cy="12" r="4"/><circle cx="17" cy="12" r="4"/><path d="M7 16h10"/>',
+ factory:'<path d="M3 21V9l6 4V9l6 4V5l6 3v13z"/><path d="M3 21h18"/>',
+ quality:'<path d="M12 2l2.5 6.5H21l-5.2 4 2 6.5L12 15l-5.8 4 2-6.5L3 8.5h6.5z"/>',
+ responsibility:'<path d="M12 21C7 17 3 13 3 8.5 3 5.5 5.5 3 8.5 3c1.7 0 3.2.9 4 2 .8-1.1 2.3-2 4-2C19.5 3 22 5.5 22 8.5c0 .8-.1 1.5-.4 2.3"/>',
+ gallery:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.8"/><path d="M21 15l-5-5L6 20"/>',
+ about:'<circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/>',
+ offices:'<path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+ settings:'<circle cx="12" cy="12" r="3.2"/><path d="M19 12a7 7 0 0 0-.1-1.3l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2.2-1.3L14 2h-4l-.4 2.1a7 7 0 0 0-2.2 1.3l-2.3-.9-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .9.1 1.3l-2 1.5 2 3.4 2.3-.9a7 7 0 0 0 2.2 1.3L10 22h4l.4-2.1a7 7 0 0 0 2.2-1.3l2.3.9 2-3.4-2-1.5c.1-.4.1-.9.1-1.3z"/>',
+ edit:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+ trash:'<path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+ logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/>',
+ image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="M21 15l-5-5L5 21"/>',
+ link:'<path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/>'
+};
+function svg(n){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">'+(ICON[n]||'')+'</svg>';}
+
+/* ---------------- data layer ---------------- */
+var KEY='pp_admin_v2';
+var IMG={cat:function(i){return '/images/cat-'+i+'.png';},dept:function(i){return '/images/dept-'+i+'.jpg';},client:function(i){return '/images/clients/client-'+i+'.png';}};
+var SEED={
+ news:[
+  {id:uid(),title:"Pioneering Exceptional Packaging Solutions Since 1997",titleAr:"ريادة في حلول التغليف منذ عام 1997",category:"General",date:"2023-08-27",image:"/images/lineup.jpg",body:"Your path to elevated product presentation with flexible packaging built for the region.",bodyAr:"طريقكم إلى عرضٍ أرقى لمنتجاتكم عبر تغليفٍ مرن مصمّم للمنطقة.",status:"published"},
+  {id:uid(),title:"Elevate Your Beverage Brand with Our Expertise",titleAr:"ارتقوا بعلامتكم في قطاع المشروبات مع خبرتنا",category:"General",date:"2023-08-14",image:"/images/dept-2.jpg",body:"Labels, sleeves and hot-fill packaging engineered for filling lines.",bodyAr:"ملصقات وأكمام وتغليف للتعبئة الساخنة مصمّم لخطوط التعبئة.",status:"published"},
+  {id:uid(),title:"The Benefits of Flexible Packaging",titleAr:"فوائد التغليف المرن",category:"General",date:"2023-05-06",image:"/images/factory.jpg",body:"Durability, versatility and eco-friendliness for modern products.",bodyAr:"المتانة والمرونة والاستدامة للمنتجات الحديثة.",status:"published"},
+  {id:uid(),title:"The Future of Packaging in Saudi Arabia",titleAr:"مستقبل التغليف في المملكة العربية السعودية",category:"General",date:"2023-02-10",image:"/images/dept-1.jpg",body:"How local manufacturing and print are shaping the next decade.",bodyAr:"كيف يشكّل التصنيع والطباعة المحليان العقد المقبل.",status:"published"},
+  {id:uid(),title:"PVC vs PET-G Shrink Films",titleAr:"أفلام الانكماش: PVC مقابل PET-G",category:"General",date:"2022-06-20",image:"/images/dept-5.jpg",body:"A practical comparison for brand owners choosing shrink sleeves.",bodyAr:"مقارنة عملية لأصحاب العلامات عند اختيار أكمام الانكماش.",status:"published"},
+  {id:uid(),title:"In-house Cylinder Engraving",titleAr:"حفر الأسطوانات داخلياً",category:"General",date:"2022-04-04",image:"/images/dept-4.jpg",body:"From artwork to press, faster, with engraving done under our own roof.",bodyAr:"من التصميم إلى الطباعة، وبسرعة أكبر، عبر الحفر داخل مصنعنا.",status:"draft"}
+ ],
+ products:[
+  {id:uid(),name:"Chips & Snacks Packaging",nameAr:"تغليف الشيبس والوجبات الخفيفة",category:"Snacks",image:IMG.cat(1),description:"High-barrier printed films and bags that keep snacks fresh and crisp.",descriptionAr:"أفلام وأكياس مطبوعة عالية الحاجز تحافظ على نضارة الوجبات الخفيفة.",active:true},
+  {id:uid(),name:"Chocolate & Wafer Packaging",nameAr:"تغليف الشوكولاتة والويفر",category:"Confectionery",image:IMG.cat(2),description:"Vivid rotogravure wraps and flow-pack for chocolate and wafers.",descriptionAr:"أغلفة روتوغرافيّة زاهية وتغليف انسيابي للشوكولاتة والويفر.",active:true},
+  {id:uid(),name:"Bakery Packaging",nameAr:"تغليف المخبوزات",category:"Bakery",image:IMG.cat(3),description:"Breathable, printed packaging for bread, biscuits and cakes.",descriptionAr:"تغليف مطبوع يسمح بالتهوية للخبز والبسكويت والكيك.",active:true},
+  {id:uid(),name:"Candy Wrappers",nameAr:"أغلفة الحلويات",category:"Confectionery",image:IMG.cat(4),description:"Twist and flow wrappers with shelf-standout print.",descriptionAr:"أغلفة لفّ وانسياب بطباعة تبرز على الرفوف.",active:true},
+  {id:uid(),name:"Bread Bags",nameAr:"أكياس الخبز",category:"Bakery",image:IMG.cat(5),description:"Durable printed bags for fresh and packaged breads.",descriptionAr:"أكياس مطبوعة متينة للخبز الطازج والمعبّأ.",active:true},
+  {id:uid(),name:"Bottle Labels",nameAr:"ملصقات القوارير",category:"Beverage",image:IMG.cat(6),description:"PET and glass bottle labels with tight registration.",descriptionAr:"ملصقات لقوارير PET والزجاج بدقّة تسجيل عالية.",active:true},
+  {id:uid(),name:"Lids & Sleeves",nameAr:"الأغطية والأكمام",category:"Dairy",image:IMG.cat(7),description:"Lidding films and shrink sleeves for dairy and desserts.",descriptionAr:"أفلام أغطية وأكمام انكماش لمنتجات الألبان والحلويات.",active:true},
+  {id:uid(),name:"Ice Cream Packaging",nameAr:"تغليف الآيس كريم",category:"Frozen",image:IMG.cat(8),description:"Freezer-grade printed wraps and tubs packaging.",descriptionAr:"أغلفة مطبوعة وتغليف عبوات مقاومة للتجميد.",active:false}
+ ],
+ team:[
+  {id:uid(),name:"Nasser Nabil",nameAr:"ناصر نبيل",role:"General Manager",roleAr:"المدير العام",email:"gm@printopack.com.sa",experience:20,bio:"Leading Printopack's operations across the region for over two decades.",bioAr:"يقود عمليات برينتوباك في المنطقة منذ أكثر من عقدين."},
+  {id:uid(),name:"Rana Saleh",nameAr:"رنا صالح",role:"Head of Quality",roleAr:"رئيسة الجودة",email:"quality@printopack.com.sa",experience:14,bio:"Owns the certification programme and lab standards.",bioAr:"مسؤولة عن برنامج الشهادات ومعايير المختبر."},
+  {id:uid(),name:"Omar Haddad",nameAr:"عمر حداد",role:"Production Director",roleAr:"مدير الإنتاج",email:"production@printopack.com.sa",experience:18,bio:"Runs the Jeddah plant floor and the engraving studio.",bioAr:"يدير أرضية مصنع جدة واستوديو الحفر."},
+  {id:uid(),name:"Layla Mansour",nameAr:"ليلى منصور",role:"Head of Sales",roleAr:"رئيسة المبيعات",email:"sales@printopack.com.sa",experience:12,bio:"Partners with food and beverage brands across markets.",bioAr:"تتعاون مع علامات الأغذية والمشروبات في مختلف الأسواق."},
+  {id:uid(),name:"Ahmad Rachid",nameAr:"أحمد رشيد",role:"IT Specialist",roleAr:"أخصائي تقنية المعلومات",email:"it@printopack.com.sa",experience:8,bio:"Keeps the plant's systems, network and portals running.",bioAr:"يحافظ على تشغيل أنظمة المصنع وشبكته وبواباته."}
+ ],
+ careers:[
+  {id:uid(),title:"Production Engineer",titleAr:"مهندس إنتاج",dept:"Production",type:"Full-time",location:"Jeddah, KSA",requirements:"BSc in mechanical or industrial engineering, 3+ years on rotogravure lines.",requirementsAr:"بكالوريوس هندسة ميكانيكية أو صناعية، وخبرة 3 سنوات فأكثر على خطوط الروتوغرافير.",email:"careers@printopack.com.sa",status:"published"},
+  {id:uid(),title:"Quality Control Specialist",titleAr:"أخصائي ضبط جودة",dept:"Quality",type:"Full-time",location:"Jeddah, KSA",requirements:"Experience with ISO 22000, FSSC and SFDA standards; strong lab background.",requirementsAr:"خبرة بمعايير ISO 22000 وFSSC وهيئة الغذاء والدواء، وخلفية مخبرية قوية.",email:"careers@printopack.com.sa",status:"published"},
+  {id:uid(),title:"Sales Account Manager",titleAr:"مدير حسابات مبيعات",dept:"Sales",type:"Full-time",location:"Jeddah, KSA",requirements:"5+ years B2B packaging sales, existing FMCG relationships preferred.",requirementsAr:"خبرة 5 سنوات فأكثر في مبيعات التغليف للشركات، ويفضّل وجود علاقات مع شركات السلع الاستهلاكية.",email:"careers@printopack.com.sa",status:"draft"}
+ ],
+ partners:[
+  {id:uid(),name:"",country:"Saudi Arabia",image:IMG.client(1),link:""},
+  {id:uid(),name:"",country:"United Arab Emirates",image:IMG.client(2),link:""},
+  {id:uid(),name:"",country:"Kuwait",image:IMG.client(3),link:""},
+  {id:uid(),name:"",country:"Egypt",image:IMG.client(4),link:""},
+  {id:uid(),name:"",country:"Jordan",image:IMG.client(5),link:""},
+  {id:uid(),name:"",country:"Qatar",image:IMG.client(6),link:""},
+  {id:uid(),name:"",country:"Bahrain",image:IMG.client(7),link:""},
+  {id:uid(),name:"",country:"Sudan",image:IMG.client(8),link:""}
+ ],
+ factory:[
+  {id:uid(),name:"Rotogravure Printing",nameAr:"الطباعة بالروتوغرافير",kind:"Department",image:IMG.dept(1),description:"Photographic-quality, multi-colour print with tight registration at production speed.",descriptionAr:"طباعة متعددة الألوان بجودة فوتوغرافية ودقّة تسجيل عالية وبسرعة إنتاجية."},
+  {id:uid(),name:"Bagging & Converting",nameAr:"صناعة الأكياس والتحويل",kind:"Department",image:IMG.dept(2),description:"Converted bags and pouches in every format your line requires.",descriptionAr:"أكياس وأكياس واقفة محوّلة بكل المقاسات التي يتطلبها خطكم."},
+  {id:uid(),name:"Punching & Finishing",nameAr:"التخريم والتشطيب",kind:"Department",image:IMG.dept(3),description:"Precision punching and finishing with solvent recovery.",descriptionAr:"تخريم وتشطيب دقيق مع استرجاع المذيبات."},
+  {id:uid(),name:"Cylinder Engraving",nameAr:"حفر الأسطوانات",kind:"Department",image:IMG.dept(4),description:"In-house engraved cylinders, from artwork to press.",descriptionAr:"حفر الأسطوانات داخلياً، من التصميم إلى الطباعة."},
+  {id:uid(),name:"Solvent Recovery",nameAr:"استرجاع المذيبات",kind:"Department",image:IMG.dept(5),description:"Responsible production with in-line solvent recovery.",descriptionAr:"إنتاج مسؤول مع استرجاع المذيبات ضمن الخط."},
+  {id:uid(),name:"Warehouses",nameAr:"المستودعات",kind:"Warehouse",image:"/images/factory.jpg",description:"Climate-considered storage for raw material and finished goods.",descriptionAr:"تخزين يراعي الظروف المناخية للمواد الخام والمنتجات النهائية."}
+ ],
+ quality:[
+  {id:uid(),title:"ISO 22000 Food Safety",titleAr:"الأيزو 22000 لسلامة الغذاء",kind:"Certificate",image:"",description:"Certified food-safety management for food-contact packaging.",descriptionAr:"إدارة معتمدة لسلامة الغذاء للتغليف الملامس للأغذية."},
+  {id:uid(),title:"Quality Assurance Programme",titleAr:"برنامج ضمان الجودة",kind:"Assurance",image:"",description:"Quality built into every run, not inspected in at the end.",descriptionAr:"الجودة مدمجة في كل تشغيلة، لا تُفحص في النهاية فقط."},
+  {id:uid(),title:"Laboratory & Testing",titleAr:"المختبر والفحص",kind:"Lab",image:"",description:"In-house lab for barrier, migration and print-quality testing.",descriptionAr:"مختبر داخلي لفحص الحاجز والانتقال وجودة الطباعة."}
+ ],
+ responsibility:[
+  {id:uid(),title:"ISO 14000 Environmental",titleAr:"الأيزو 14000 البيئي",category:"Environment",image:"",description:"Environmental management across the plant and its processes.",descriptionAr:"إدارة بيئية تشمل المصنع وعملياته."},
+  {id:uid(),title:"Safety & Anti-pollution Systems",titleAr:"أنظمة السلامة والحماية من التلوث",category:"Environment",image:"",description:"Safety management and pollution-control systems on site.",descriptionAr:"أنظمة إدارة السلامة والحماية من التلوث في الموقع."},
+  {id:uid(),title:"Saudization Certificate",titleAr:"شهادة السعودة",category:"Local Community",image:"",description:"Commitment to local employment and the community.",descriptionAr:"التزام بالتوظيف المحلي وخدمة المجتمع."},
+  {id:uid(),title:"Certified Global Shipping",titleAr:"الشحن العالمي المعتمد",category:"International",image:"",description:"Certified shipping and a safe product for global trade.",descriptionAr:"شحن معتمد ومنتج آمن للتجارة العالمية."}
+ ],
+ gallery:[
+  {id:uid(),title:"On the print floor",titleAr:"داخل صالة الطباعة",kind:"Photo",image:IMG.dept(1),url:""},
+  {id:uid(),title:"Finished product lineup",titleAr:"تشكيلة المنتجات النهائية",kind:"Photo",image:"/images/lineup.jpg",url:""},
+  {id:uid(),title:"Printopack corporate film",titleAr:"الفيلم التعريفي لبرينتوباك",kind:"Video",image:"/images/factory.jpg",url:"https://"}
+ ],
+ offices:[
+  {id:uid(),city:"Jeddah (HQ)",country:"Saudi Arabia",phone:"+966 12 608 1074",email:"info@printopack.com.sa",staff:"Head office and production",hq:true},
+  {id:uid(),city:"Kuwait City",country:"Kuwait",phone:"",email:"kuwait@printopack.com.sa",staff:"",hq:false},
+  {id:uid(),city:"Amman",country:"Jordan",phone:"",email:"jordan@printopack.com.sa",staff:"",hq:false},
+  {id:uid(),city:"Cairo",country:"Egypt",phone:"",email:"egypt@printopack.com.sa",staff:"",hq:false},
+  {id:uid(),city:"Khartoum",country:"Sudan",phone:"",email:"sudan@printopack.com.sa",staff:"",hq:false},
+  {id:uid(),city:"Tunis",country:"Tunisia",phone:"",email:"tunisia@printopack.com.sa",staff:"",hq:false},
+  {id:uid(),city:"Algiers",country:"Algeria",phone:"",email:"algeria@printopack.com.sa",staff:"",hq:false}
+ ],
+ about:{
+  heroTitle:"Where technology meets vision.",heroTitleAr:"حيث تلتقي التقنية بالرؤية.",
+  heroSub:"A global leader in developing and producing responsible packaging.",heroSubAr:"رائدون عالمياً في تطوير وإنتاج تغليف مسؤول.",
+  history:"Packaging pioneers since 1997, printing from our Jeddah facility for the region and beyond.",historyAr:"روّاد في التغليف منذ عام 1997، نطبع من منشأتنا في جدة للمنطقة وخارجها.",
+  ownership:"Saudi Modern Packaging Factory Co. Ltd.",ownershipAr:"شركة السعودية الحديثة للتغليف المحدودة.",
+  mission:"To be the driving force behind brands' packaging evolution.",missionAr:"أن نكون القوة الدافعة وراء تطوّر تغليف العلامات التجارية.",
+  vision:"Empowering brands through creative packaging excellence.",visionAr:"تمكين العلامات التجارية عبر التميّز في التغليف الإبداعي.",
+  values:"Quality, responsibility, innovation and reliable supply.",valuesAr:"الجودة والمسؤولية والابتكار والتوريد الموثوق.",
+  statOffices:"6",statCountries:"26",statYears:"25",statEmployees:"400",statAvgExp:"14"
+ },
+ settings:{
+  company:"Printopack - Saudi Modern Packaging Factory Co. Ltd.",
+  phone:"+966 12 608 1074",fax:"+966 12 608 1082",email:"info@printopack.com.sa",
+  hours:"9:00 AM to 5:00 PM",address:"Industrial Area 5, Unit 10, 8508, Jeddah 22428, Saudi Arabia"
+ }
+};
+function db(){try{return JSON.parse(localStorage.getItem(KEY))||null;}catch(e){return null;}}
+function save(d){localStorage.setItem(KEY,JSON.stringify(d));}
+function ensure(){if(!db())save(SEED);}
+function coll(k){return (db()||{})[k]||[];}
+function setColl(k,a){var d=db()||{};d[k]=a;save(d);}
+function obj(k){return (db()||{})[k]||{};}
+function setObj(k,o){var d=db()||{};d[k]=o;save(d);}
+
+/* ---------------- models ---------------- */
+var sel=function(a){return a;};
+var MODELS={
+ news:{label:"News & Events",singular:"Post",icon:"news",group:"Content",hasImport:true,hasCalendar:true,
+  columns:[{type:"thumb",field:"image"},{type:"title",field:"title",sub:"category"},{type:"pill",field:"status"},{type:"date",field:"date"}],
+  fields:[{name:"image",type:"image",label:"Cover image"},{name:"category",type:"select",label:"Category",half:true,options:["General","Company News","Sustainability","Certifications","Events","Products"]},{name:"date",type:"date",label:"Date",half:true},{name:"status",type:"select",label:"Status",half:true,options:["draft","published"]},{name:"title",type:"text",label:"Title (English)"},{name:"body",type:"textarea",label:"Body (English)"},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true},{name:"bodyAr",type:"textarea",label:"Body",ar:"Arabic (review before publishing)",rtl:true}]},
+ products:{label:"Products",singular:"Product",icon:"products",group:"Content",
+  columns:[{type:"thumb",field:"image",contain:true},{type:"title",field:"name",sub:"category"},{type:"active",field:"active"}],
+  fields:[{name:"image",type:"image",label:"Product image",contain:true},{name:"name",type:"text",label:"Name (English)",half:true},{name:"category",type:"text",label:"Category",half:true},{name:"description",type:"textarea",label:"Description (English)"},{name:"nameAr",type:"text",label:"Name",ar:"Arabic",rtl:true,half:true},{name:"active",type:"select",label:"Visible on site",half:true,options:["true","false"]},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
+ team:{label:"Our Team",singular:"Member",icon:"team",group:"Content",
+  columns:[{type:"thumb",field:"photo",round:true},{type:"title",field:"name",sub:"role"},{type:"text",field:"experience",prefix:"",suffix:" yrs"},{type:"text",field:"email"}],
+  fields:[{name:"photo",type:"image",label:"Photo"},{name:"name",type:"text",label:"Name (English)",half:true},{name:"role",type:"text",label:"Role (English)",half:true},{name:"nameAr",type:"text",label:"Name",ar:"Arabic",rtl:true,half:true},{name:"roleAr",type:"text",label:"Role",ar:"Arabic",rtl:true,half:true},{name:"email",type:"text",label:"Email",half:true},{name:"experience",type:"number",label:"Years of experience",half:true},{name:"bio",type:"textarea",label:"Short bio (English)"},{name:"bioAr",type:"textarea",label:"Bio",ar:"Arabic",rtl:true}]},
+ careers:{label:"Careers",singular:"Job",icon:"careers",group:"Content",
+  columns:[{type:"title",field:"title",sub:"dept"},{type:"text",field:"type"},{type:"text",field:"location"},{type:"pill",field:"status"}],
+  fields:[{name:"title",type:"text",label:"Title (English)",half:true},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true,half:true},{name:"dept",type:"select",label:"Department",half:true,options:["Production","Quality","Sales","Engineering","Admin","Logistics","IT"]},{name:"type",type:"select",label:"Type",half:true,options:["Full-time","Part-time","Contract","Internship"]},{name:"location",type:"text",label:"Location",half:true},{name:"status",type:"select",label:"Status",half:true,options:["draft","published"]},{name:"email",type:"text",label:"Application email"},{name:"requirements",type:"textarea",label:"Requirements (English)"},{name:"requirementsAr",type:"textarea",label:"Requirements",ar:"Arabic",rtl:true}]},
+ partners:{label:"Success Partners",singular:"Partner",icon:"partners",group:"Content",
+  columns:[{type:"thumb",field:"image",contain:true},{type:"title",field:"name",sub:"country",fallback:"country"},{type:"text",field:"country"}],
+  fields:[{name:"image",type:"image",label:"Logo",contain:true},{name:"name",type:"text",label:"Client name",half:true},{name:"country",type:"text",label:"Country",half:true},{name:"link",type:"url",label:"Website (optional)"}]},
+ factory:{label:"Factory Departments",singular:"Department",icon:"factory",group:"Company",
+  columns:[{type:"thumb",field:"image"},{type:"title",field:"name",sub:"kind"},{type:"tag",field:"kind"}],
+  fields:[{name:"image",type:"image",label:"Photo"},{name:"name",type:"text",label:"Name (English)",half:true},{name:"kind",type:"select",label:"Type",half:true,options:["Department","Warehouse"]},{name:"nameAr",type:"text",label:"Name",ar:"Arabic",rtl:true},{name:"description",type:"textarea",label:"Description (English)"},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
+ quality:{label:"Quality System",singular:"Item",icon:"quality",group:"Company",
+  columns:[{type:"thumb",field:"image"},{type:"title",field:"title",sub:"kind"},{type:"tag",field:"kind"}],
+  fields:[{name:"image",type:"image",label:"Certificate / image"},{name:"title",type:"text",label:"Title (English)",half:true},{name:"kind",type:"select",label:"Type",half:true,options:["Certificate","Assurance","Lab"]},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true},{name:"description",type:"textarea",label:"Description (English)"},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
+ responsibility:{label:"Social Responsibility",singular:"Item",icon:"responsibility",group:"Company",
+  columns:[{type:"thumb",field:"image"},{type:"title",field:"title",sub:"category"},{type:"tag",field:"category"}],
+  fields:[{name:"image",type:"image",label:"Certificate / image"},{name:"title",type:"text",label:"Title (English)",half:true},{name:"category",type:"select",label:"Area",half:true,options:["Environment","Local Community","International"]},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true},{name:"description",type:"textarea",label:"Description (English)"},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
+ gallery:{label:"Gallery",singular:"Item",icon:"gallery",group:"Company",
+  columns:[{type:"thumb",field:"image"},{type:"title",field:"title",sub:"kind"},{type:"tag",field:"kind"}],
+  fields:[{name:"kind",type:"select",label:"Type",half:true,options:["Photo","Video","Advertisement"]},{name:"title",type:"text",label:"Title (English)",half:true},{name:"image",type:"image",label:"Image / thumbnail"},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true},{name:"url",type:"url",label:"Video / link (for videos & ads)"}]},
+ offices:{label:"Offices & Contact",singular:"Office",icon:"offices",group:"Site",
+  columns:[{type:"title",field:"city",sub:"country"},{type:"text",field:"phone"},{type:"text",field:"email"}],
+  fields:[{name:"city",type:"text",label:"City / office",half:true},{name:"country",type:"text",label:"Country",half:true},{name:"phone",type:"text",label:"Phone",half:true},{name:"email",type:"text",label:"Email",half:true},{name:"staff",type:"textarea",label:"Staff / notes"}]}
+};
+
+/* ---------------- auth ---------------- */
+var SKEY='pp_admin_session';
+function loggedIn(){return localStorage.getItem(SKEY)==='1';}
+function renderLogin(){
+ root.innerHTML='<div class="login"><form class="login-card" id="lf">'+
+  '<div class="login-brand">PRINTO<span>·</span>PACK</div>'+
+  '<p class="login-sub">Content management system</p>'+
+  '<h1>Sign in</h1>'+
+  '<div class="field"><label>Email</label><input type="email" value="creative@printopack.com.sa" required></div>'+
+  '<div class="field"><label>Password</label><input type="password" value="demo" required></div>'+
+  '<button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px" type="submit">Sign in</button>'+
+  '<p class="login-note">You are signing in to the Printopack content dashboard.</p>'+
+ '</form></div>';
+ $('#lf').addEventListener('submit',function(e){e.preventDefault();localStorage.setItem(SKEY,'1');render();});
+}
+
+/* ---------------- shell ---------------- */
+var view='dashboard';
+var NAV=[{k:'dashboard',label:'Dashboard',icon:'dash'},{grp:'Content'},{k:'news'},{k:'products'},{k:'team'},{k:'careers'},{k:'partners'},{grp:'Company'},{k:'factory'},{k:'quality'},{k:'responsibility'},{k:'gallery'},{grp:'Site'},{k:'about',label:'About & Home',icon:'about'},{k:'offices'},{k:'settings',label:'Settings',icon:'settings'}];
+function sidebar(){
+ var items=NAV.map(function(n){
+  if(n.grp)return '<div class="sb-group">'+n.grp+'</div>';
+  var m=MODELS[n.k]; var label=n.label||(m&&m.label)||n.k; var icon=n.icon||(m&&m.icon)||'dash';
+  var badge=m?'<span class="badge">'+coll(n.k).length+'</span>':'';
+  return '<div class="sb-item'+(view===n.k?' on':'')+'" data-nav="'+n.k+'">'+svg(icon)+'<span>'+label+'</span>'+badge+'</div>';
+ }).join('');
+ return '<aside class="sidebar"><div class="sb-brand"><b>PRINTO<span>·</span>PACK</b><small>System · Admin</small></div>'+
+  '<nav class="sb-nav">'+items+'</nav>'+
+  '<div class="sb-foot"><div class="sb-user"><div class="av">CM</div><div><div class="nm">Creative Manager</div><div class="rl">creative@printopack.com.sa</div></div></div>'+
+  '<button class="sb-logout" data-logout>'+svg('logout')+'Sign out</button></div></aside>';
+}
+function topbar(title,crumb,actions){return '<div class="topbar"><div><div class="crumb">'+esc(crumb||'Printopack System')+'</div><h1>'+esc(title)+'</h1></div><div class="topbar-actions">'+(actions||'')+'</div></div>';}
+function render(){
+ ensure();
+ if(!loggedIn()){renderLogin();return;}
+ root.innerHTML='<div class="app">'+sidebar()+'<main class="main" id="main"></main></div>';
+ renderView();
+ root.querySelectorAll('[data-nav]').forEach(function(el){el.addEventListener('click',function(){view=el.getAttribute('data-nav');render();});});
+ var lo=root.querySelector('[data-logout]');if(lo)lo.addEventListener('click',function(){localStorage.removeItem(SKEY);render();});
+}
+function renderView(){var m=$('#main');if(view==='dashboard')return dashView(m);if(view==='about')return aboutView(m);if(view==='settings')return settingsView(m);if(MODELS[view])return listView(m,view);}
+
+/* ---------------- dashboard ---------------- */
+function dashView(m){
+ var cards=[{k:'news',l:'News posts',icon:'news'},{k:'products',l:'Products',icon:'products'},{k:'team',l:'Team members',icon:'team'},{k:'partners',l:'Partners',icon:'partners'}].map(function(c){
+  return '<div class="stat-card" data-nav="'+c.k+'"><div class="ic">'+svg(c.icon)+'</div><div class="n">'+coll(c.k).length+'</div><div class="l">'+c.l+'</div></div>';
+ }).join('');
+ var recent=coll('news').slice(0,4).map(function(p){return '<tr class="row" data-open="news:'+p.id+'"><td><span class="t-title">'+esc(p.title)+'</span></td><td><span class="pill tag">'+esc(p.category)+'</span></td><td>'+statusPill(p.status)+'</td><td>'+fmtDate(p.date)+'</td></tr>';}).join('');
+ var quick=['news','careers','team','factory'].map(function(k){return '<button class="btn btn-ghost" data-open="'+k+':new">'+svg('plus')+'New '+MODELS[k].singular.toLowerCase()+'</button>';}).join('');
+ m.innerHTML=topbar('Welcome back','Dashboard','<button class="btn btn-gold" data-open="news:new">'+svg('plus')+'New post</button>')+
+  '<div class="view"><div class="stat-grid">'+cards+'</div>'+
+  '<div class="panel"><div class="panel-head"><h2>Recent news</h2><button class="btn btn-ghost btn-sm" data-nav="news">View all</button></div><table class="tbl"><thead><tr><th>Title</th><th>Category</th><th>Status</th><th>Date</th></tr></thead><tbody>'+(recent||'')+'</tbody></table></div>'+
+  '<div class="panel"><div class="panel-head"><div><h2>Quick actions</h2><p>Jump into what you update most.</p></div></div><div class="panel-body" style="display:flex;gap:10px;flex-wrap:wrap">'+quick+'<button class="btn btn-ghost" data-nav="about">'+svg('edit')+'Edit home & about</button></div></div></div>';
+ bind(m);
+}
+
+/* ---------------- list ---------------- */
+function statusPill(s){return s==='published'?'<span class="pill pub">Published</span>':'<span class="pill draft">Draft</span>';}
+function cellFor(col,row){
+ var v=row[col.field];
+ if(col.type==='thumb'){var cls='thumb'+(col.round?' round':'')+(col.contain?' contain':'');return v?'<img class="'+cls+'" src="'+esc(v)+'">':'<div class="'+cls+'" style="display:grid;place-items:center;color:var(--faint);font-family:var(--disp);font-size:15px">'+esc(initials(row))+'</div>';}
+ if(col.type==='title'){var t=v||row[col.fallback]||'Untitled';var sub=col.sub&&row[col.sub]?'<div class="t-sub">'+esc(row[col.sub])+'</div>':'';return '<div class="t-title">'+esc(t)+'</div>'+sub;}
+ if(col.type==='pill')return statusPill(v);
+ if(col.type==='active')return v?'<span class="pill pub">Visible</span>':'<span class="pill off">Hidden</span>';
+ if(col.type==='tag')return v?'<span class="pill tag">'+esc(v)+'</span>':'';
+ if(col.type==='date')return fmtDate(v);
+ if(col.type==='text')return v==null||v===''?'<span class="muted">—</span>':esc((col.prefix||'')+v+(col.suffix||''));
+ return esc(v);
+}
+function initials(r){var s=(r.name||r.title||r.city||'?').trim().split(/\s+/);return ((s[0]||'')[0]||'')+((s[1]||'')[0]||'');}
+function listView(m,key){
+ var mdl=MODELS[key],rows=coll(key);
+ var heads=mdl.columns.map(function(c){return '<th>'+(c.type==='thumb'?'':esc(c.field.charAt(0).toUpperCase()+c.field.slice(1)))+'</th>';}).join('')+'<th></th>';
+ var actions='<button class="btn btn-gold" data-open="'+key+':new">'+svg('plus')+'New '+mdl.singular.toLowerCase()+'</button>';
+ var toggle=mdl.hasCalendar?'<div class="seg" id="tg"><button class="on" data-mode="list">List</button><button data-mode="cal">Calendar</button></div>':'';
+ m.innerHTML=topbar(mdl.label,'Content · '+mdl.label,actions)+'<div class="view"><div class="toolbar"><div class="search">'+svg('search')+'<input id="q" placeholder="Search '+mdl.label.toLowerCase()+'…"></div>'+toggle+'</div><div id="host"></div></div>';
+ function paint(f){
+  var list=rows.filter(function(r){return !f||JSON.stringify(r).toLowerCase().indexOf(f.toLowerCase())>-1;});
+  if(!list.length){$('#host').innerHTML='<div class="panel"><div class="empty">'+svg(mdl.icon)+'<h3>Nothing here yet</h3><p>Create your first '+mdl.singular.toLowerCase()+' with the button above.</p></div></div>';return;}
+  var body=list.map(function(r){var tds=mdl.columns.map(function(c){return '<td>'+cellFor(c,r)+'</td>';}).join('');return '<tr class="row" data-open="'+key+':'+r.id+'">'+tds+'<td><div class="cell-actions"><button class="icon-btn" data-open="'+key+':'+r.id+'">'+svg('edit')+'</button><button class="icon-btn del" data-del="'+key+':'+r.id+'">'+svg('trash')+'</button></div></td></tr>';}).join('');
+  $('#host').innerHTML='<div class="panel"><table class="tbl"><thead><tr>'+heads+'</tr></thead><tbody>'+body+'</tbody></table></div>';bind($('#host'));
+ }
+ paint('');$('#q').addEventListener('input',function(){paint(this.value);});
+ if(mdl.hasCalendar){var seg=$('#tg');seg.querySelectorAll('button').forEach(function(b){b.addEventListener('click',function(){seg.querySelectorAll('button').forEach(function(x){x.classList.remove('on');});b.classList.add('on');if(b.dataset.mode==='cal')renderCal($('#host'));else paint($('#q').value);});});}
+}
+
+/* ---------------- form drawer ---------------- */
+var draft={};
+function fieldHTML(f,val){
+ var lab='<label>'+esc(f.label)+(f.ar?' <span class="ar">· '+esc(f.ar)+'</span>':'')+'</label>';
+ var rtl=f.rtl?' dir="rtl"':'';
+ if(f.type==='image'){var has=val?' has':'';var cn=f.contain?' contain':'';return '<div class="field full"><label>'+esc(f.label)+'</label><div class="imgpick'+has+cn+'" data-imgpick="'+f.name+'"><img src="'+esc(val||'')+'"><div class="ph">'+svg('image')+'Click to upload</div></div><input type="file" accept="image/*" data-imgfile="'+f.name+'" hidden></div>';}
+ if(f.type==='textarea')return '<div class="field full">'+lab+'<textarea data-f="'+f.name+'"'+rtl+'>'+esc(val||'')+'</textarea></div>';
+ if(f.type==='select'){var opts=f.options.map(function(o){return '<option'+(String(val)===String(o)?' selected':'')+'>'+esc(o)+'</option>';}).join('');return '<div class="field'+(f.half?'':' full')+'">'+lab+'<select data-f="'+f.name+'">'+opts+'</select></div>';}
+ var t=f.type==='date'?'date':(f.type==='number'?'number':(f.type==='url'?'url':'text'));
+ return '<div class="field'+(f.half?'':' full')+'">'+lab+'<input type="'+t+'" data-f="'+f.name+'"'+rtl+' value="'+esc(val==null?'':val)+'"></div>';
+}
+function openForm(key,id){
+ var mdl=MODELS[key];var rec=id==='new'?{}:coll(key).find(function(x){return x.id===id;})||{};
+ draft=JSON.parse(JSON.stringify(rec));
+ if(id==='new'){mdl.fields.forEach(function(f){if(f.name==='date'&&!draft.date)draft.date=today();if(f.name==='status'&&!draft.status)draft.status='draft';});}
+ var imp=mdl.hasImport?'<div class="li-import"><label>'+svg('link')+' Import from a LinkedIn post</label><div class="li-row"><input id="liu" placeholder="Paste a LinkedIn post link…"><button class="btn btn-primary" id="lib" type="button">Import</button></div><div class="li-status" id="lis"><span class="spin"></span><span id="lit"></span></div></div>':'';
+ var body='<div class="form-grid">'+mdl.fields.map(function(f){return fieldHTML(f,draft[f.name]);}).join('')+'</div>';
+ var host=document.createElement('div');
+ host.innerHTML='<div class="overlay" id="ov"></div><div class="drawer" id="dw"><div class="drawer-head"><h2>'+(id==='new'?'New ':'Edit ')+esc(mdl.singular)+'</h2><button class="x" id="xc">✕</button></div><div class="drawer-body">'+imp+body+'</div><div class="drawer-foot"><button class="btn btn-ghost" id="cx">Cancel</button><button class="btn btn-ok" id="sv">Save '+esc(mdl.singular.toLowerCase())+'</button></div></div>';
+ document.body.appendChild(host);
+ requestAnimationFrame(function(){$('#ov',host).classList.add('show');$('#dw',host).classList.add('show');});
+ function close(){$('#ov',host).classList.remove('show');$('#dw',host).classList.remove('show');setTimeout(function(){host.remove();},350);}
+ $('#xc',host).addEventListener('click',close);$('#cx',host).addEventListener('click',close);$('#ov',host).addEventListener('click',close);
+ host.querySelectorAll('[data-f]').forEach(function(el){el.addEventListener('input',function(){draft[el.getAttribute('data-f')]=el.value;});});
+ host.querySelectorAll('[data-imgpick]').forEach(function(p){var name=p.getAttribute('data-imgpick');var file=host.querySelector('[data-imgfile="'+name+'"]');p.addEventListener('click',function(){file.click();});file.addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){draft[name]=rd.result;p.classList.add('has');$('img',p).src=rd.result;};rd.readAsDataURL(f);});});
+ if(mdl.hasImport){$('#lib',host).addEventListener('click',function(){importLI(host);});$('#liu',host).addEventListener('keydown',function(e){if(e.key==='Enter')importLI(host);});}
+ $('#sv',host).addEventListener('click',function(){
+  if(key==='products')draft.active=String(draft.active)!=='false';
+  if(key==='team'&&draft.experience!=null)draft.experience=parseInt(draft.experience,10)||0;
+  if(!draft.title&&!draft.name&&!draft.city){toast('Add a title/name first','err');return;}
+  var arr=coll(key);
+  if(id==='new'){draft.id=uid();arr.unshift(draft);toast(mdl.singular+' created','ok');}else{var i=arr.findIndex(function(x){return x.id===id;});if(i>-1)arr[i]=draft;toast(mdl.singular+' updated','ok');}
+  setColl(key,arr);close();render();
+ });
+}
+function importLI(host){
+ var url=$('#liu',host).value.trim();if(!url){toast('Paste a link first','err');return;}if(!/^https?:\/\//.test(url))url='https://'+url;
+ var st=$('#lis',host),tx=$('#lit',host);st.className='li-status show';tx.textContent='Fetching the post…';$('#lib',host).disabled=true;
+ var ctrl=new AbortController();var to=setTimeout(function(){ctrl.abort();},28000);
+ fetch('https://r.jina.ai/'+url,{headers:{'Accept':'application/json'},signal:ctrl.signal}).then(function(r){return r.json();}).then(function(res){
+  var d=(res&&res.data)||{},meta=d.metadata||{};var title=meta['og:title']||d.title||'';var desc=meta['og:description']||d.description||'';if(!desc&&d.content)desc=String(d.content).replace(/\s+/g,' ').slice(0,320).trim()+'…';var img=meta['og:image']||meta['twitter:image']||'';
+  if(!title&&!desc)throw 0;
+  setV(host,'title',title.trim());setV(host,'body',desc.trim());if(img){draft.image=img;var p=host.querySelector('[data-imgpick="image"]');if(p){p.classList.add('has');$('img',p).src=img;}}
+  st.className='li-status show done';tx.textContent='Imported. Review the text and Arabic, then save.';
+ }).catch(function(){st.className='li-status show err';tx.textContent='Could not read that link (login wall or blocked). Type the details below.';}).finally(function(){$('#lib',host).disabled=false;clearTimeout(to);});
+}
+function setV(host,n,v){draft[n]=v;var el=host.querySelector('[data-f="'+n+'"]');if(el)el.value=v;}
+
+/* ---------------- calendar ---------------- */
+function renderCal(hostEl){
+ var now=new Date(),y=now.getFullYear(),mth=now.getMonth();var start=new Date(y,mth,1).getDay(),days=new Date(y,mth+1,0).getDate();var evs=coll('news');
+ var dow=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(function(d){return '<div class="cal-dow">'+d+'</div>';}).join('');var cells='';
+ for(var i=0;i<start;i++)cells+='<div class="cal-cell out"></div>';
+ for(var d=1;d<=days;d++){var ds=y+'-'+String(mth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');var t=(d===now.getDate())?' today':'';var de=evs.filter(function(e){return e.date===ds;}).map(function(e){return '<div class="cal-ev" data-open="news:'+e.id+'">'+esc(e.title)+'</div>';}).join('');cells+='<div class="cal-cell'+t+'"><div class="dn">'+d+'</div>'+de+'</div>';}
+ hostEl.innerHTML='<div class="cal"><div class="cal-head"><h2>'+new Date(y,mth,1).toLocaleDateString('en-GB',{month:'long',year:'numeric'})+'</h2><span class="muted" style="font-size:13px">'+evs.length+' entries</span></div><div class="cal-grid">'+dow+cells+'</div></div>';
+ bind(hostEl);
+}
+
+/* ---------------- about & settings (single form) ---------------- */
+function formPanel(title,desc,fields,data){
+ return '<div class="panel"><div class="panel-head"><div><h2>'+esc(title)+'</h2>'+(desc?'<p>'+esc(desc)+'</p>':'')+'</div></div><div class="panel-body"><div class="form-grid">'+fields.map(function(f){return fieldHTML(f,data[f.name]);}).join('')+'</div></div></div>';
+}
+function aboutView(m){
+ var p=obj('about');
+ m.innerHTML=topbar('About & Home','Site','<button class="btn btn-ok" id="save">Save changes</button>')+'<div class="view">'+
+  formPanel('Home hero','The headline visitors see first.',[{name:'heroTitle',type:'text',label:'Hero headline'},{name:'heroTitleAr',type:'text',label:'Hero headline',ar:'Arabic',rtl:true},{name:'heroSub',type:'textarea',label:'Hero subtext'},{name:'heroSubAr',type:'textarea',label:'Hero subtext',ar:'Arabic',rtl:true}],p)+
+  formPanel('About us','Company story shown on the About page.',[{name:'history',type:'textarea',label:'History (English)'},{name:'historyAr',type:'textarea',label:'History',ar:'Arabic',rtl:true},{name:'ownership',type:'text',label:'Ownership'},{name:'ownershipAr',type:'text',label:'Ownership',ar:'Arabic',rtl:true},{name:'mission',type:'textarea',label:'Mission'},{name:'missionAr',type:'textarea',label:'Mission',ar:'Arabic',rtl:true},{name:'vision',type:'textarea',label:'Vision'},{name:'visionAr',type:'textarea',label:'Vision',ar:'Arabic',rtl:true},{name:'values',type:'textarea',label:'Values'},{name:'valuesAr',type:'textarea',label:'Values',ar:'Arabic',rtl:true}],p)+
+  formPanel('Counters','The stat icons across the site.',[{name:'statOffices',type:'text',label:'Offices',half:true},{name:'statCountries',type:'text',label:'Countries',half:true},{name:'statYears',type:'text',label:'Years',half:true},{name:'statEmployees',type:'text',label:'Employees',half:true},{name:'statAvgExp',type:'text',label:'Avg. experience (yrs)',half:true}],p)+
+  '</div>';
+ var d={};m.querySelectorAll('[data-f]').forEach(function(el){el.addEventListener('input',function(){d[el.getAttribute('data-f')]=el.value;});});
+ $('#save').addEventListener('click',function(){var cur=obj('about');Object.keys(d).forEach(function(k){cur[k]=d[k];});setObj('about',cur);toast('Saved','ok');});
+}
+function settingsView(m){
+ var s=obj('settings');
+ m.innerHTML=topbar('Settings','Site','<button class="btn btn-ok" id="save">Save changes</button>')+'<div class="view">'+
+  formPanel('Company details','Shown in the footer and contact page.',[{name:'company',type:'text',label:'Company name'},{name:'phone',type:'text',label:'Phone',half:true},{name:'fax',type:'text',label:'Fax',half:true},{name:'email',type:'text',label:'Email',half:true},{name:'hours',type:'text',label:'Office hours',half:true},{name:'address',type:'textarea',label:'Address'}],s)+'</div>';
+ var d={};m.querySelectorAll('[data-f]').forEach(function(el){el.addEventListener('input',function(){d[el.getAttribute('data-f')]=el.value;});});
+ $('#save').addEventListener('click',function(){var cur=obj('settings');Object.keys(d).forEach(function(k){cur[k]=d[k];});setObj('settings',cur);toast('Saved','ok');});
+}
+
+/* ---------------- shared bindings ---------------- */
+function bind(scope){
+ scope.querySelectorAll('[data-open]').forEach(function(el){el.addEventListener('click',function(e){e.stopPropagation();var p=el.getAttribute('data-open').split(':');openForm(p[0],p[1]);});});
+ scope.querySelectorAll('[data-del]').forEach(function(el){el.addEventListener('click',function(e){e.stopPropagation();var p=el.getAttribute('data-del').split(':');if(!confirm('Delete this '+MODELS[p[0]].singular.toLowerCase()+'? This cannot be undone.'))return;setColl(p[0],coll(p[0]).filter(function(x){return x.id!==p[1];}));toast(MODELS[p[0]].singular+' deleted');render();});});
+ scope.querySelectorAll('[data-nav]').forEach(function(el){el.addEventListener('click',function(){view=el.getAttribute('data-nav');render();});});
+}
+render();
+})();
