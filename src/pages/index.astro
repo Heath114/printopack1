@@ -1,0 +1,263 @@
+---
+import Base from '../layouts/Base.astro';
+import Counter from '../components/Counter.astro';
+
+const capabilities = [
+  { img: "/images/dept-1.jpg", label: "Rotogravure Printing", href: "/factory" },
+  { img: "/images/dept-4.jpg", label: "Cylinder Engraving", href: "/factory" },
+  { img: "/images/dept-2.jpg", label: "Bag Making", href: "/factory" },
+  { img: "/images/dept-3.jpg", label: "Punching & Finishing", href: "/factory" },
+];
+const news = [
+  { date: "10 Feb 2023", cat: "General", title: "The Future of Packaging in Saudi Arabia", img: "/images/lineup.jpg" },
+  { date: "06 May 2023", cat: "General", title: "The Benefits of Flexible Packaging: Durability, Versatility & Eco-Friendliness", img: "/images/factory.jpg" },
+  { date: "20 Jun 2022", cat: "General", title: "PVC vs PET-G Shrink Films", img: "/images/dept-5.jpg" },
+];
+const products = [
+  { name: "Chips & Snacks", img: "/images/cat-1.png" },
+  { name: "Chocolates", img: "/images/cat-2.png" },
+  { name: "Bakery Products", img: "/images/cat-3.png" },
+  { name: "Candy", img: "/images/cat-4.png" },
+  { name: "Breads", img: "/images/cat-5.png" },
+  { name: "Bottle Labels", img: "/images/cat-6.png" },
+  { name: "Lids", img: "/images/cat-7.png" },
+  { name: "Ice Cream", img: "/images/cat-8.png" },
+];
+const clients = Array.from({ length: 20 }, (_, i) => `/images/clients/client-${i + 1}.png`);
+---
+<Base>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"><img src="/images/hero.jpg" alt="Printopack production" fetchpriority="high" /></div>
+    <div class="wrap-wide hero-inner">
+      <span class="eyebrow" style="color:var(--gold-bright)">Since 1997 · Jeddah, Saudi Arabia</span>
+      <h1 class="display-xl">Where technology<br>meets <span class="serif-note" style="color:var(--gold-bright)">vision.</span></h1>
+      <p class="hero-lede">A global leader in developing and producing responsible packaging for food, beverage, pharmaceutical, medical, home and personal-care brands.</p>
+      <div class="hero-cta">
+        <a href="/products" class="btn btn-gold">Explore our products</a>
+        <a href="/contact" class="btn btn-outline-light">Request a quote</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- COUNTERS -->
+  <section class="counters on-deep">
+    <div class="wrap-wide counters-grid">
+      <Counter value="6" label="Regional offices" />
+      <Counter prefix="+" value="26" label="Countries served" />
+      <Counter prefix="+" value="25" label="Years of printing" />
+      <Counter prefix="~" value="400" label="Team members" />
+    </div>
+  </section>
+
+  <!-- INTRO -->
+  <section>
+    <div class="wrap intro-grid">
+      <div data-reveal>
+        <span class="eyebrow">Who we are</span>
+        <h2 style="margin-top:16px">Pioneering flexible packaging, refined until it performs.</h2>
+      </div>
+      <div data-reveal>
+        <p class="lede">From our Jeddah facility, every structure, laminate and print run is developed until it meets the Printopack standard, then delivered on time, to leading brands across the region and beyond.</p>
+        <a href="/about" class="link-line" style="margin-top:26px">Our story</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS PREVIEW -->
+  <section style="padding-top:0">
+    <div class="wrap-wide">
+      <div class="section-head split-head">
+        <div>
+          <span class="eyebrow" data-reveal>What we make</span>
+          <h2 data-reveal style="margin-top:16px">Packaging for every category</h2>
+        </div>
+        <a href="/products" class="link-line" data-reveal>All products</a>
+      </div>
+      <div class="prod-grid">
+        {products.map((p) => (
+          <a href="/products" class="card prod-card" data-reveal>
+            <span class="card-img prod-img"><img src={p.img} alt={p.name} loading="lazy" decoding="async" /></span>
+            <span class="prod-label">{p.name}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CAPABILITIES / FACTORY -->
+  <section style="padding-top:0">
+    <div class="wrap-wide">
+      <div class="section-head">
+        <span class="eyebrow" data-reveal>What we do</span>
+        <h2 data-reveal>Capabilities, end to end.</h2>
+      </div>
+      <div class="cap-grid">
+        {capabilities.map((c) => (
+          <a href={c.href} class="card cap-card" data-reveal>
+            <span class="card-img cap-img"><img src={c.img} alt={c.label} loading="lazy" decoding="async" /></span>
+            <span class="cap-label">{c.label}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- EDITORIAL BAND (navy) -->
+  <section class="on-navy editorial">
+    <div class="wrap editorial-inner">
+      <span class="eyebrow" data-reveal>Our vision</span>
+      <p class="editorial-quote" data-reveal>
+        Empowering brands through creative packaging excellence: redefining packaging as an enduring testament to brand values and consumer trust.
+      </p>
+      <a href="/about" class="link-line" data-reveal style="color:var(--gold-bright);border-color:var(--gold-bright)">Read our philosophy</a>
+    </div>
+  </section>
+
+  <!-- QUALITY & RESPONSIBILITY TEASER -->
+  <section style="background:var(--cream)">
+    <div class="wrap split">
+      <div class="split-media" data-reveal><img src="/images/dept-5.jpg" alt="Quality and responsibility at Printopack" loading="lazy" decoding="async" /></div>
+      <div data-reveal>
+        <span class="eyebrow">Quality &amp; responsibility</span>
+        <h2 style="margin:16px 0 20px">Certified at every step.</h2>
+        <p class="lede">From ISO-certified food-safety systems to responsible, low-impact production, quality is built into every run, not inspected in at the end. It is how we have earned the trust of brands across 26 countries.</p>
+        <a href="/quality" class="link-line" style="margin-top:26px">Our standards</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUCCESS PARTNERS -->
+  <section>
+    <div class="wrap-wide">
+      <div class="section-head center">
+        <span class="eyebrow plain" data-reveal style="color:var(--gold)">Success partners</span>
+        <h2 data-reveal style="margin-top:14px">Trusted by leading brands</h2>
+      </div>
+      <div class="logo-grid">
+        {clients.map((c) => (
+          <span class="logo" data-reveal><img src={c} alt="Client brand" loading="lazy" /></span>
+        ))}
+      </div>
+      <div class="partner-counters">
+        <Counter prefix="+" value="26" label="Countries served" />
+        <Counter prefix="+" value="20" label="Brand partners" />
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWS -->
+  <section>
+    <div class="wrap-wide">
+      <div class="section-head" style="display:flex;justify-content:space-between;align-items:flex-end;max-width:none">
+        <div>
+          <span class="eyebrow" data-reveal>News &amp; events</span>
+          <h2 data-reveal style="margin-top:16px">The latest from Printopack</h2>
+        </div>
+        <a href="/news" class="link-line" data-reveal>All news</a>
+      </div>
+      <div class="news-grid">
+        {news.map((n) => (
+          <a href="/news" class="card news-card" data-reveal>
+            <span class="card-img news-img"><img src={n.img} alt="" loading="lazy" decoding="async" /></span>
+            <span class="news-meta">{n.cat} · {n.date}</span>
+            <h3 class="news-title">{n.title}</h3>
+            <span class="link-line news-read">Read more</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta on-deep">
+    <div class="wrap" style="text-align:center">
+      <span class="eyebrow plain" data-reveal style="color:var(--gold-bright)">Let's talk packaging</span>
+      <h2 data-reveal style="margin:16px 0 26px">Set the standard in your industry.</h2>
+      <a href="/contact" class="btn btn-gold" data-reveal>Request a quote</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* hero */
+  .hero{position:relative;min-height:92vh;display:flex;align-items:flex-end;color:var(--paper);overflow:hidden}
+  .hero-bg{position:absolute;inset:0}
+  .hero-bg img{width:100%;height:100%;object-fit:cover}
+  .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,rgba(9,24,41,.78) 0%,rgba(9,24,41,.42) 42%,rgba(9,24,41,.12) 72%),linear-gradient(0deg,rgba(9,24,41,.88) 0%,rgba(9,24,41,.15) 46%,transparent 70%)}
+  .hero-inner{position:relative;z-index:2;padding-bottom:clamp(48px,7vw,88px)}
+  .hero h1{margin:20px 0 24px;max-width:16ch}
+  .hero-lede{font-size:clamp(16px,1.5vw,20px);color:rgba(250,246,238,.82);max-width:52ch;font-weight:300;line-height:1.6}
+  .hero-cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+
+  /* counters */
+  .counters{padding-block:clamp(48px,6vw,72px)}
+  .counters-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
+
+  /* intro */
+  .intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,6vw,80px);align-items:start}
+
+  /* capabilities */
+  .cap-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
+  .cap-img{aspect-ratio:4/5}
+  .cap-label{display:block;margin-top:16px;font-family:var(--display);font-size:15px;font-weight:400;letter-spacing:.04em;color:var(--ink)}
+  .cap-card:hover .cap-label{color:var(--gold)}
+
+  /* editorial */
+  .editorial-inner{max-width:920px;text-align:center;margin-inline:auto}
+  .editorial-quote{font-family:var(--display);font-weight:300;font-size:clamp(24px,3.2vw,40px);line-height:1.28;color:var(--paper);margin:24px auto 30px;max-width:none}
+
+  /* news */
+  .news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;align-items:stretch}
+  .news-card{display:flex;flex-direction:column}
+  .news-img{aspect-ratio:3/2}
+  .news-meta{display:block;margin-top:18px;font-family:var(--display);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+  .news-title{margin:10px 0 16px;font-size:clamp(20px,1.7vw,25px)}
+  .news-read{font-size:12px;margin-top:auto;align-self:flex-start}
+
+  /* section head with side link */
+  .split-head{display:flex;justify-content:space-between;align-items:flex-end;max-width:none}
+
+  /* products preview.
+     multiply melts each photo's baked-in white background into the cream
+     tile, so the product sits on the tile instead of inside a smaller white box. */
+  .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
+  .prod-img{aspect-ratio:1;background:var(--cream);display:grid;place-items:center}
+  .prod-img img{width:100%;height:100%;object-fit:contain;padding:10px;mix-blend-mode:multiply;transition:transform 1s var(--ease)}
+  .prod-card:hover .prod-img img{transform:scale(1.05)}
+  .prod-label{display:block;margin-top:14px;font-family:var(--display);font-size:15px;letter-spacing:.04em;color:var(--ink)}
+  .prod-card:hover .prod-label{color:var(--gold)}
+
+  /* split feature (quality teaser) */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,6vw,74px);align-items:center}
+  .split-media{aspect-ratio:5/4;overflow:hidden;background:var(--sand)}
+  .split-media img{width:100%;height:100%;object-fit:cover}
+
+  /* partners logo grid.
+     The image is absolutely positioned: a percentage max-height inside an
+     aspect-ratio grid cell is circular and collapses the img to 0x0, while
+     an abs-pos child resolves against the cell and cannot inflate it.
+     mix-blend-mode melts the logos' baked-in white backgrounds into the paper. */
+  .logo{position:relative;background:var(--paper);aspect-ratio:16/9}
+  .logo-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+  .logo img{position:absolute;inset:0;margin:auto;max-width:calc(100% - 52px);max-height:calc(100% - 52px);mix-blend-mode:multiply;transition:.4s var(--ease)}
+  .logo:hover img{filter:grayscale(1);opacity:.55}
+  .partner-counters{display:flex;justify-content:center;gap:clamp(40px,8vw,120px);margin-top:clamp(44px,6vw,66px)}
+
+  @media(max-width:1000px){
+    .counters-grid,.cap-grid,.prod-grid{grid-template-columns:repeat(2,1fr);gap:36px 24px}
+    .intro-grid,.news-grid,.split{grid-template-columns:1fr;gap:30px}
+    .news-grid{gap:40px}
+    .split-head{flex-direction:column;align-items:flex-start;gap:16px}
+    .logo-grid{grid-template-columns:repeat(3,1fr)}
+  }
+  @media(max-width:560px){
+    .counters-grid,.cap-grid{grid-template-columns:1fr}
+    .prod-grid{grid-template-columns:repeat(2,1fr);gap:18px}
+    .prod-img img{padding:8px}
+    .prod-label{font-size:13.5px}
+    .logo-grid{grid-template-columns:repeat(2,1fr)}
+    .hero-cta{flex-direction:column;align-items:flex-start}
+    .partner-counters{gap:40px}
+  }
+</style>

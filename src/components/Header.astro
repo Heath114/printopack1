@@ -1,0 +1,168 @@
+---
+// Global header: slim bar with centered wordmark + category nav with a mega-menu.
+const nav = [
+  { label: "About", href: "/about" },
+  { label: "Products", href: "/products" },
+  {
+    label: "Company", href: "/company",
+    mega: {
+      links: [
+        { label: "Factory Departments", href: "/factory" },
+        { label: "Our Team", href: "/team" },
+        { label: "Careers", href: "/careers" },
+        { label: "Success Partners", href: "/partners" },
+      ],
+      featured: [
+        { img: "/images/dept-1.jpg", label: "Rotogravure", href: "/factory" },
+        { img: "/images/dept-4.jpg", label: "Cylinder Engraving", href: "/factory" },
+      ],
+    },
+  },
+  { label: "Quality & Responsibility", href: "/quality" },
+  { label: "News & Events", href: "/news" },
+  { label: "Contact", href: "/contact" },
+];
+---
+<header class="site-header">
+  <div class="wrap-wide hdr-top">
+    <button class="hdr-icon hdr-left" aria-label="Search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <span>Search</span>
+    </button>
+    <a href="/" class="wordmark">PRINTO<span>·</span>PACK</a>
+    <div class="hdr-right">
+      <button class="lang" aria-label="Switch language">ع</button>
+      <a href="/admin" class="hdr-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg>
+        <span>Login</span>
+      </a>
+    </div>
+    <button class="burger" aria-label="Menu" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span><span></span></button>
+  </div>
+
+  <nav class="hdr-nav">
+    <ul class="wrap-wide">
+      {nav.map((item) => (
+        <li class={item.mega ? "has-mega" : ""}>
+          <a href={item.href}>{item.label}</a>
+          {item.mega && (
+            <div class="mega">
+              <div class="mega-inner wrap-wide">
+                <div class="mega-links">
+                  <span class="mega-kicker">Explore</span>
+                  {item.mega.links.map((l) => <a href={l.href}>{l.label}</a>)}
+                  <a href={item.href} class="mega-all">View all &rarr;</a>
+                </div>
+                <div class="mega-feature">
+                  {item.mega.featured.map((f) => (
+                    <a href={f.href} class="mega-card">
+                      <span class="mega-card-img"><img src={f.img} alt={f.label} /></span>
+                      <span class="mega-card-label">{f.label}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<!-- mobile nav panel (burger, <=720px). Lives outside <header> because its
+     backdrop-filter creates a containing block that would trap position:fixed. -->
+<nav class="mobile-nav" id="mobile-nav" aria-label="Mobile" hidden>
+  {nav.map((item) => (
+    <div class="mnav-group">
+      <a href={item.href} class="mnav-link">{item.label}</a>
+      {item.mega && item.mega.links.map((l) => <a href={l.href} class="mnav-sub">{l.label}</a>)}
+    </div>
+  ))}
+</nav>
+
+<style>
+  .site-header{position:sticky;top:0;z-index:60;background:color-mix(in srgb, var(--paper) 92%, transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .hdr-top{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:82px}
+  .hdr-icon{display:inline-flex;align-items:center;gap:9px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-family:var(--display);font-weight:500;transition:.3s}
+  .hdr-icon:hover{color:var(--ink)}
+  .hdr-icon svg{width:19px;height:19px}
+  .hdr-right{display:flex;align-items:center;gap:26px;justify-content:flex-end}
+  .lang{font-family:var(--display);font-size:14px;font-weight:600;color:var(--muted);letter-spacing:.05em;transition:.3s}
+  .lang:hover{color:var(--gold)}
+  .wordmark{font-family:var(--display);font-size:26px;font-weight:500;letter-spacing:.26em;color:var(--navy);padding-left:.26em}
+  .wordmark span{color:var(--gold)}
+
+  .hdr-nav{border-top:1px solid var(--line-soft)}
+  .hdr-nav > ul{display:flex;justify-content:center;gap:clamp(20px,3vw,46px)}
+  .hdr-nav li{position:static}
+  .hdr-nav li > a{display:block;padding:17px 2px;font-family:var(--display);font-size:13px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);position:relative;transition:.3s}
+  .hdr-nav li > a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--gold);transform:scaleX(0);transition:transform .35s var(--ease)}
+  .hdr-nav li:hover > a{color:var(--navy)}
+  .hdr-nav li:hover > a::after{transform:scaleX(1)}
+
+  /* mega */
+  .mega{position:absolute;left:0;right:0;top:100%;background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 30px 50px rgba(14,35,64,.08);opacity:0;visibility:hidden;transform:translateY(-8px);transition:.35s var(--ease);z-index:5}
+  .has-mega:hover .mega{opacity:1;visibility:visible;transform:none}
+  .mega-inner{display:grid;grid-template-columns:1fr 1fr;gap:60px;padding-block:44px}
+  .mega-links{display:flex;flex-direction:column;gap:2px}
+  .mega-kicker{font-family:var(--display);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+  .mega-links > a{font-family:var(--display);font-size:22px;font-weight:300;color:var(--ink);padding:9px 0;transition:.3s;width:fit-content}
+  .mega-links > a:hover{color:var(--gold);padding-left:8px}
+  .mega-all{margin-top:14px;font-size:13px!important;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)!important}
+  .mega-feature{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .mega-card-img{display:block;aspect-ratio:4/3;overflow:hidden;background:var(--cream)}
+  .mega-card-img img{width:100%;height:100%;object-fit:cover;transition:transform 1s var(--ease)}
+  .mega-card:hover .mega-card-img img{transform:scale(1.05)}
+  .mega-card-label{display:block;margin-top:12px;font-family:var(--display);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+
+  .burger{display:none;flex-direction:column;gap:5px;padding:6px;justify-self:end}
+  .burger span{width:24px;height:1.5px;background:var(--ink);transition:.3s}
+  .burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+  .burger.open span:nth-child(2){opacity:0}
+  .burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+
+  /* mobile nav panel */
+  .mobile-nav{display:none}
+
+  @media(max-width:1080px){
+    .hdr-nav > ul{gap:20px;overflow-x:auto;justify-content:flex-start}
+    .mega{display:none}
+  }
+  @media(max-width:720px){
+    .hdr-top{grid-template-columns:auto 1fr auto auto;gap:16px;height:68px}
+    .hdr-right{gap:16px}
+    .hdr-left span,.hdr-icon span{display:none}
+    .wordmark{font-size:20px;letter-spacing:.2em}
+    .hdr-nav{display:none}
+    .burger{display:flex}
+    .mobile-nav:not([hidden]){display:block;position:fixed;top:68px;left:0;right:0;bottom:0;background:var(--paper);overflow-y:auto;padding:22px var(--gutter) 48px;border-top:1px solid var(--line);z-index:55}
+    .mnav-group{border-bottom:1px solid var(--line-soft);padding:8px 0}
+    .mnav-group:last-child{border-bottom:none}
+    .mnav-link{display:block;font-family:var(--display);font-size:23px;font-weight:300;color:var(--ink);padding:12px 0}
+    .mnav-sub{display:block;font-family:var(--display);font-size:14px;color:var(--muted);letter-spacing:.04em;padding:8px 0 8px 18px}
+  }
+</style>
+
+<script>
+  // Burger toggle for the mobile nav panel. No motion: instant show/hide.
+  const burger = document.querySelector('.burger');
+  const panel = document.getElementById('mobile-nav');
+  burger?.addEventListener('click', () => {
+    if (!panel) return;
+    const open = panel.hasAttribute('hidden');
+    panel.toggleAttribute('hidden', !open);
+    burger.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  // If the viewport leaves burger territory while the panel is open, reset state.
+  matchMedia('(min-width: 721px)').addEventListener('change', (m) => {
+    if (m.matches && panel && !panel.hasAttribute('hidden')) {
+      panel.setAttribute('hidden', '');
+      burger?.classList.remove('open');
+      burger?.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+  });
+</script>

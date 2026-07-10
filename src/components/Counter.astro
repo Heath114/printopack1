@@ -1,0 +1,60 @@
+---
+// A single stat / counter - the client's signature device. Reused across sections.
+const { prefix = "", value, suffix = "", label } = Astro.props;
+---
+<div class="counter" data-reveal>
+  <div class="counter-num">
+    {prefix && <span class="counter-fix">{prefix}</span>}
+    <span class="counter-val" data-count={value}>{value}</span>
+    {suffix && <span class="counter-fix">{suffix}</span>}
+  </div>
+  <div class="counter-rule"></div>
+  <div class="counter-label">{label}</div>
+</div>
+
+<style>
+  .counter{text-align:center}
+  .counter-num{font-family:var(--display);font-weight:300;font-size:clamp(44px,5.5vw,76px);line-height:1;color:var(--gold);letter-spacing:-.01em;display:inline-flex;align-items:baseline}
+  .counter-fix{font-size:.5em;color:var(--gold)}
+  .counter-rule{width:34px;height:1px;background:currentColor;opacity:.4;margin:18px auto 14px}
+  .counter-label{font-family:var(--display);font-size:12.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .on-navy .counter-label,.on-deep .counter-label{color:rgba(250,246,238,.62)}
+  .on-navy .counter-num,.on-deep .counter-num,.on-navy .counter-fix,.on-deep .counter-fix{color:var(--gold-bright)}
+</style>
+
+<script>
+  // Count-up: each stat animates from 0 to its target the first time it
+  // scrolls into view. Bundled once by Astro even though Counter renders many
+  // times. Respects reduced-motion and degrades gracefully without JS
+  // (the server-rendered final value stays in place).
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const nums = document.querySelectorAll('.counter-val');
+
+  const run = (el) => {
+    const target = parseInt(el.dataset.count ?? el.textContent ?? '', 10);
+    if (Number.isNaN(target)) return;
+    if (reduce) { el.textContent = String(target); return; }
+    const dur = 1400;
+    const ease = (t) => 1 - Math.pow(1 - t, 3); // easeOutCubic
+    let start;
+    const step = (ts) => {
+      if (start === undefined) start = ts;
+      const p = Math.min((ts - start) / dur, 1);
+      el.textContent = String(Math.round(ease(p) * target));
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = String(target);
+    };
+    requestAnimationFrame(step);
+  };
+
+  if (reduce || !('IntersectionObserver' in window)) {
+    // no animation: leave the final values as rendered
+  } else {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { io.unobserve(e.target); run(e.target); }
+      });
+    }, { threshold: 0.4 });
+    nums.forEach((el) => { el.textContent = '0'; io.observe(el); });
+  }
+</script>
