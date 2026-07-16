@@ -121,7 +121,7 @@ const standard = [
   /* breadcrumb */
   .crumbs{border-bottom:1px solid var(--line-soft);background:var(--cream)}
   .crumbs > div{display:flex;align-items:center;gap:12px;padding-block:14px;font-family:var(--display);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
-  .crumbs a{color:var(--muted);transition:.3s}
+  .crumbs a{color:var(--muted)}
   .crumbs a:hover{color:var(--gold)}
   .crumbs span[aria-hidden]{color:var(--faint)}
   .crumb-here{color:var(--navy)}
@@ -155,13 +155,12 @@ const standard = [
   .pdp-more{border-top:1px solid var(--line-soft)}
   .more-head{margin-bottom:clamp(28px,4vw,44px)}
   .more-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(18px,2vw,30px)}
-  .more-card{display:flex;flex-direction:column;border:1px solid var(--line);background:var(--paper);transition:border-color .35s var(--ease),box-shadow .35s var(--ease)}
+  .more-card{display:flex;flex-direction:column;border:1px solid var(--line);background:var(--paper)}
   .more-card:hover{border-color:var(--sand);box-shadow:0 20px 38px rgba(14,35,64,.07)}
   .more-img{display:block;aspect-ratio:4/3;background:var(--cream);overflow:hidden}
-  .more-img img{width:100%;height:100%;object-fit:contain;padding:18px;mix-blend-mode:multiply;transition:transform 1s var(--ease)}
-  .more-card:hover .more-img img{transform:scale(1.05)}
+  .more-img img{width:100%;height:100%;object-fit:contain;padding:18px;mix-blend-mode:multiply}
   .more-name{font-family:var(--display);font-size:17px;padding:16px 18px 4px;color:var(--ink)}
-  .more-link{font-family:var(--display);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);padding:0 18px 18px;transition:.3s}
+  .more-link{font-family:var(--display);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);padding:0 18px 18px}
   .more-card:hover .more-link{color:var(--gold)}
   .more-all{align-items:center;justify-content:center;background:var(--cream);text-align:center}
   .more-all-inner{display:flex;flex-direction:column;align-items:center;gap:6px;padding:24px}

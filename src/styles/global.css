@@ -103,7 +103,7 @@ section{padding-block:var(--section-y)}
   font-family:var(--display);font-size:13px;font-weight:var(--w-med);
   letter-spacing:.14em;text-transform:uppercase;
   padding:16px 30px;border-radius:var(--radius);
-  transition:.45s var(--ease);white-space:nowrap;
+  white-space:nowrap;
 }
 .btn svg{width:16px;height:16px}
 .btn-solid{background:var(--navy);color:var(--paper)}
@@ -119,20 +119,19 @@ section{padding-block:var(--section-y)}
   font-family:var(--display);font-size:13px;font-weight:var(--w-med);
   letter-spacing:.12em;text-transform:uppercase;
   padding-bottom:4px;border-bottom:1px solid currentColor;
-  transition:.35s var(--ease);
 }
-.link-line:hover{color:var(--gold);gap:14px}
+.link-line:hover{color:var(--gold)}
 
 /* ---------- cards ---------- */
 .card-img{position:relative;overflow:hidden;background:var(--cream)}
-.card-img img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
-.card:hover .card-img img{transform:scale(1.05)}
+.card-img img{width:100%;height:100%;object-fit:cover}
 
-/* ---------- reveal (subtle, no continuous motion) ---------- */
-@media (prefers-reduced-motion: no-preference){
-  [data-reveal]{opacity:0;transform:translateY(20px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
-  [data-reveal].in{opacity:1;transform:none}
-}
+/* ---------- no-animation policy ----------
+   The client asked for a fully still site. data-reveal attributes in the markup
+   are inert (kept so a reveal could be reintroduced by deleting this block), and
+   the kill switch below disables every transition and keyframe site-wide. Hover
+   feedback is instant color/border/shadow changes only: nothing moves. */
+*,*::before,*::after{transition:none!important;animation:none!important}
 
 /* ---------- RTL groundwork ---------- */
 [dir="rtl"]{--display:var(--arabic);--body:var(--arabic)}

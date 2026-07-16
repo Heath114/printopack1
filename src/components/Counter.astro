@@ -22,39 +22,5 @@ const { prefix = "", value, suffix = "", label } = Astro.props;
   .on-navy .counter-num,.on-deep .counter-num,.on-navy .counter-fix,.on-deep .counter-fix{color:var(--gold-bright)}
 </style>
 
-<script>
-  // Count-up: each stat animates from 0 to its target the first time it
-  // scrolls into view. Bundled once by Astro even though Counter renders many
-  // times. Respects reduced-motion and degrades gracefully without JS
-  // (the server-rendered final value stays in place).
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const nums = document.querySelectorAll('.counter-val');
-
-  const run = (el) => {
-    const target = parseInt(el.dataset.count ?? el.textContent ?? '', 10);
-    if (Number.isNaN(target)) return;
-    if (reduce) { el.textContent = String(target); return; }
-    const dur = 1400;
-    const ease = (t) => 1 - Math.pow(1 - t, 3); // easeOutCubic
-    let start;
-    const step = (ts) => {
-      if (start === undefined) start = ts;
-      const p = Math.min((ts - start) / dur, 1);
-      el.textContent = String(Math.round(ease(p) * target));
-      if (p < 1) requestAnimationFrame(step);
-      else el.textContent = String(target);
-    };
-    requestAnimationFrame(step);
-  };
-
-  if (reduce || !('IntersectionObserver' in window)) {
-    // no animation: leave the final values as rendered
-  } else {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) { io.unobserve(e.target); run(e.target); }
-      });
-    }, { threshold: 0.4 });
-    nums.forEach((el) => { el.textContent = '0'; io.observe(el); });
-  }
-</script>
+<!-- No-animation policy: the count-up script was removed; the server-rendered
+     final values are always shown, still. -->

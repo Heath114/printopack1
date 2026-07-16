@@ -122,8 +122,8 @@ const steps = [
   .cat-rail{position:sticky;top:150px;align-self:start}
   .rail-kicker{font-family:var(--display);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:18px}
   .rail-list{display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--line)}
-  .rail-btn{display:block;width:100%;text-align:left;padding:13px 0;font-family:var(--display);font-size:15px;font-weight:400;color:var(--muted);border-bottom:1px solid var(--line-soft);transition:.25s var(--ease)}
-  .rail-btn:hover{color:var(--ink);padding-left:6px}
+  .rail-btn{display:block;width:100%;text-align:left;padding:13px 0;font-family:var(--display);font-size:15px;font-weight:400;color:var(--muted);border-bottom:1px solid var(--line-soft)}
+  .rail-btn:hover{color:var(--ink)}
   .rail-btn.active{color:var(--navy);font-weight:500}
   .rail-note{margin-top:28px}
   .rail-note p{font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:18px;max-width:34ch}
@@ -131,16 +131,14 @@ const steps = [
 
   /* product cards */
   .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,2.4vw,34px)}
-  .prod2{display:flex;flex-direction:column;border:1px solid var(--line);background:var(--paper);transition:border-color .35s var(--ease),box-shadow .35s var(--ease)}
+  .prod2{display:flex;flex-direction:column;border:1px solid var(--line);background:var(--paper)}
   /* [hidden] must beat the .prod2 class selector, or filtered-out cards stay visible */
   .prod2[hidden]{display:none}
   .prod2:hover{border-color:var(--sand);box-shadow:0 24px 44px rgba(14,35,64,.07)}
   .prod2-img{display:block;aspect-ratio:4/3;background:var(--cream);overflow:hidden}
-  .prod2-img img{width:100%;height:100%;object-fit:contain;padding:22px;mix-blend-mode:multiply;transition:transform 1s var(--ease)}
-  .prod2:hover .prod2-img img{transform:scale(1.05)}
+  .prod2-img img{width:100%;height:100%;object-fit:contain;padding:22px;mix-blend-mode:multiply}
   .prod2-body{display:flex;flex-direction:column;flex:1;padding:22px 22px 24px}
   .prod2-name{font-size:clamp(19px,1.5vw,22px);margin-bottom:9px}
-  .prod2-name a{transition:.3s}
   .prod2-name a:hover{color:var(--gold)}
   .prod2-desc{font-size:14.5px;color:var(--muted);line-height:1.6;margin-bottom:20px}
   .prod2-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:16px;border-top:1px solid var(--line-soft)}
@@ -165,7 +163,6 @@ const steps = [
     .cat-rail{position:static}
     .rail-list{flex-direction:row;flex-wrap:wrap;border-top:none;gap:8px}
     .rail-btn{width:auto;border:1px solid var(--line);border-radius:2px;padding:9px 15px;font-size:13.5px}
-    .rail-btn:hover{padding-left:15px}
     .rail-btn.active{border-color:var(--navy);color:var(--navy)}
     .rail-note{display:none}
     .cat-grid{grid-template-columns:repeat(2,1fr)}
@@ -191,9 +188,7 @@ const steps = [
     cards.forEach((card) => {
       const match = filter === 'all' || card.dataset.group === filter;
       card.hidden = !match;
-      // force a filtered-in card fully visible so it never stays stuck at the
-      // reveal animation's opacity:0 if it had not scrolled into view yet
-      if (match) { card.classList.add('in'); shown++; }
+      if (match) shown++;
     });
     if (empty) empty.hidden = shown !== 0;
   };

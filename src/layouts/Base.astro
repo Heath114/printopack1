@@ -35,14 +35,7 @@ const ogImage = new URL('/images/hero.jpg', Astro.site);
   <Header />
   <main><slot /></main>
   <Footer />
-  <script>
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-    document.querySelectorAll('[data-reveal]').forEach((el, i) => {
-      (el as HTMLElement).style.transitionDelay = (i % 4) * 0.06 + 's';
-      io.observe(el);
-    });
-  </script>
+  <!-- No-animation policy: the scroll-reveal observer was removed; data-reveal
+       attributes in the markup are inert. Everything renders visible and still. -->
 </body>
 </html>
