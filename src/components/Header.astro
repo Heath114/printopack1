@@ -32,9 +32,14 @@ const nav = [
     <a href="/" class="wordmark">PRINTO<span>·</span>PACK</a>
     <div class="hdr-right">
       <button class="lang" aria-label="Switch language">ع</button>
-      <a href="/admin" class="hdr-icon">
+      <!-- Two distinct logins: customers go to their POS portal, staff to the CMS -->
+      <a href="https://printopack.azurewebsites.net/" target="_blank" rel="noopener" class="hdr-icon" title="Existing customers: orders, statements and documents">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg>
-        <span>Login</span>
+        <span>Customer Login</span>
+      </a>
+      <a href="/admin" class="hdr-icon hdr-admin" title="Printopack staff: site administration">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l7 3v5c0 4.4-3 8.4-7 10-4-1.6-7-5.6-7-10V6z"/><path d="M9.2 12l2 2 3.6-4"/></svg>
+        <span>Admin</span>
       </a>
     </div>
     <button class="burger" aria-label="Menu" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span><span></span></button>
@@ -79,6 +84,10 @@ const nav = [
       {item.mega && item.mega.links.map((l) => <a href={l.href} class="mnav-sub">{l.label}</a>)}
     </div>
   ))}
+  <div class="mnav-group mnav-logins">
+    <a href="https://printopack.azurewebsites.net/" target="_blank" rel="noopener" class="mnav-link">Customer Login</a>
+    <a href="/admin" class="mnav-sub">Site administration</a>
+  </div>
 </nav>
 
 <style>
@@ -87,7 +96,9 @@ const nav = [
   .hdr-icon{display:inline-flex;align-items:center;gap:9px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-family:var(--display);font-weight:500;transition:.3s}
   .hdr-icon:hover{color:var(--ink)}
   .hdr-icon svg{width:19px;height:19px}
-  .hdr-right{display:flex;align-items:center;gap:26px;justify-content:flex-end}
+  .hdr-right{display:flex;align-items:center;gap:22px;justify-content:flex-end}
+  .hdr-admin{color:var(--faint)}
+  .hdr-admin:hover{color:var(--gold)}
   .lang{font-family:var(--display);font-size:14px;font-weight:600;color:var(--muted);letter-spacing:.05em;transition:.3s}
   .lang:hover{color:var(--gold)}
   .wordmark{font-family:var(--display);font-size:26px;font-weight:500;letter-spacing:.26em;color:var(--navy);padding-left:.26em}

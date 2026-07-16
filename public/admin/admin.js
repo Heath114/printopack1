@@ -178,12 +178,13 @@ function loggedIn(){return localStorage.getItem(SKEY)==='1';}
 function renderLogin(){
  root.innerHTML='<div class="login"><form class="login-card" id="lf">'+
   '<div class="login-brand">PRINTO<span>·</span>PACK</div>'+
-  '<p class="login-sub">Content management system</p>'+
-  '<h1>Sign in</h1>'+
+  '<p class="login-sub">Site administration · Staff only</p>'+
+  '<h1>Admin sign in</h1>'+
   '<div class="field"><label>Email</label><input type="email" value="creative@printopack.com.sa" required></div>'+
   '<div class="field"><label>Password</label><input type="password" value="demo" required></div>'+
   '<button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px" type="submit">Sign in</button>'+
-  '<p class="login-note">You are signing in to the Printopack content dashboard.</p>'+
+  '<p class="login-note">Restricted area for Printopack staff. Customer accounts are managed in the customer portal.</p>'+
+  '<a class="login-portal" href="https://printopack.azurewebsites.net/">Are you a customer? Go to the customer portal &rarr;</a>'+
  '</form></div>';
  $('#lf').addEventListener('submit',function(e){e.preventDefault();localStorage.setItem(SKEY,'1');render();});
 }

@@ -1,31 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
 import Counter from '../components/Counter.astro';
+import { categories, groups } from '../data/products';
 
-// Grove catalogue model: browse categories, enquire for a quote (no cart, no prices).
-// Products and full descriptions are provided by the client and edited via the admin
-// CMS. Copy here is category-level and intentionally generic so it reads well until
-// the client fills in the detail.
-const categories = [
-  { img: "/images/cat-1.png", name: "Chips & Snacks", group: "snacks", desc: "Metallised laminate bags and films that hold freshness and crunch on the shelf." },
-  { img: "/images/cat-2.png", name: "Chocolates", group: "confectionery", desc: "High-barrier wrappers and flow-wrap films with a premium print finish." },
-  { img: "/images/cat-3.png", name: "Bakery Products", group: "bakery", desc: "Grease-resistant laminates and bags for breads, cakes and pastries." },
-  { img: "/images/cat-4.png", name: "Candy", group: "confectionery", desc: "Twist wraps, flow-wrap and stand-up pouches for confectionery lines." },
-  { img: "/images/cat-5.png", name: "Breads", group: "bakery", desc: "Printed bread bags and resealable packs built for shelf life." },
-  { img: "/images/cat-6.png", name: "Bottle Labels", group: "labels", desc: "Shrink sleeves and wrap-around labels for bottles and containers." },
-  { img: "/images/cat-7.png", name: "Lids", group: "lids", desc: "Heat-seal lidding films for cups, trays and dairy formats." },
-  { img: "/images/cat-8.png", name: "Ice Cream", group: "frozen", desc: "Cold-resistant wrappers and lidding for frozen and dairy products." },
-];
-
-const groups = [
-  { key: "all", label: "All products" },
-  { key: "snacks", label: "Snacks" },
-  { key: "confectionery", label: "Confectionery" },
-  { key: "bakery", label: "Bakery" },
-  { key: "labels", label: "Labels & sleeves" },
-  { key: "lids", label: "Lids & closures" },
-  { key: "frozen", label: "Frozen & dairy" },
-];
+// Grove catalogue model: browse categories, open a category for detail, enquire
+// for a quote (no cart, no prices). The 20 categories are the client's real list
+// from the live API; copy is category-level and edited via the admin CMS.
 
 const steps = [
   { n: "01", t: "Share your brief", d: "Format, structure, barrier needs and artwork. We advise on the right laminate from the start." },
@@ -45,8 +25,8 @@ const steps = [
         <h1 data-reveal>Packaging, made to your brief.</h1>
         <p class="lede" data-reveal>
           From snack films to shrink sleeves, every structure is developed for your product, printed
-          in our Jeddah facility and offered by consultation. Browse the categories, then request a
-          quote and we will build to your specification.
+          in our Jeddah facility and offered by consultation. Browse the categories, open one for
+          detail, then request a quote and we will build to your specification.
         </p>
       </div>
     </div>
@@ -72,15 +52,15 @@ const steps = [
         <div class="cat-grid">
           {categories.map((c) => (
             <article class="prod2" data-group={c.group} data-reveal>
-              <a href="/contact" class="prod2-img" aria-label={`Enquire about ${c.name}`}>
+              <a href={`/products/${c.slug}`} class="prod2-img" aria-label={`View ${c.name}`}>
                 <img src={c.img} alt={c.name} loading="lazy" decoding="async" />
               </a>
               <div class="prod2-body">
-                <h3 class="prod2-name">{c.name}</h3>
+                <h3 class="prod2-name"><a href={`/products/${c.slug}`}>{c.name}</a></h3>
                 <p class="prod2-desc">{c.desc}</p>
                 <div class="prod2-foot">
                   <span class="prod2-meta">Price on request</span>
-                  <a href="/contact" class="link-line prod2-link">Request a quote</a>
+                  <a href={`/products/${c.slug}`} class="link-line prod2-link">View &amp; enquire</a>
                 </div>
               </div>
             </article>
@@ -160,6 +140,8 @@ const steps = [
   .prod2:hover .prod2-img img{transform:scale(1.05)}
   .prod2-body{display:flex;flex-direction:column;flex:1;padding:22px 22px 24px}
   .prod2-name{font-size:clamp(19px,1.5vw,22px);margin-bottom:9px}
+  .prod2-name a{transition:.3s}
+  .prod2-name a:hover{color:var(--gold)}
   .prod2-desc{font-size:14.5px;color:var(--muted);line-height:1.6;margin-bottom:20px}
   .prod2-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:16px;border-top:1px solid var(--line-soft)}
   .prod2-meta{font-family:var(--display);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
