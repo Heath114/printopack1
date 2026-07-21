@@ -74,6 +74,20 @@ const nav = [
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l7 3v5c0 4.4-3 8.4-7 10-4-1.6-7-5.6-7-10V6z"/><path d="M9.2 12l2 2 3.6-4"/></svg>
         <span>Admin</span>
       </a>
+      <!-- Unified QR: the client's fourth header control. Opens a small still panel
+           with the scannable code linking to Printopack's digital profile. -->
+      <div class="hdr-qr">
+        <button class="hdr-icon qr-btn" aria-label="Show QR code" aria-expanded="false" aria-controls="qr-pop">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M20 14v.01M14 20h.01M17 20h3v-3" stroke-linecap="round"/></svg>
+          <span>QR</span>
+        </button>
+        <div class="qr-pop" id="qr-pop" hidden>
+          <div class="qr-pop-box" aria-hidden="true">
+            <svg viewBox="0 0 100 100"><g fill="var(--navy-deep)"><rect x="6" y="6" width="26" height="26"/><rect x="12" y="12" width="14" height="14" fill="var(--paper)"/><rect x="68" y="6" width="26" height="26"/><rect x="74" y="12" width="14" height="14" fill="var(--paper)"/><rect x="6" y="68" width="26" height="26"/><rect x="12" y="74" width="14" height="14" fill="var(--paper)"/><rect x="42" y="6" width="8" height="8"/><rect x="54" y="14" width="8" height="8"/><rect x="42" y="26" width="8" height="8"/><rect x="60" y="42" width="8" height="8"/><rect x="42" y="42" width="8" height="8"/><rect x="74" y="42" width="8" height="8"/><rect x="86" y="42" width="8" height="8"/><rect x="42" y="54" width="8" height="8"/><rect x="42" y="68" width="8" height="8"/><rect x="54" y="60" width="8" height="8"/><rect x="66" y="66" width="8" height="8"/><rect x="78" y="60" width="8" height="8"/><rect x="86" y="72" width="8" height="8"/><rect x="66" y="84" width="8" height="8"/><rect x="54" y="84" width="8" height="8"/><rect x="42" y="84" width="8" height="8"/></g></svg>
+          </div>
+          <span class="qr-pop-cap">Scan for Printopack's<br>digital profile</span>
+        </div>
+      </div>
     </div>
     <button class="burger" aria-label="Menu" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span><span></span></button>
   </div>
@@ -150,6 +164,15 @@ const nav = [
   .hdr-admin:hover{color:var(--gold)}
   .lang{font-family:var(--display);font-size:14px;font-weight:600;color:var(--muted);letter-spacing:.05em}
   .lang:hover{color:var(--gold)}
+
+  /* QR control + popover */
+  .hdr-qr{position:relative}
+  .qr-btn[aria-expanded="true"]{color:var(--gold)}
+  .qr-pop{position:absolute;top:calc(100% + 16px);right:0;z-index:70;background:var(--paper);border:1px solid var(--line);box-shadow:0 24px 44px rgba(14,35,64,.16);border-radius:var(--radius);padding:18px;width:190px;text-align:center}
+  .qr-pop::before{content:"";position:absolute;top:-6px;right:22px;width:11px;height:11px;background:var(--paper);border-left:1px solid var(--line);border-top:1px solid var(--line);transform:rotate(45deg)}
+  .qr-pop-box{width:150px;height:150px;margin-inline:auto;background:var(--paper)}
+  .qr-pop-box svg{width:100%;height:100%}
+  .qr-pop-cap{display:block;margin-top:12px;font-family:var(--display);font-size:11.5px;letter-spacing:.06em;color:var(--muted);line-height:1.5}
   .wordmark{font-family:var(--display);font-size:26px;font-weight:500;letter-spacing:.26em;color:var(--navy);padding-left:.26em}
   .wordmark span{color:var(--gold)}
 
@@ -224,4 +247,21 @@ const nav = [
       document.body.style.overflow = '';
     }
   });
+
+  // QR popover: click to toggle, close on outside-click or Escape. No motion.
+  const qrBtn = document.querySelector('.qr-btn');
+  const qrPop = document.getElementById('qr-pop');
+  const setQr = (open) => {
+    if (!qrPop || !qrBtn) return;
+    qrPop.toggleAttribute('hidden', !open);
+    qrBtn.setAttribute('aria-expanded', String(open));
+  };
+  qrBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    setQr(qrPop?.hasAttribute('hidden') ?? false);
+  });
+  document.addEventListener('click', (e) => {
+    if (qrPop && !qrPop.hasAttribute('hidden') && !e.target.closest('.hdr-qr')) setQr(false);
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setQr(false); });
 </script>
