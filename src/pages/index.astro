@@ -24,6 +24,21 @@ const products = [
   { name: "Ice Cream", img: "/images/cat-8.png" },
 ];
 const clients = Array.from({ length: 20 }, (_, i) => `/images/clients/client-${i + 1}.png`);
+
+// "Why Printopack": four icon value-props, janasmart's card device rendered with gold.
+const why = [
+  { t: "Everything under one roof", d: "Engraving, printing, converting and finishing in one Jeddah plant: faster proofs, tighter control.",
+    icon: '<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 12l9 5 9-5"/>' },
+  { t: "Food-safe certified", d: "Certified food-contact materials and an in-house lab checking every run before it ships.",
+    icon: '<path d="M12 3l7 3v5c0 4.4-3 8.4-7 10-4-1.6-7-5.6-7-10V6z"/><path d="M9.2 12l2 2 3.6-4"/>' },
+  { t: "26 countries served", d: "Export logistics and regional offices that get your order to the line on time.",
+    icon: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/>' },
+  { t: "25 years of expertise", d: "A flexible-packaging legacy since 1997, trusted by leading regional brands.",
+    icon: '<circle cx="12" cy="9" r="6"/><path d="M8.5 14l-1.5 7 5-3 5 3-1.5-7"/>' },
+];
+
+// Vision/Mission/Values for the tabbed band.
+const mvValues = ["Quality without compromise", "Responsible by design", "Partnership, not supply", "Built to deliver on time"];
 ---
 <Base>
   <!-- HERO -->
@@ -47,6 +62,27 @@ const clients = Array.from({ length: 20 }, (_, i) => `/images/clients/client-${i
       <Counter prefix="+" value="26" label="Countries served" />
       <Counter prefix="+" value="25" label="Years of printing" />
       <Counter prefix="~" value="400" label="Team members" />
+    </div>
+  </section>
+
+  <!-- WHY PRINTOPACK (icon value cards) -->
+  <section class="why">
+    <div class="wrap-wide">
+      <div class="section-head center">
+        <span class="eyebrow plain" style="color:var(--gold)">Why Printopack</span>
+        <h2 style="margin-top:14px">Built to perform, end to end.</h2>
+      </div>
+      <div class="why-grid">
+        {why.map((w) => (
+          <div class="why-card">
+            <span class="why-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" set:html={w.icon} />
+            </span>
+            <h3>{w.t}</h3>
+            <p>{w.d}</p>
+          </div>
+        ))}
+      </div>
     </div>
   </section>
 
@@ -103,14 +139,38 @@ const clients = Array.from({ length: 20 }, (_, i) => `/images/clients/client-${i
     </div>
   </section>
 
-  <!-- EDITORIAL BAND (navy) -->
-  <section class="on-navy editorial">
-    <div class="wrap editorial-inner">
-      <span class="eyebrow" data-reveal>Our vision</span>
-      <p class="editorial-quote" data-reveal>
-        Empowering brands through creative packaging excellence: redefining packaging as an enduring testament to brand values and consumer trust.
-      </p>
-      <a href="/about" class="link-line" data-reveal style="color:var(--gold-bright);border-color:var(--gold-bright)">Read our philosophy</a>
+  <!-- VISION / MISSION / VALUES (tabbed band, image + tabs + checklist) -->
+  <section class="on-navy vmv">
+    <div class="wrap-wide vmv-grid">
+      <div class="vmv-media"><img src="/images/lineup.jpg" alt="Printopack finished packaging" loading="lazy" decoding="async" /></div>
+      <div class="vmv-body">
+        <span class="eyebrow">What drives us</span>
+        <h2 style="margin:14px 0 26px">Vision, mission and values.</h2>
+        <div class="vmv-tabs" role="tablist" aria-label="Vision, mission and values">
+          <button class="vmv-tab is-active" role="tab" aria-selected="true" id="h-vision" aria-controls="p-vision" data-tab="vision">Vision</button>
+          <button class="vmv-tab" role="tab" aria-selected="false" id="h-mission" aria-controls="p-mission" data-tab="mission">Mission</button>
+          <button class="vmv-tab" role="tab" aria-selected="false" id="h-values" aria-controls="p-values" data-tab="values">Values</button>
+        </div>
+        <div class="vmv-panels">
+          <div class="vmv-panel is-active" role="tabpanel" id="p-vision" aria-labelledby="h-vision" data-panel="vision">
+            <p class="vmv-statement">Empowering brands through creative packaging excellence.</p>
+          </div>
+          <div class="vmv-panel" role="tabpanel" id="p-mission" aria-labelledby="h-mission" data-panel="mission" hidden>
+            <p class="vmv-statement">To be the driving force behind brands' packaging evolution, with a legacy of expertise in flexible packaging since 1997.</p>
+          </div>
+          <div class="vmv-panel" role="tabpanel" id="p-values" aria-labelledby="h-values" data-panel="values" hidden>
+            <ul class="vmv-list">
+              {mvValues.map((v) => (
+                <li>
+                  <span class="vmv-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4.5 4.5L19 7"/></svg></span>
+                  {v}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <a href="/about" class="link-line vmv-link">Read our philosophy</a>
+      </div>
     </div>
   </section>
 
@@ -203,9 +263,34 @@ const clients = Array.from({ length: 20 }, (_, i) => `/images/clients/client-${i
   .cap-label{display:block;margin-top:16px;font-family:var(--display);font-size:15px;font-weight:400;letter-spacing:.04em;color:var(--ink)}
   .cap-card:hover .cap-label{color:var(--gold)}
 
-  /* editorial */
-  .editorial-inner{max-width:920px;text-align:center;margin-inline:auto}
-  .editorial-quote{font-family:var(--display);font-weight:300;font-size:clamp(24px,3.2vw,40px);line-height:1.28;color:var(--paper);margin:24px auto 30px;max-width:none}
+  /* why-printopack icon cards */
+  .why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+  .why-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(26px,2.6vw,34px) clamp(22px,2.2vw,28px)}
+  .why-card:hover{border-color:var(--gold);box-shadow:0 20px 40px rgba(14,35,64,.07)}
+  .why-icon{display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;background:var(--gold-soft);color:var(--gold);margin-bottom:22px}
+  .why-icon svg{width:27px;height:27px}
+  .why-card h3{font-size:clamp(18px,1.7vw,22px);margin-bottom:12px;line-height:1.15}
+  .why-card p{color:var(--muted);font-size:14.5px;max-width:none}
+  @media(max-width:1000px){.why-grid{grid-template-columns:1fr 1fr;gap:20px}}
+  @media(max-width:560px){.why-grid{grid-template-columns:1fr}}
+
+  /* vision/mission/values tabbed band */
+  .vmv-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(32px,5vw,72px);align-items:center}
+  .vmv-media{aspect-ratio:4/3;overflow:hidden;border-radius:var(--radius);background:var(--navy-soft)}
+  .vmv-media img{width:100%;height:100%;object-fit:cover}
+  .vmv-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line-dark);margin-bottom:28px}
+  .vmv-tab{font-family:var(--display);font-size:13px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(250,246,238,.55);padding:12px 20px;border-bottom:2px solid transparent;margin-bottom:-1px}
+  .vmv-tab:hover{color:var(--paper)}
+  .vmv-tab.is-active{color:var(--gold-bright);border-bottom-color:var(--gold-bright)}
+  .vmv-panel[hidden]{display:none}
+  .vmv-panels{min-height:132px}
+  .vmv-statement{font-family:var(--display);font-weight:300;font-size:clamp(22px,2.7vw,33px);line-height:1.26;color:var(--paper);max-width:24ch}
+  .vmv-list{display:grid;gap:12px}
+  .vmv-list li{display:flex;align-items:center;gap:12px;color:rgba(250,246,238,.86);font-size:clamp(16px,1.4vw,18px)}
+  .vmv-tick{flex:none;display:inline-flex;color:var(--gold-bright)}
+  .vmv-tick svg{width:18px;height:18px}
+  .vmv-link{margin-top:30px;color:var(--gold-bright);border-color:var(--gold-bright)}
+  @media(max-width:860px){.vmv-grid{grid-template-columns:1fr;gap:32px}.vmv-media{order:2}}
 
   /* news */
   .news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;align-items:stretch}
@@ -260,3 +345,25 @@ const clients = Array.from({ length: 20 }, (_, i) => `/images/clients/client-${i
     .partner-counters{gap:40px}
   }
 </style>
+
+<script>
+  // Vision/Mission/Values tabs on the home band. Instant, no motion, keyboard-friendly.
+  const tabs = Array.from(document.querySelectorAll('.vmv-tab'));
+  const panels = Array.from(document.querySelectorAll('.vmv-panel'));
+  function select(tab) {
+    tabs.forEach((t) => { t.classList.remove('is-active'); t.setAttribute('aria-selected', 'false'); });
+    panels.forEach((p) => { p.classList.remove('is-active'); p.setAttribute('hidden', ''); });
+    tab.classList.add('is-active'); tab.setAttribute('aria-selected', 'true');
+    const panel = document.getElementById('p-' + tab.dataset.tab);
+    panel?.classList.add('is-active'); panel?.removeAttribute('hidden');
+  }
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(t));
+    t.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault();
+      const next = e.key === 'ArrowRight' ? (i + 1) % tabs.length : (i - 1 + tabs.length) % tabs.length;
+      tabs[next].focus(); select(tabs[next]);
+    });
+  });
+</script>
