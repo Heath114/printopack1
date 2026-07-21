@@ -1,0 +1,115 @@
+---
+import Base from '../layouts/Base.astro';
+import Counter from '../components/Counter.astro';
+
+// Careers. The three roles below are the client's real openings from the admin data.
+// Roles, requirements and the careers inbox are managed in the admin CMS. Applicants
+// can apply by email now; a direct CV upload is on the build roadmap.
+const roles = [
+  { title: "Production Engineer", dept: "Production", type: "Full-time", location: "Jeddah, KSA",
+    req: "BSc in mechanical or industrial engineering, with 3+ years on rotogravure lines." },
+  { title: "Quality Control Specialist", dept: "Quality", type: "Full-time", location: "Jeddah, KSA",
+    req: "Experience with ISO 22000, FSSC and SFDA standards, and a strong laboratory background." },
+  { title: "Sales Account Manager", dept: "Sales", type: "Full-time", location: "Jeddah, KSA",
+    req: "5+ years of B2B packaging sales; existing FMCG relationships preferred." },
+];
+const email = "careers@printopack.com.sa";
+---
+<Base
+  title="Careers - Printopack"
+  description="Join Printopack in Jeddah. Explore open roles in production, quality and sales, and apply to build responsible flexible packaging for brands across the region."
+>
+  <!-- PAGE HEADER -->
+  <section class="page-head">
+    <div class="wrap-wide">
+      <div class="page-head-inner">
+        <span class="eyebrow">Careers</span>
+        <h1>Build what protects the product.</h1>
+        <p class="lede">
+          Packaging is made by people. If you want to work at a serious Saudi manufacturer with a
+          25-year record, look through our open roles and get in touch.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COUNTERS -->
+  <section class="on-deep car-stats">
+    <div class="wrap-wide counters-row">
+      <Counter prefix="~" value="400" label="People on the team" />
+      <Counter prefix="+" value="25" label="Years of stability" />
+      <Counter prefix="" value="6" label="Regional offices" />
+    </div>
+  </section>
+
+  <!-- OPEN ROLES -->
+  <section class="roles">
+    <div class="wrap-wide">
+      <div class="section-head">
+        <span class="eyebrow">Now hiring</span>
+        <h2>Open positions</h2>
+      </div>
+      <div class="role-list">
+        {roles.map((r) => (
+          <article class="role">
+            <div class="role-main">
+              <h3>{r.title}</h3>
+              <div class="role-tags">
+                <span>{r.dept}</span><span>{r.type}</span><span>{r.location}</span>
+              </div>
+              <p>{r.req}</p>
+            </div>
+            <div class="role-cta">
+              <a class="btn btn-outline" href={`mailto:${email}?subject=Application: ${r.title}`}>Apply by email</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- APPLY -->
+  <section class="on-navy apply">
+    <div class="wrap apply-inner">
+      <div>
+        <span class="eyebrow">Apply</span>
+        <h2 style="margin:14px 0 16px">Send us your CV.</h2>
+        <p class="lede">
+          Do not see the right role? We are always glad to hear from strong candidates. Email your CV
+          and a short note, and our team will be in touch. Direct upload from this page is coming soon.
+        </p>
+      </div>
+      <div class="apply-card">
+        <span class="apply-label">Careers inbox</span>
+        <a class="apply-email" href={`mailto:${email}`}>{email}</a>
+        <a class="btn btn-gold" href={`mailto:${email}?subject=CV Submission`} style="margin-top:22px">Email your CV</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head{padding-block:clamp(56px,8vw,104px) clamp(30px,4vw,52px);background:var(--cream);border-bottom:1px solid var(--line)}
+  .page-head-inner{max-width:820px}
+  .page-head h1{margin:20px 0 22px;font-size:clamp(40px,6vw,78px)}
+  .page-head .lede{max-width:60ch}
+
+  .counters-row{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+  @media(max-width:640px){.counters-row{grid-template-columns:1fr;gap:40px}}
+
+  .role-list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+  .role{display:flex;justify-content:space-between;align-items:center;gap:32px;padding:34px 0;border-bottom:1px solid var(--line)}
+  .role-main h3{font-size:clamp(22px,2.4vw,30px)}
+  .role-tags{display:flex;flex-wrap:wrap;gap:8px 10px;margin:14px 0 14px}
+  .role-tags span{font-family:var(--display);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);background:var(--cream);border:1px solid var(--line);padding:5px 12px;border-radius:var(--radius)}
+  .role-main p{color:var(--muted);max-width:60ch}
+  .role-cta{flex:none}
+  @media(max-width:720px){.role{flex-direction:column;align-items:flex-start;gap:20px}}
+
+  .apply-inner{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(32px,6vw,72px);align-items:center}
+  .apply-card{background:var(--navy-soft);border:1px solid var(--line-dark);border-radius:var(--radius);padding:clamp(28px,4vw,40px);text-align:center}
+  .apply-label{font-family:var(--display);font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-bright)}
+  .apply-email{display:block;margin-top:14px;font-family:var(--display);font-size:clamp(18px,2vw,23px);color:var(--paper);word-break:break-word}
+  .apply-email:hover{color:var(--gold-bright)}
+  @media(max-width:720px){.apply-inner{grid-template-columns:1fr;gap:32px}}
+</style>

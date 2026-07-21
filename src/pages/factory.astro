@@ -1,0 +1,101 @@
+---
+import Base from '../layouts/Base.astro';
+import Counter from '../components/Counter.astro';
+
+// Factory Departments. The five departments and the warehouse are Printopack's real
+// production stages. Photos are the client's real factory images. Descriptions are a
+// faithful scaffold, edited per department in the admin CMS.
+const departments = [
+  { name: "Rotogravure Printing", img: "/images/dept-1.jpg",
+    desc: "Photographic-quality, multi-colour print with tight registration at production speed. The heart of the plant, where artwork becomes finished print on film." },
+  { name: "Cylinder Engraving", img: "/images/dept-4.jpg",
+    desc: "In-house engraving turns approved artwork into precision cylinders, ready for the press. Doing this under our own roof means faster proofs and full control of quality." },
+  { name: "Bag Making & Converting", img: "/images/dept-2.jpg",
+    desc: "Printed film is converted into pouches and bags in every format your line requires, from stand-up pouches to flow-wrap and lidding." },
+  { name: "Punching & Finishing", img: "/images/dept-3.jpg",
+    desc: "Precision punching, slitting and finishing bring each order to its final specification, checked and squared before it leaves the floor." },
+  { name: "Solvent Recovery", img: "/images/dept-5.jpg",
+    desc: "In-line solvent recovery makes production more responsible, capturing and reusing solvents rather than releasing them." },
+  { name: "Warehousing", img: "/images/factory.jpg",
+    desc: "Climate-considered storage for raw material and finished goods keeps stock in condition and orders moving on schedule." },
+];
+---
+<Base
+  title="Factory Departments - Printopack"
+  description="Inside the Printopack plant in Jeddah: rotogravure printing, in-house cylinder engraving, bag making, finishing, solvent recovery and warehousing, all under one roof."
+>
+  <!-- PAGE HEADER -->
+  <section class="page-head">
+    <div class="wrap-wide">
+      <div class="page-head-inner">
+        <span class="eyebrow">Factory departments</span>
+        <h1>Everything, under one roof.</h1>
+        <p class="lede">
+          From engraved cylinder to finished reel, every stage of production happens inside our Jeddah
+          facility. That means faster proofs, tighter quality control and packaging built exactly to
+          your specification.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COUNTERS -->
+  <section class="on-deep fac-stats">
+    <div class="wrap-wide counters-row">
+      <Counter prefix="" value="5" label="Production departments" />
+      <Counter prefix="+" value="25" label="Years of manufacturing" />
+      <Counter prefix="~" value="400" label="People on the floor" />
+    </div>
+  </section>
+
+  <!-- DEPARTMENTS -->
+  <section class="depts">
+    <div class="wrap-wide">
+      <div class="section-head">
+        <span class="eyebrow">The production line</span>
+        <h2>Our departments</h2>
+        <p class="lede">Each stage is a department in its own right, staffed and equipped to hold the Printopack standard.</p>
+      </div>
+      <div class="dept-list">
+        {departments.map((d, i) => (
+          <article class={"dept-row" + (i % 2 ? " reverse" : "")}>
+            <div class="dept-media"><div class="card-img"><img src={d.img} alt={d.name} /></div></div>
+            <div class="dept-body">
+              <span class="dept-num">{String(i + 1).padStart(2, "0")}</span>
+              <h3>{d.name}</h3>
+              <p>{d.desc}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="on-navy fac-cta">
+    <div class="wrap" style="text-align:center">
+      <span class="eyebrow plain" style="color:var(--gold-bright)">See it for yourself</span>
+      <h2 style="margin:14px 0 26px">Bring us your brief.</h2>
+      <a href="/contact" class="btn btn-gold">Request a quote</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head{padding-block:clamp(56px,8vw,104px) clamp(30px,4vw,52px);background:var(--cream);border-bottom:1px solid var(--line)}
+  .page-head-inner{max-width:820px}
+  .page-head h1{margin:20px 0 22px;font-size:clamp(40px,6vw,78px)}
+  .page-head .lede{max-width:60ch}
+
+  .counters-row{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+  @media(max-width:640px){.counters-row{grid-template-columns:1fr;gap:40px}}
+
+  .dept-list{display:flex;flex-direction:column;gap:clamp(48px,7vw,96px)}
+  .dept-row{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(32px,5vw,72px);align-items:center}
+  .dept-row.reverse .dept-media{order:2}
+  .dept-media .card-img{aspect-ratio:4/3;border-radius:var(--radius)}
+  .dept-num{font-family:var(--display);font-size:14px;font-weight:500;letter-spacing:.2em;color:var(--gold)}
+  .dept-body h3{margin:14px 0 16px}
+  .dept-body p{color:var(--muted);max-width:52ch}
+  @media(max-width:820px){.dept-row,.dept-row.reverse{grid-template-columns:1fr;gap:24px}.dept-row.reverse .dept-media{order:0}}
+</style>
