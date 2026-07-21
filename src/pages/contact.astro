@@ -14,6 +14,16 @@ const offices = [
   { country: "Tunisia", email: "tunisia@printopack.com.sa" },
   { country: "Algeria", email: "algeria@printopack.com.sa" },
 ];
+
+// Topic router: the client asked for an Outlook-style picker where you choose the
+// subject and it goes to the right inbox. Pick a topic, the recipient and a suggested
+// subject fill in, and Compose opens a pre-addressed email.
+const topics = [
+  { name: "General enquiry", email: "info@printopack.com.sa", subject: "General enquiry" },
+  { name: "Sales & quotations", email: "mkt@printopack.com.sa", subject: "Quote request" },
+  { name: "Quality & certifications", email: "quality@printopack.com.sa", subject: "Quality enquiry" },
+  { name: "Careers", email: "careers@printopack.com.sa", subject: "Careers enquiry" },
+];
 ---
 <Base
   title="Contact - Printopack"
@@ -54,6 +64,37 @@ const offices = [
         <h3>Customer portal</h3>
         <p>Existing customers follow orders, statements and documents through the Printopack customer program.</p>
         <a href="https://printopack.azurewebsites.net/" target="_blank" rel="noopener" class="btn btn-outline chan-cta">Customer login</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOPIC ROUTER (Outlook-style compose) -->
+  <section class="compose" style="background:var(--cream)">
+    <div class="wrap-wide compose-inner">
+      <div class="compose-head">
+        <span class="eyebrow">Write to us</span>
+        <h2 style="margin:16px 0 18px">Choose a topic, we route it to the right desk.</h2>
+        <p class="lede">Pick what your message is about and add a subject. We open a ready-addressed email, so it reaches the right team the first time.</p>
+      </div>
+      <div class="compose-card">
+        <span class="compose-step">1 &nbsp;What is it about?</span>
+        <div class="topic-grid" role="radiogroup" aria-label="Message topic">
+          {topics.map((t, i) => (
+            <button type="button" class={"topic" + (i === 0 ? " is-sel" : "")} role="radio" aria-checked={i === 0 ? "true" : "false"} data-email={t.email} data-subject={t.subject}>
+              <span class="topic-check" aria-hidden="true"></span>
+              <span class="topic-text">
+                <span class="topic-name">{t.name}</span>
+                <span class="topic-email">{t.email}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+        <label class="compose-step" for="subject">2 &nbsp;Subject</label>
+        <input id="subject" class="compose-subject" type="text" autocomplete="off" placeholder="Type your subject" />
+        <div class="compose-actions">
+          <button type="button" class="btn btn-gold" id="composeGo">Compose email</button>
+          <span class="compose-hint">Opens your email app, addressed to <strong id="composeTo">info@printopack.com.sa</strong></span>
+        </div>
       </div>
     </div>
   </section>
@@ -110,6 +151,28 @@ const offices = [
   .office a{font-size:14px;color:rgba(250,246,238,.72)}
   .office a:hover{color:var(--gold-bright)}
 
+  /* topic router */
+  .compose-inner{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(32px,5vw,72px);align-items:start}
+  .compose-head{position:sticky;top:120px}
+  .compose-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(24px,3vw,38px)}
+  .compose-step{display:block;font-family:var(--display);font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);margin-bottom:16px}
+  .topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px}
+  .topic{display:flex;align-items:flex-start;gap:12px;text-align:left;border:1px solid var(--line);border-radius:var(--radius);padding:16px 16px;background:var(--paper)}
+  .topic:hover{border-color:var(--navy)}
+  .topic.is-sel{border-color:var(--navy);background:var(--gold-soft)}
+  .topic-check{flex:none;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--faint);margin-top:2px;position:relative}
+  .topic.is-sel .topic-check{border-color:var(--gold)}
+  .topic.is-sel .topic-check::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--gold)}
+  .topic-name{display:block;font-family:var(--display);font-size:15.5px;color:var(--ink)}
+  .topic-email{display:block;font-size:12px;color:var(--muted);margin-top:3px;word-break:break-word}
+  .compose-subject{width:100%;padding:15px 16px;border:1px solid var(--line);background:var(--paper);font:inherit;font-size:15px;border-radius:var(--radius);margin-bottom:24px}
+  .compose-subject:focus{outline:none;border-color:var(--navy)}
+  .compose-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .compose-hint{font-size:12.5px;color:var(--muted)}
+  .compose-hint strong{color:var(--navy);font-weight:600}
+  @media(max-width:900px){.compose-inner{grid-template-columns:1fr;gap:28px}.compose-head{position:static}}
+  @media(max-width:460px){.topic-grid{grid-template-columns:1fr}}
+
   .contact-stats{padding-block:clamp(52px,6vw,78px)}
   .counters-row{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
 
@@ -122,3 +185,27 @@ const offices = [
     .office-grid{grid-template-columns:1fr}
   }
 </style>
+
+<script>
+  // Topic router: selecting a topic sets the recipient and suggests a subject.
+  // Compose opens a pre-addressed mailto. No motion.
+  const topics = Array.from(document.querySelectorAll('.topic'));
+  const subjectInput = document.getElementById('subject');
+  const toEl = document.getElementById('composeTo');
+  let selected = topics[0];
+  function choose(btn) {
+    topics.forEach((t) => { t.classList.remove('is-sel'); t.setAttribute('aria-checked', 'false'); });
+    btn.classList.add('is-sel'); btn.setAttribute('aria-checked', 'true');
+    selected = btn;
+    if (toEl) toEl.textContent = btn.dataset.email || '';
+    if (subjectInput && !subjectInput.dataset.touched) subjectInput.value = btn.dataset.subject || '';
+  }
+  topics.forEach((t) => t.addEventListener('click', () => choose(t)));
+  subjectInput?.addEventListener('input', () => { subjectInput.dataset.touched = '1'; });
+  document.getElementById('composeGo')?.addEventListener('click', () => {
+    const email = selected?.dataset.email || 'info@printopack.com.sa';
+    const subject = encodeURIComponent(subjectInput?.value || selected?.dataset.subject || '');
+    window.location.href = `mailto:${email}?subject=${subject}`;
+  });
+  if (topics[0]) choose(topics[0]);
+</script>
