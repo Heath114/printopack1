@@ -1,62 +1,57 @@
 ---
 import Base from '../layouts/Base.astro';
 
-// Social Responsibility, a subsection of About Us. The three groups and their items
-// are exactly what Nasser listed in his brief; nothing here is invented. The live
-// printopack.com.sa site has no social-responsibility content, so the actual
-// certificate documents, the licence number and the Saudization and Mowaamah
-// certificates are supplied by Printopack and replace the placeholders below.
-const groups = [
-  {
-    name: "Environment",
-    icon: '<path d="M4 20c8 0 16-4 16-16C12 4 4 8 4 20z"/><path d="M4 20c4-6 8-8 12-9"/>',
+// ── EDITABLE CONTENT ────────────────────────────────────────────────────────
+// The admin's editable surface. The three groups and their items are exactly what
+// Nasser listed; nothing is invented. The certificate slot is a content-editable
+// template (admin adds any number of certificate images of any shape); it is seeded
+// with the real BRCGS certificate fetched from the live site.
+const content = {
+  meta: {
+    title: "Social Responsibility - Printopack",
+    description: "Printopack's social responsibility across three areas: the environment, the local community, and the international community.",
+  },
+  header: {
+    eyebrow: "Social responsibility",
+    title: "Social responsibility.",
+    lede: "Printopack's social responsibility covers three areas: the environment, the local community, and the international community.",
+  },
+  groups: [
+    {
+      name: "Environment",
+      icon: '<path d="M4 20c8 0 16-4 16-16C12 4 4 8 4 20z"/><path d="M4 20c4-6 8-8 12-9"/>',
+      items: ["ISO 14000 certificates and its family of standards", "Safety system", "Pollution-protection system"],
+    },
+    {
+      name: "Local community",
+      icon: '<circle cx="9" cy="8" r="3"/><path d="M3.5 20c0-3 2.6-5 5.5-5s5.5 2 5.5 5"/><circle cx="17.5" cy="9" r="2.2"/><path d="M15.5 20c0-2.4 1.8-4 3.8-4"/>',
+      items: ["Licence number", "Saudization certificate", "Mowaamah certificate"],
+    },
+    {
+      name: "International community",
+      icon: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/>',
+      items: ["Global trade", "Certified shipping", "Safe product"],
+    },
+  ],
+  certifications: {
+    eyebrow: "Certifications",
+    title: "Our certificates.",
+    note: "Certificate documents, the licence number and the Saudization and Mowaamah certificates are added and kept current by Printopack through the site's admin.",
     items: [
-      "ISO 14000 certificates and its family of standards",
-      "Safety system",
-      "Pollution-protection system",
+      { name: "BRCGS Global Standard for Packaging Materials", note: "Grade A, issued by SGS", image: "/images/cert-brcgs.jpg" },
     ],
   },
-  {
-    name: "Local community",
-    icon: '<circle cx="9" cy="8" r="3"/><path d="M3.5 20c0-3 2.6-5 5.5-5s5.5 2 5.5 5"/><circle cx="17.5" cy="9" r="2.2"/><path d="M15.5 20c0-2.4 1.8-4 3.8-4"/>',
-    items: [
-      "Licence number",
-      "Saudization certificate",
-      "Mowaamah certificate",
-    ],
-  },
-  {
-    name: "International community",
-    icon: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/>',
-    items: [
-      "Global trade",
-      "Certified shipping",
-      "Safe product",
-    ],
-  },
-];
-
-// Certificate slots. Content-editable template: the admin adds any number of certificate
-// images, each of any shape, and the grid holds them without breaking. Seeded with the
-// real BRCGS certificate fetched from the live site (an example the client can replace).
-const certs = [
-  { name: "BRCGS Global Standard for Packaging Materials", note: "Grade A, issued by SGS", image: "/images/cert-brcgs.jpg" },
-];
+};
+const c = content;
 ---
-<Base
-  title="Social Responsibility - Printopack"
-  description="Printopack's social responsibility across three areas: the environment, the local community, and the international community."
->
+<Base title={c.meta.title} description={c.meta.description}>
   <!-- PAGE HEADER -->
   <section class="page-head">
     <div class="wrap-wide">
       <div class="page-head-inner">
-        <span class="eyebrow">Social responsibility</span>
-        <h1>Social responsibility.</h1>
-        <p class="lede">
-          Printopack's social responsibility covers three areas: the environment, the local community,
-          and the international community.
-        </p>
+        <span class="eyebrow">{c.header.eyebrow}</span>
+        <h1>{c.header.title}</h1>
+        <p class="lede">{c.header.lede}</p>
       </div>
     </div>
   </section>
@@ -65,7 +60,7 @@ const certs = [
   <section class="groups">
     <div class="wrap-wide">
       <div class="group-grid">
-        {groups.map((g) => (
+        {c.groups.map((g) => (
           <div class="group">
             <span class="group-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" set:html={g.icon} />
@@ -91,21 +86,21 @@ const certs = [
   <section class="certs" style="background:var(--cream)">
     <div class="wrap-wide">
       <div class="section-head">
-        <span class="eyebrow">Certifications</span>
-        <h2>Our certificates.</h2>
+        <span class="eyebrow">{c.certifications.eyebrow}</span>
+        <h2>{c.certifications.title}</h2>
       </div>
       <div class="cert-grid">
-        {certs.map((c) => (
-          <a class="cert-card" href={c.image} target="_blank" rel="noopener">
-            <span class="cert-thumb"><img src={c.image} alt={c.name} loading="lazy" /></span>
+        {c.certifications.items.map((cert) => (
+          <a class="cert-card" href={cert.image} target="_blank" rel="noopener">
+            <span class="cert-thumb"><img src={cert.image} alt={cert.name} loading="lazy" /></span>
             <span class="cert-body">
-              <span class="cert-name">{c.name}</span>
-              {c.note && <span class="cert-note">{c.note}</span>}
+              <span class="cert-name">{cert.name}</span>
+              {cert.note && <span class="cert-note">{cert.note}</span>}
             </span>
           </a>
         ))}
       </div>
-      <p class="resp-note">Certificate documents, the licence number and the Saudization and Mowaamah certificates are added and kept current by Printopack through the site's admin.</p>
+      <p class="resp-note">{c.certifications.note}</p>
     </div>
   </section>
 </Base>
