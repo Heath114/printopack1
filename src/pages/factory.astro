@@ -40,7 +40,7 @@ const content = {
       { img: "/images/factory-bagging.jpg", name: { en: "Bagging Machine", ar: "صناعة الأكياس" }, desc: { en: "Converting printed film into bags and pouches.", ar: "تحويل الأفلام المطبوعة إلى أكياس وعبوات." } },
       { img: "/images/factory-punching.jpg", name: { en: "Punching Machine", ar: "التخريم والتشطيب" }, desc: { en: "Punching and finishing to final specification.", ar: "التخريم والتشطيب حتى المواصفات النهائية." } },
       { img: "/images/factory-solvent.jpg", name: { en: "Solvent Recovery", ar: "استرجاع المذيبات" }, desc: { en: "In-line recovery and reuse of solvents.", ar: "استرجاع المذيبات وإعادة استخدامها ضمن الخط." } },
-      { img: "/images/factory.jpg", name: { en: "Warehouses", ar: "المستودعات" }, desc: { en: "Storage for raw material and finished goods.", ar: "تخزين المواد الخام والمنتجات النهائية." } },
+      { img: "", name: { en: "Warehouses", ar: "المستودعات" }, desc: { en: "Storage for raw material and finished goods.", ar: "تخزين المواد الخام والمنتجات النهائية." } },
     ],
   },
   cta: {
@@ -81,7 +81,13 @@ const c = content;
       <div class="dept-list">
         {c.departments.items.map((d, i) => (
           <article class={"dept-row" + (i % 2 ? " reverse" : "")}>
-            <div class="dept-media"><div class="card-img"><img src={d.img} alt={d.name.en} /></div></div>
+            <div class="dept-media">
+              <div class="card-img">
+                {d.img
+                  ? <img src={d.img} alt={d.name.en} />
+                  : <span class="img-ph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M3 9l9-5 9 5v11H3z"/><path d="M3 9h18M9 20v-6h6v6"/></svg></span>}
+              </div>
+            </div>
             <div class="dept-body">
               <span class="dept-num">{String(i + 1).padStart(2, "0")}</span>
               <h3><Bi en={d.name.en} ar={d.name.ar} /></h3>
@@ -116,6 +122,8 @@ const c = content;
   .dept-row{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(32px,5vw,72px);align-items:center}
   .dept-row.reverse .dept-media{order:2}
   .dept-media .card-img{aspect-ratio:4/3;border-radius:var(--radius)}
+  .img-ph{display:grid;place-items:center;width:100%;height:100%;background:var(--cream);color:var(--faint);border:1px dashed var(--line)}
+  .img-ph svg{width:56px;height:56px}
   .dept-num{font-family:var(--display);font-size:14px;font-weight:500;letter-spacing:.2em;color:var(--gold)}
   .dept-body h3{margin:14px 0 16px}
   .dept-body p{color:var(--muted);max-width:52ch}
