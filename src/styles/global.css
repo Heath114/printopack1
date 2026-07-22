@@ -133,6 +133,19 @@ section{padding-block:var(--section-y)}
    feedback is instant color/border/shadow changes only: nothing moves. */
 *,*::before,*::after{transition:none!important;animation:none!important}
 
-/* ---------- RTL groundwork ---------- */
+/* ---------- bilingual (EN / AR) ----------
+   Both languages are rendered; only the one matching the document dir is shown.
+   dir is set synchronously from localStorage in Base.astro, so there is no flash. */
+.i18n-ar{display:none}
+[dir="rtl"] .i18n-en{display:none}
+[dir="rtl"] .i18n-ar{display:inline}
+.i18n-ar{font-family:var(--arabic)}
+
+/* ---------- RTL layout ---------- */
 [dir="rtl"]{--display:var(--arabic);--body:var(--arabic)}
+[dir="rtl"] body{text-align:right}
+[dir="rtl"] .eyebrow{flex-direction:row-reverse}
 [dir="rtl"] .eyebrow::before{margin-inline:0}
+[dir="rtl"] .btn svg,[dir="rtl"] .link-line svg{transform:scaleX(-1)}
+/* Arabic reads a touch larger for legibility parity with Latin */
+[dir="rtl"]{font-size:16.5px}

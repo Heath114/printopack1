@@ -1,0 +1,10 @@
+---
+// Bilingual inline text. Renders both languages; CSS shows only the one matching the
+// document's current dir/lang (set synchronously from localStorage in Base, so there
+// is no flash and no content-swap JS). Fast and static-friendly.
+//
+// The `ar` value must be natural, Arabic-first fusha, never a literal translation of
+// `en`. Where the client provided Arabic (Nasser's notes), use his exact words.
+const { en, ar } = Astro.props;
+---
+<span class="i18n-en">{en}</span><span class="i18n-ar" lang="ar">{ar || en}</span>

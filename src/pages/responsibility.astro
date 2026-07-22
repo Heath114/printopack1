@@ -1,44 +1,67 @@
 ---
 import Base from '../layouts/Base.astro';
+import Bi from '../components/Bi.astro';
 
-// ── EDITABLE CONTENT ────────────────────────────────────────────────────────
-// The admin's editable surface. The three groups and their items are exactly what
-// Nasser listed; nothing is invented. The certificate slot is a content-editable
-// template (admin adds any number of certificate images of any shape); it is seeded
-// with the real BRCGS certificate fetched from the live site.
+// ── EDITABLE CONTENT (bilingual) ─────────────────────────────────────────────
+// Each visible string is { en, ar }. The Arabic is natural fusha, NOT a literal
+// translation: the group names and items are Nasser's own Arabic words from his brief;
+// "شهاداتنا" is Printopack's own term from their live site. The certificate slot is a
+// content-editable template seeded with the real BRCGS certificate.
 const content = {
   meta: {
     title: "Social Responsibility - Printopack",
     description: "Printopack's social responsibility across three areas: the environment, the local community, and the international community.",
   },
   header: {
-    eyebrow: "Social responsibility",
-    title: "Social responsibility.",
-    lede: "Printopack's social responsibility covers three areas: the environment, the local community, and the international community.",
+    eyebrow: { en: "Social responsibility", ar: "المسؤولية الاجتماعية" },
+    title: { en: "Social responsibility.", ar: "المسؤولية الاجتماعية" },
+    lede: {
+      en: "Printopack's social responsibility covers three areas: the environment, the local community, and the international community.",
+      ar: "تشمل مسؤولية برنتوباك الاجتماعية ثلاثة مجالات: البيئة، والمجتمع المحلي، والمجتمع الدولي.",
+    },
   },
   groups: [
     {
-      name: "Environment",
       icon: '<path d="M4 20c8 0 16-4 16-16C12 4 4 8 4 20z"/><path d="M4 20c4-6 8-8 12-9"/>',
-      items: ["ISO 14000 certificates and its family of standards", "Safety system", "Pollution-protection system"],
+      name: { en: "Environment", ar: "البيئة" },
+      items: [
+        { en: "ISO 14000 certificates and its family of standards", ar: "شهادات الأيزو 14 ألف وأخواتها" },
+        { en: "Safety system", ar: "نظام السلامة" },
+        { en: "Pollution-protection system", ar: "نظام الحماية من التلوث" },
+      ],
     },
     {
-      name: "Local community",
       icon: '<circle cx="9" cy="8" r="3"/><path d="M3.5 20c0-3 2.6-5 5.5-5s5.5 2 5.5 5"/><circle cx="17.5" cy="9" r="2.2"/><path d="M15.5 20c0-2.4 1.8-4 3.8-4"/>',
-      items: ["Licence number", "Saudization certificate", "Mowaamah certificate"],
+      name: { en: "Local community", ar: "المجتمع المحلي" },
+      items: [
+        { en: "Licence number", ar: "رقم الترخيص" },
+        { en: "Saudization certificate", ar: "شهادة السعودة" },
+        { en: "Mowaamah certificate", ar: "شهادة المواءمة" },
+      ],
     },
     {
-      name: "International community",
       icon: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/>',
-      items: ["Global trade", "Certified shipping", "Safe product"],
+      name: { en: "International community", ar: "المجتمع الدولي" },
+      items: [
+        { en: "Global trade", ar: "التجارة العالمية" },
+        { en: "Certified shipping", ar: "الشحن المعتمد" },
+        { en: "Safe product", ar: "المنتج الآمن" },
+      ],
     },
   ],
   certifications: {
-    eyebrow: "Certifications",
-    title: "Our certificates.",
-    note: "Certificate documents, the licence number and the Saudization and Mowaamah certificates are added and kept current by Printopack through the site's admin.",
+    eyebrow: { en: "Certifications", ar: "الشهادات" },
+    title: { en: "Our certificates.", ar: "شهاداتنا" },
+    note: {
+      en: "Certificate documents, the licence number and the Saudization and Mowaamah certificates are added and kept current by Printopack through the site's admin.",
+      ar: "تُضيف برنتوباك وثائق الشهادات ورقم الترخيص وشهادتَي السعودة والمواءمة، وتُحدّثها عبر لوحة تحكم الموقع.",
+    },
     items: [
-      { name: "BRCGS Global Standard for Packaging Materials", note: "Grade A, issued by SGS", image: "/images/cert-brcgs.jpg" },
+      {
+        name: { en: "BRCGS Global Standard for Packaging Materials", ar: "معيار BRCGS العالمي لمواد التغليف" },
+        note: { en: "Grade A, issued by SGS", ar: "الدرجة A، صادرة عن SGS" },
+        image: "/images/cert-brcgs.jpg",
+      },
     ],
   },
 };
@@ -49,9 +72,9 @@ const c = content;
   <section class="page-head">
     <div class="wrap-wide">
       <div class="page-head-inner">
-        <span class="eyebrow">{c.header.eyebrow}</span>
-        <h1>{c.header.title}</h1>
-        <p class="lede">{c.header.lede}</p>
+        <span class="eyebrow"><Bi en={c.header.eyebrow.en} ar={c.header.eyebrow.ar} /></span>
+        <h1><Bi en={c.header.title.en} ar={c.header.title.ar} /></h1>
+        <p class="lede"><Bi en={c.header.lede.en} ar={c.header.lede.ar} /></p>
       </div>
     </div>
   </section>
@@ -65,14 +88,14 @@ const c = content;
             <span class="group-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" set:html={g.icon} />
             </span>
-            <h3>{g.name}</h3>
+            <h3><Bi en={g.name.en} ar={g.name.ar} /></h3>
             <ul>
               {g.items.map((it) => (
                 <li>
                   <span class="tick" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4.5 4.5L19 7"/></svg>
                   </span>
-                  {it}
+                  <Bi en={it.en} ar={it.ar} />
                 </li>
               ))}
             </ul>
@@ -86,21 +109,21 @@ const c = content;
   <section class="certs" style="background:var(--cream)">
     <div class="wrap-wide">
       <div class="section-head">
-        <span class="eyebrow">{c.certifications.eyebrow}</span>
-        <h2>{c.certifications.title}</h2>
+        <span class="eyebrow"><Bi en={c.certifications.eyebrow.en} ar={c.certifications.eyebrow.ar} /></span>
+        <h2><Bi en={c.certifications.title.en} ar={c.certifications.title.ar} /></h2>
       </div>
       <div class="cert-grid">
         {c.certifications.items.map((cert) => (
           <a class="cert-card" href={cert.image} target="_blank" rel="noopener">
-            <span class="cert-thumb"><img src={cert.image} alt={cert.name} loading="lazy" /></span>
+            <span class="cert-thumb"><img src={cert.image} alt={cert.name.en} loading="lazy" /></span>
             <span class="cert-body">
-              <span class="cert-name">{cert.name}</span>
-              {cert.note && <span class="cert-note">{cert.note}</span>}
+              <span class="cert-name"><Bi en={cert.name.en} ar={cert.name.ar} /></span>
+              <span class="cert-note"><Bi en={cert.note.en} ar={cert.note.ar} /></span>
             </span>
           </a>
         ))}
       </div>
-      <p class="resp-note">{c.certifications.note}</p>
+      <p class="resp-note"><Bi en={c.certifications.note.en} ar={c.certifications.note.ar} /></p>
     </div>
   </section>
 </Base>

@@ -279,4 +279,17 @@ const nav = [
     if (qrPop && !qrPop.hasAttribute('hidden') && !e.target.closest('.hdr-qr')) setQr(false);
   });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setQr(false); });
+
+  // Language toggle: flip EN/AR, set dir, persist, and show the OTHER language on the button.
+  const langBtn = document.querySelector('.lang');
+  const applyLang = (l) => {
+    document.documentElement.lang = l;
+    document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
+    try { localStorage.setItem('lang', l); } catch (e) {}
+    if (langBtn) langBtn.textContent = l === 'ar' ? 'EN' : 'ع';
+  };
+  if (langBtn) {
+    langBtn.textContent = document.documentElement.dir === 'rtl' ? 'EN' : 'ع';
+    langBtn.addEventListener('click', () => applyLang(document.documentElement.dir === 'rtl' ? 'en' : 'ar'));
+  }
 </script>

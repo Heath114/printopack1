@@ -15,6 +15,17 @@ const ogImage = new URL('/images/hero.jpg', Astro.site);
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Set language + direction synchronously from the saved choice, before paint,
+       so Arabic (RTL) renders immediately with no flash of English/LTR. -->
+  <script is:inline>
+    (function () {
+      try {
+        var l = localStorage.getItem('lang') === 'ar' ? 'ar' : 'en';
+        document.documentElement.lang = l;
+        document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
+      } catch (e) {}
+    })();
+  </script>
   <title>{title}</title>
   <meta name="description" content={description} />
   <meta name="theme-color" content="#0e2340" />
