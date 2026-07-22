@@ -1,42 +1,64 @@
 ---
 import Base from '../layouts/Base.astro';
 import Counter from '../components/Counter.astro';
-// Years in the market: computed live so it is always current (climbs from 1997).
+import Bi from '../components/Bi.astro';
 const year = new Date().getFullYear();
 
-// Factory Departments. The five departments and the warehouse are Printopack's real
-// production stages. Photos are the client's real factory images. Descriptions are a
-// faithful scaffold, edited per department in the admin CMS.
-const departments = [
-  { name: "Rotogravure Printing", img: "/images/dept-1.jpg",
-    desc: "Photographic-quality, multi-colour print with tight registration at production speed. The heart of the plant, where artwork becomes finished print on film." },
-  { name: "Cylinder Engraving", img: "/images/dept-4.jpg",
-    desc: "In-house engraving turns approved artwork into precision cylinders, ready for the press. Doing this under our own roof means faster proofs and full control of quality." },
-  { name: "Bag Making & Converting", img: "/images/dept-2.jpg",
-    desc: "Printed film is converted into pouches and bags in every format your line requires, from stand-up pouches to flow-wrap and lidding." },
-  { name: "Punching & Finishing", img: "/images/dept-3.jpg",
-    desc: "Precision punching, slitting and finishing bring each order to its final specification, checked and squared before it leaves the floor." },
-  { name: "Solvent Recovery", img: "/images/dept-5.jpg",
-    desc: "In-line solvent recovery makes production more responsible, capturing and reusing solvents rather than releasing them." },
-  { name: "Warehousing", img: "/images/factory.jpg",
-    desc: "Climate-considered storage for raw material and finished goods keeps stock in condition and orders moving on schedule." },
-];
+// ── EDITABLE CONTENT (bilingual) ─────────────────────────────────────────────
+// Factory Departments (Nasser's Page 1 subsection). Department NAMES and PHOTOS are
+// real, pulled from the live site's gallery (Rotogravure, Cylinder Engraving, Bagging
+// Machine, Punching Machine, Solvent Recovery) plus Warehouses. Descriptions are brief
+// factual notes on each real process, editable by the client. Arabic is natural fusha.
+const content = {
+  meta: {
+    title: "Factory Departments - Printopack",
+    description: "Inside the Printopack plant in Jeddah: rotogravure printing, in-house cylinder engraving, bag making, punching, solvent recovery and warehousing, all under one roof.",
+  },
+  header: {
+    eyebrow: { en: "Factory departments", ar: "أقسام المصنع" },
+    title: { en: "Everything, under one roof.", ar: "كل شيء تحت سقفٍ واحد." },
+    lede: {
+      en: "From engraved cylinder to finished reel, every stage of production happens inside our Jeddah facility. That means faster proofs, tighter quality control and packaging built exactly to your specification.",
+      ar: "من الأسطوانة المحفورة إلى اللفّة النهائية، تجري كل مراحل الإنتاج داخل مصنعنا في جدة، بما يعني بروفات أسرع، ورقابة جودة أدقّ، وتغليفاً مبنياً على مواصفاتكم بالضبط.",
+    },
+  },
+  counters: [
+    { value: 5, label: { en: "Production departments", ar: "أقسام إنتاجية" } },
+    { from: 1997, value: year, label: { en: "Manufacturing since 1997", ar: "التصنيع منذ 1997" } },
+    { prefix: "~", value: 400, label: { en: "People on the floor", ar: "عامل في المصنع" } },
+  ],
+  departments: {
+    eyebrow: { en: "The production line", ar: "خط الإنتاج" },
+    title: { en: "Our departments", ar: "أقسامنا" },
+    lede: {
+      en: "Each stage is a department in its own right, staffed and equipped to hold the Printopack standard.",
+      ar: "كل مرحلة قسمٌ قائم بذاته، مجهّز بطاقمه ومعدّاته للحفاظ على معيار برنتوباك.",
+    },
+    items: [
+      { img: "/images/factory-rotogravure.jpg", name: { en: "Rotogravure", ar: "الطباعة الروتوغرافية" }, desc: { en: "High-volume, multi-colour rotogravure printing from engraved cylinders.", ar: "طباعة روتوغرافية متعددة الألوان وعالية الإنتاجية من أسطوانات محفورة." } },
+      { img: "/images/factory-engraving.jpg", name: { en: "Cylinder Engraving", ar: "حفر الأسطوانات" }, desc: { en: "In-house engraving of the cylinders used on the press.", ar: "حفر الأسطوانات المستخدمة في الطباعة داخل المصنع." } },
+      { img: "/images/factory-bagging.jpg", name: { en: "Bagging Machine", ar: "صناعة الأكياس" }, desc: { en: "Converting printed film into bags and pouches.", ar: "تحويل الأفلام المطبوعة إلى أكياس وعبوات." } },
+      { img: "/images/factory-punching.jpg", name: { en: "Punching Machine", ar: "التخريم والتشطيب" }, desc: { en: "Punching and finishing to final specification.", ar: "التخريم والتشطيب حتى المواصفات النهائية." } },
+      { img: "/images/factory-solvent.jpg", name: { en: "Solvent Recovery", ar: "استرجاع المذيبات" }, desc: { en: "In-line recovery and reuse of solvents.", ar: "استرجاع المذيبات وإعادة استخدامها ضمن الخط." } },
+      { img: "/images/factory.jpg", name: { en: "Warehouses", ar: "المستودعات" }, desc: { en: "Storage for raw material and finished goods.", ar: "تخزين المواد الخام والمنتجات النهائية." } },
+    ],
+  },
+  cta: {
+    eyebrow: { en: "See it for yourself", ar: "شاهدها بنفسك" },
+    title: { en: "Bring us your brief.", ar: "أرسل لنا مشروعك." },
+    button: { en: "Request a quote", ar: "اطلب عرض سعر" },
+  },
+};
+const c = content;
 ---
-<Base
-  title="Factory Departments - Printopack"
-  description="Inside the Printopack plant in Jeddah: rotogravure printing, in-house cylinder engraving, bag making, finishing, solvent recovery and warehousing, all under one roof."
->
+<Base title={c.meta.title} description={c.meta.description}>
   <!-- PAGE HEADER -->
   <section class="page-head">
     <div class="wrap-wide">
       <div class="page-head-inner">
-        <span class="eyebrow">Factory departments</span>
-        <h1>Everything, under one roof.</h1>
-        <p class="lede">
-          From engraved cylinder to finished reel, every stage of production happens inside our Jeddah
-          facility. That means faster proofs, tighter quality control and packaging built exactly to
-          your specification.
-        </p>
+        <span class="eyebrow"><Bi en={c.header.eyebrow.en} ar={c.header.eyebrow.ar} /></span>
+        <h1><Bi en={c.header.title.en} ar={c.header.title.ar} /></h1>
+        <p class="lede"><Bi en={c.header.lede.en} ar={c.header.lede.ar} /></p>
       </div>
     </div>
   </section>
@@ -44,9 +66,7 @@ const departments = [
   <!-- COUNTERS -->
   <section class="on-deep fac-stats">
     <div class="wrap-wide counters-row">
-      <Counter prefix="" value="5" label="Production departments" />
-      <Counter from="1997" value={year} label="Manufacturing since 1997" />
-      <Counter prefix="~" value="400" label="People on the floor" />
+      {c.counters.map((n) => <Counter from={n.from} prefix={n.prefix} value={n.value} label={n.label.en} labelAr={n.label.ar} />)}
     </div>
   </section>
 
@@ -54,18 +74,18 @@ const departments = [
   <section class="depts">
     <div class="wrap-wide">
       <div class="section-head">
-        <span class="eyebrow">The production line</span>
-        <h2>Our departments</h2>
-        <p class="lede">Each stage is a department in its own right, staffed and equipped to hold the Printopack standard.</p>
+        <span class="eyebrow"><Bi en={c.departments.eyebrow.en} ar={c.departments.eyebrow.ar} /></span>
+        <h2><Bi en={c.departments.title.en} ar={c.departments.title.ar} /></h2>
+        <p class="lede"><Bi en={c.departments.lede.en} ar={c.departments.lede.ar} /></p>
       </div>
       <div class="dept-list">
-        {departments.map((d, i) => (
+        {c.departments.items.map((d, i) => (
           <article class={"dept-row" + (i % 2 ? " reverse" : "")}>
-            <div class="dept-media"><div class="card-img"><img src={d.img} alt={d.name} /></div></div>
+            <div class="dept-media"><div class="card-img"><img src={d.img} alt={d.name.en} /></div></div>
             <div class="dept-body">
               <span class="dept-num">{String(i + 1).padStart(2, "0")}</span>
-              <h3>{d.name}</h3>
-              <p>{d.desc}</p>
+              <h3><Bi en={d.name.en} ar={d.name.ar} /></h3>
+              <p><Bi en={d.desc.en} ar={d.desc.ar} /></p>
             </div>
           </article>
         ))}
@@ -76,9 +96,9 @@ const departments = [
   <!-- CTA -->
   <section class="on-navy fac-cta">
     <div class="wrap" style="text-align:center">
-      <span class="eyebrow plain" style="color:var(--gold-bright)">See it for yourself</span>
-      <h2 style="margin:14px 0 26px">Bring us your brief.</h2>
-      <a href="/contact" class="btn btn-gold">Request a quote</a>
+      <span class="eyebrow plain" style="color:var(--gold-bright)"><Bi en={c.cta.eyebrow.en} ar={c.cta.eyebrow.ar} /></span>
+      <h2 style="margin:14px 0 26px"><Bi en={c.cta.title.en} ar={c.cta.title.ar} /></h2>
+      <a href="/contact" class="btn btn-gold"><Bi en={c.cta.button.en} ar={c.cta.button.ar} /></a>
     </div>
   </section>
 </Base>
