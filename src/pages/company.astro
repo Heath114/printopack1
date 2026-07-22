@@ -4,36 +4,47 @@ import Counter from '../components/Counter.astro';
 // Years in the market: computed live so it is always current (climbs from 1997).
 const year = new Date().getFullYear();
 
-// Company hub. The "Company" nav item gathers the sections about the organisation.
-// This page introduces Printopack and routes to each sub-section.
-const sections = [
-  { t: "About Us", d: "History, ownership, mission, vision and values.", href: "/about", img: "/images/factory.jpg" },
-  { t: "Factory Departments", d: "Inside the plant: printing, engraving, converting and more.", href: "/factory", img: "/images/dept-1.jpg" },
-  { t: "Our Team", d: "The people who run the press floor and the offices.", href: "/team", img: "/images/dept-4.jpg" },
-  { t: "Quality & Responsibility", d: "Certification, testing, environment and compliance.", href: "/quality", img: "/images/dept-5.jpg" },
-  { t: "Success Partners", d: "The brands we print and pack for across 26 countries.", href: "/partners", img: "/images/lineup.jpg" },
-  { t: "Careers", d: "Open roles and how to join the team in Jeddah.", href: "/careers", img: "/images/dept-2.jpg" },
+// "The Company" subsection of About Us. Vision and Mission below are the client's
+// real published text, taken verbatim from printopack.com.sa/about. The history is
+// written from verified facts. Ownership is client-gated (no names invented). Values
+// are a scaffold drawn from the mission language, for the client to confirm/edit.
+const vision = [
+  "Printopack's vision is to redefine packaging as a transformative brand experience, fostering a sustainable and captivating future for industries worldwide. Our dedication to innovative solutions and responsible practices will shape a world where packaging becomes an enduring testament to brand values and consumer trust.",
+  "We envision a world where packaging transcends its functional role, becoming an artful representation of brand values, consumer trust, and environmental responsibility. Our journey is fueled by the ambition to lead industries towards responsible packaging practices that resonate with consumers, empower businesses, and contribute to a more sustainable planet.",
+  "Through strategic partnerships, unwavering quality, and a passion for pushing boundaries, we aim to set new benchmarks in packaging excellence. Our vision is to inspire change, foster creativity, and craft a global legacy of responsible packaging that leaves a lasting impression on both brands and consumers alike.",
+];
+const mission = [
+  "At Printopack, our mission is to be the driving force behind brands' packaging evolution. With a legacy of expertise in flexible packaging solutions since 1997, we are dedicated to designing, developing, and producing responsible packaging that transcends mere functionality.",
+  "Through innovative design, cutting-edge technology, and a commitment to sustainability, we empower brands to create packaging experiences that captivate consumers and align with their values. Our mission extends to nurturing lasting partnerships with businesses across the globe, helping them navigate the dynamic landscape of packaging trends and consumer expectations.",
+  "We are guided by the principle that packaging should tell a story, reflect brand authenticity, and contribute to a better world. By merging creativity with purpose, we seek to redefine packaging's impact on industries, enrich consumer experiences, and leave a positive footprint on the planet we all share.",
+];
+const values = [
+  { t: "Quality without compromise", d: "Every reel is held to the Printopack standard, from incoming substrate to final dispatch." },
+  { t: "Responsible by design", d: "Food-safe materials, solvent recovery and efficient production run through everything we make." },
+  { t: "Partnership, not supply", d: "We advise on structure and print from the first brief, so the packaging fits the product and the line." },
+  { t: "Built to deliver", d: "Planned materials and export logistics mean orders land on time, run after run." },
 ];
 ---
 <Base
-  title="Company - Printopack"
-  description="Get to know Printopack, the Saudi Modern Packaging Factory: our story, our plant, our people, our standards and the partners we serve since 1997."
+  title="The Company - Printopack"
+  description="Printopack, the Saudi Modern Packaging Factory, has produced responsible flexible packaging in Jeddah since 1997. Our history, vision, mission and values."
 >
   <!-- PAGE HEADER -->
   <section class="page-head">
     <div class="wrap-wide">
       <div class="page-head-inner">
-        <span class="eyebrow">Company</span>
-        <h1>Get to know Printopack.</h1>
+        <span class="eyebrow">The company</span>
+        <h1>The company behind the packaging.</h1>
         <p class="lede">
-          A Saudi flexible-packaging manufacturer with a 25-year record, a full-service plant in Jeddah
-          and partners across 26 countries. Start anywhere below.
+          Printopack, the Saudi Modern Packaging Factory, has developed and produced responsible
+          flexible packaging from Jeddah since 1997, for food, beverage, pharmaceutical and consumer
+          brands across the region and beyond.
         </p>
       </div>
     </div>
   </section>
 
-  <!-- COUNTERS -->
+  <!-- COUNTERS (autocounting years from 1997) -->
   <section class="on-deep co-stats">
     <div class="wrap-wide counters-row">
       <Counter from="1997" value={year} label="In the market since 1997" />
@@ -43,20 +54,95 @@ const sections = [
     </div>
   </section>
 
-  <!-- SECTION CARDS -->
-  <section class="co-sections">
+  <!-- HISTORY -->
+  <section class="history">
+    <div class="wrap-wide hist-grid">
+      <div class="hist-media"><div class="card-img"><img src="/images/factory.jpg" alt="The Printopack plant in Jeddah" /></div></div>
+      <div class="hist-body">
+        <span class="eyebrow">Our history</span>
+        <h2>From one line in 1997 to brands across 26 countries.</h2>
+        <p class="lede">
+          Printopack, the trading name of Saudi Modern Packaging Factory Co. Ltd., was established in
+          1997 in Jeddah. What began as a single flexible-packaging operation has grown into a full
+          service converter, with in-house rotogravure printing, cylinder engraving, bag making,
+          finishing and solvent recovery, all under one roof.
+        </p>
+        <p class="lede">
+          Today the company serves food, beverage, pharmaceutical and personal-care brands across more
+          than 26 countries, supported by six regional offices and a team of around 400. The detailed
+          founding story is expanded by Printopack through the site's admin.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- OWNERSHIP -->
+  <section class="owners">
     <div class="wrap-wide">
-      <div class="co-grid">
-        {sections.map((s) => (
-          <a class="co-card" href={s.href}>
-            <span class="card-img"><img src={s.img} alt={s.t} /></span>
-            <span class="co-card-body">
-              <span class="co-card-t">{s.t}</span>
-              <span class="co-card-d">{s.d}</span>
-              <span class="co-card-go">Explore &rarr;</span>
-            </span>
-          </a>
+      <div class="section-head">
+        <span class="eyebrow">Ownership</span>
+        <h2>The people who own Printopack.</h2>
+      </div>
+      <div class="owner-card">
+        <p>Ownership and leadership details are added by Printopack through the admin. Names, roles and
+          photographs of the owners appear here once provided.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISION -->
+  <section class="on-navy vision">
+    <div class="wrap-wide vm-grid">
+      <div class="vm-head">
+        <span class="eyebrow">Our vision</span>
+        <h2>Empowering brands through creative packaging excellence.</h2>
+      </div>
+      <div class="vm-body">
+        {vision.map((p) => <p>{p}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSION -->
+  <section class="mission">
+    <div class="wrap-wide vm-grid">
+      <div class="vm-head">
+        <span class="eyebrow">Our mission</span>
+        <h2>The driving force behind brands' packaging evolution.</h2>
+      </div>
+      <div class="vm-body">
+        {mission.map((p) => <p>{p}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUES -->
+  <section class="values">
+    <div class="wrap-wide">
+      <div class="section-head">
+        <span class="eyebrow">What we stand for</span>
+        <h2>Our values</h2>
+      </div>
+      <div class="values-grid">
+        {values.map((v) => (
+          <div class="value">
+            <span class="value-rule"></span>
+            <h3>{v.t}</h3>
+            <p>{v.d}</p>
+          </div>
         ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPLORE THE REST OF ABOUT US -->
+  <section class="on-deep explore">
+    <div class="wrap-wide">
+      <span class="eyebrow">More about us</span>
+      <div class="explore-links">
+        <a href="/factory">Factory Departments &rarr;</a>
+        <a href="/team">Our Team &rarr;</a>
+        <a href="/quality#responsibility">Social Responsibility &rarr;</a>
       </div>
     </div>
   </section>
@@ -71,15 +157,32 @@ const sections = [
   .counters-row{display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
   @media(max-width:760px){.counters-row{grid-template-columns:1fr 1fr;gap:40px 24px}}
 
-  .co-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
-  .co-card{display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
-  .co-card:hover{border-color:var(--navy);box-shadow:0 20px 40px rgba(14,35,64,.08)}
-  .co-card .card-img{aspect-ratio:16/10}
-  .co-card:hover .card-img img{opacity:.92}
-  .co-card-body{display:flex;flex-direction:column;padding:24px 24px 26px}
-  .co-card-t{font-family:var(--display);font-size:22px;font-weight:var(--w-light);color:var(--ink)}
-  .co-card-d{color:var(--muted);font-size:15px;margin:10px 0 18px}
-  .co-card-go{font-family:var(--display);font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-top:auto}
-  @media(max-width:900px){.co-grid{grid-template-columns:1fr 1fr}}
-  @media(max-width:560px){.co-grid{grid-template-columns:1fr}}
+  .hist-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(36px,6vw,84px);align-items:center}
+  .hist-media .card-img{aspect-ratio:4/3;border-radius:var(--radius)}
+  .hist-body .eyebrow{margin-bottom:16px}
+  .hist-body h2{margin-bottom:22px}
+  .hist-body .lede + .lede{margin-top:18px}
+  @media(max-width:860px){.hist-grid{grid-template-columns:1fr;gap:36px}}
+
+  .owners{background:var(--cream)}
+  .owner-card{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:var(--radius);padding:clamp(24px,3vw,34px);max-width:760px}
+  .owner-card p{color:var(--muted);max-width:none}
+
+  .vm-grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:clamp(32px,5vw,72px);align-items:start}
+  .vm-head{position:sticky;top:120px}
+  .vm-head h2{margin-top:14px}
+  .vm-body p{margin-bottom:18px}
+  .vision .vm-body p{color:rgba(250,246,238,.82)}
+  .mission .vm-body p{color:var(--muted)}
+  @media(max-width:860px){.vm-grid{grid-template-columns:1fr;gap:24px}.vm-head{position:static}}
+
+  .values-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:40px 56px}
+  .value-rule{display:block;width:34px;height:2px;background:var(--gold);margin-bottom:20px}
+  .value h3{font-size:clamp(20px,2vw,26px);margin-bottom:12px}
+  .value p{color:var(--muted)}
+  @media(max-width:760px){.values-grid{grid-template-columns:1fr;gap:32px}}
+
+  .explore-links{display:flex;flex-wrap:wrap;gap:14px 40px;margin-top:22px}
+  .explore-links a{font-family:var(--display);font-size:clamp(18px,2vw,24px);font-weight:300;color:var(--paper)}
+  .explore-links a:hover{color:var(--gold-bright)}
 </style>
