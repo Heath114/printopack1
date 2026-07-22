@@ -4,87 +4,111 @@ import Counter from '../components/Counter.astro';
 // Years in the market: computed live so it is always current (climbs from 1997).
 const year = new Date().getFullYear();
 
-// "The Company" subsection of About Us. Vision and Mission are the client's real
-// published text, verbatim from printopack.com.sa/about. History is from verified
-// facts. Ownership is client-gated (no names invented). Values are a scaffold drawn
-// from the mission language, for the client to confirm. Built with the same layout
-// patterns as the rest of the site (story block, section heads, values grid).
-const vision = [
-  "Printopack's vision is to redefine packaging as a transformative brand experience, fostering a sustainable and captivating future for industries worldwide. Our dedication to innovative solutions and responsible practices will shape a world where packaging becomes an enduring testament to brand values and consumer trust.",
-  "We envision a world where packaging transcends its functional role, becoming an artful representation of brand values, consumer trust, and environmental responsibility. Our journey is fueled by the ambition to lead industries towards responsible packaging practices that resonate with consumers, empower businesses, and contribute to a more sustainable planet.",
-];
-const mission = [
-  "At Printopack, our mission is to be the driving force behind brands' packaging evolution. With a legacy of expertise in flexible packaging solutions since 1997, we are dedicated to designing, developing, and producing responsible packaging that transcends mere functionality.",
-  "Through innovative design, cutting-edge technology, and a commitment to sustainability, we empower brands to create packaging experiences that captivate consumers and align with their values, nurturing lasting partnerships with businesses across the globe.",
-];
-const values = [
-  { t: "Quality without compromise", d: "Every reel is held to the Printopack standard, from incoming substrate to final dispatch." },
-  { t: "Responsible by design", d: "Food-safe materials, solvent recovery and efficient production run through everything we make." },
-  { t: "Partnership, not supply", d: "We advise on structure and print from the first brief, so the packaging fits the product and the line." },
-  { t: "Built to deliver", d: "Planned materials and export logistics mean orders land on time, run after run." },
-];
+// ── EDITABLE CONTENT ────────────────────────────────────────────────────────
+// The admin's editable surface for "The Company". Vision/Mission are the client's
+// real text (verbatim from printopack.com.sa/about). History is factual; ownership
+// is folded into the history as a client-gated note; values are a scaffold.
+const content = {
+  meta: {
+    title: "The Company - Printopack",
+    description: "Printopack, the Saudi Modern Packaging Factory, has produced responsible flexible packaging in Jeddah since 1997. Our history, vision, mission and values.",
+  },
+  header: {
+    eyebrow: "The company",
+    title: "The company behind the packaging.",
+    lede: "Printopack, the Saudi Modern Packaging Factory, has developed and produced responsible flexible packaging from Jeddah since 1997, for food, beverage, pharmaceutical and consumer brands across the region and beyond.",
+  },
+  counters: [
+    { from: 1997, value: year, label: "In the market since 1997" },
+    { prefix: "+", value: 26, label: "Countries served" },
+    { prefix: "~", value: 400, label: "Team members" },
+    { value: 6, label: "Regional offices" },
+  ],
+  history: {
+    eyebrow: "Our history",
+    title: "From one line in 1997 to brands across 26 countries.",
+    image: "/images/factory.jpg",
+    imageAlt: "The Printopack plant in Jeddah",
+    paragraphs: [
+      "Printopack, the trading name of Saudi Modern Packaging Factory Co. Ltd., was established in 1997 in Jeddah. What began as a single flexible-packaging operation has grown into a full service converter, with in-house rotogravure printing, cylinder engraving, bag making, finishing and solvent recovery, all under one roof.",
+      "Today the company is family-owned and Saudi-operated, serving food, beverage, pharmaceutical and consumer brands across more than 26 countries through six regional offices. Ownership and the full founding story are added by Printopack through the site's admin.",
+    ],
+  },
+  vision: {
+    eyebrow: "Our vision",
+    title: "Empowering brands through creative packaging excellence.",
+    paragraphs: [
+      "Printopack's vision is to redefine packaging as a transformative brand experience, fostering a sustainable and captivating future for industries worldwide. Our dedication to innovative solutions and responsible practices will shape a world where packaging becomes an enduring testament to brand values and consumer trust.",
+      "We envision a world where packaging transcends its functional role, becoming an artful representation of brand values, consumer trust, and environmental responsibility. Our journey is fueled by the ambition to lead industries towards responsible packaging practices that resonate with consumers, empower businesses, and contribute to a more sustainable planet.",
+    ],
+  },
+  mission: {
+    eyebrow: "Our mission",
+    title: "The driving force behind brands' packaging evolution.",
+    paragraphs: [
+      "At Printopack, our mission is to be the driving force behind brands' packaging evolution. With a legacy of expertise in flexible packaging solutions since 1997, we are dedicated to designing, developing, and producing responsible packaging that transcends mere functionality.",
+      "Through innovative design, cutting-edge technology, and a commitment to sustainability, we empower brands to create packaging experiences that captivate consumers and align with their values, nurturing lasting partnerships with businesses across the globe.",
+    ],
+  },
+  values: {
+    eyebrow: "What we stand for",
+    title: "Our values",
+    items: [
+      { title: "Quality without compromise", text: "Every reel is held to the Printopack standard, from incoming substrate to final dispatch." },
+      { title: "Responsible by design", text: "Food-safe materials, solvent recovery and efficient production run through everything we make." },
+      { title: "Partnership, not supply", text: "We advise on structure and print from the first brief, so the packaging fits the product and the line." },
+      { title: "Built to deliver", text: "Planned materials and export logistics mean orders land on time, run after run." },
+    ],
+  },
+  cta: {
+    eyebrow: "Work with us",
+    title: "Let's build packaging that performs.",
+    button: { label: "Request a quote", href: "/contact" },
+  },
+};
+const c = content;
 ---
-<Base
-  title="The Company - Printopack"
-  description="Printopack, the Saudi Modern Packaging Factory, has produced responsible flexible packaging in Jeddah since 1997. Our history, vision, mission and values."
->
+<Base title={c.meta.title} description={c.meta.description}>
   <!-- PAGE HEADER -->
   <section class="page-head">
     <div class="wrap-wide">
       <div class="page-head-inner">
-        <span class="eyebrow">The company</span>
-        <h1>The company behind the packaging.</h1>
-        <p class="lede">
-          Printopack, the Saudi Modern Packaging Factory, has developed and produced responsible
-          flexible packaging from Jeddah since 1997, for food, beverage, pharmaceutical and consumer
-          brands across the region and beyond.
-        </p>
+        <span class="eyebrow">{c.header.eyebrow}</span>
+        <h1>{c.header.title}</h1>
+        <p class="lede">{c.header.lede}</p>
       </div>
     </div>
   </section>
 
-  <!-- COUNTERS (autocounting years from 1997) -->
+  <!-- COUNTERS -->
   <section class="on-deep co-stats">
     <div class="wrap-wide counters-row">
-      <Counter from="1997" value={year} label="In the market since 1997" />
-      <Counter prefix="+" value="26" label="Countries served" />
-      <Counter prefix="~" value="400" label="Team members" />
-      <Counter prefix="" value="6" label="Regional offices" />
+      {c.counters.map((n) => <Counter {...n} />)}
     </div>
   </section>
 
-  <!-- HISTORY (two-column story block, same as /about) -->
+  <!-- HISTORY -->
   <section class="story">
     <div class="wrap-wide story-grid">
       <div class="story-media">
-        <div class="card-img"><img src="/images/factory.jpg" alt="The Printopack plant in Jeddah" /></div>
+        <div class="card-img"><img src={c.history.image} alt={c.history.imageAlt} /></div>
       </div>
       <div class="story-body">
-        <span class="eyebrow">Our history</span>
-        <h2>From one line in 1997 to brands across 26 countries.</h2>
-        <p class="lede">
-          Printopack, the trading name of Saudi Modern Packaging Factory Co. Ltd., was established in
-          1997 in Jeddah. What began as a single flexible-packaging operation has grown into a full
-          service converter, with in-house rotogravure printing, cylinder engraving, bag making,
-          finishing and solvent recovery, all under one roof.
-        </p>
-        <p class="lede">
-          Today the company is family-owned and Saudi-operated, serving food, beverage, pharmaceutical
-          and consumer brands across more than 26 countries through six regional offices. Ownership and
-          the full founding story are added by Printopack through the site's admin.
-        </p>
+        <span class="eyebrow">{c.history.eyebrow}</span>
+        <h2>{c.history.title}</h2>
+        {c.history.paragraphs.map((p) => <p class="lede">{p}</p>)}
       </div>
     </div>
   </section>
 
-  <!-- VISION (navy editorial band) -->
+  <!-- VISION -->
   <section class="on-navy">
     <div class="wrap-wide">
       <div class="section-head">
-        <span class="eyebrow">Our vision</span>
-        <h2>Empowering brands through creative packaging excellence.</h2>
+        <span class="eyebrow">{c.vision.eyebrow}</span>
+        <h2>{c.vision.title}</h2>
       </div>
-      <div class="prose">{vision.map((p) => <p class="lede">{p}</p>)}</div>
+      <div class="prose">{c.vision.paragraphs.map((p) => <p class="lede">{p}</p>)}</div>
     </div>
   </section>
 
@@ -92,38 +116,38 @@ const values = [
   <section>
     <div class="wrap-wide">
       <div class="section-head">
-        <span class="eyebrow">Our mission</span>
-        <h2>The driving force behind brands' packaging evolution.</h2>
+        <span class="eyebrow">{c.mission.eyebrow}</span>
+        <h2>{c.mission.title}</h2>
       </div>
-      <div class="prose">{mission.map((p) => <p class="lede">{p}</p>)}</div>
+      <div class="prose">{c.mission.paragraphs.map((p) => <p class="lede">{p}</p>)}</div>
     </div>
   </section>
 
-  <!-- VALUES (grid, same as /about) -->
+  <!-- VALUES -->
   <section class="values" style="background:var(--cream)">
     <div class="wrap-wide">
       <div class="section-head">
-        <span class="eyebrow">What we stand for</span>
-        <h2>Our values</h2>
+        <span class="eyebrow">{c.values.eyebrow}</span>
+        <h2>{c.values.title}</h2>
       </div>
       <div class="values-grid">
-        {values.map((v) => (
+        {c.values.items.map((v) => (
           <div class="value">
             <span class="value-rule"></span>
-            <h3>{v.t}</h3>
-            <p>{v.d}</p>
+            <h3>{v.title}</h3>
+            <p>{v.text}</p>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- CTA (same as /about) -->
+  <!-- CTA -->
   <section class="on-deep">
     <div class="wrap" style="text-align:center">
-      <span class="eyebrow plain" style="color:var(--gold-bright)">Work with us</span>
-      <h2 style="margin:14px 0 26px">Let's build packaging that performs.</h2>
-      <a href="/contact" class="btn btn-gold">Request a quote</a>
+      <span class="eyebrow plain" style="color:var(--gold-bright)">{c.cta.eyebrow}</span>
+      <h2 style="margin:14px 0 26px">{c.cta.title}</h2>
+      <a href={c.cta.button.href} class="btn btn-gold">{c.cta.button.label}</a>
     </div>
   </section>
 </Base>
