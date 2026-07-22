@@ -4,34 +4,30 @@ import Counter from '../components/Counter.astro';
 // Years in the market: computed live so it is always current (climbs from 1997).
 const year = new Date().getFullYear();
 
-// Quality & Responsibility. Combines the Quality System and Social Responsibility
-// sections the client asked for. Certificate names are representative placeholders:
-// the client uploads the exact certificates and numbers through the admin CMS.
+// Quality System (Nasser's Page 2). His three sub-sections are Quality certificates,
+// Quality assurance, and Laboratory & testing. The live site has no quality content,
+// so the certificate details are supplied by Printopack through the admin.
+// NOTE: the card descriptions below are still placeholder copy and are to be replaced
+// with the client's own wording when Page 2 is finalised.
 const quality = [
   { t: "Quality certificates", d: "Internationally recognised food-safety and quality-management certification for food-contact packaging." },
   { t: "Quality assurance", d: "Quality is built into every run, not inspected in at the end: controls at incoming goods, on press and at dispatch." },
   { t: "Laboratory & testing", d: "An in-house lab checks barrier performance, migration and print quality before an order ships." },
 ];
-const responsibility = [
-  { k: "Environment", items: ["ISO 14000 environmental management", "Workplace safety systems", "Anti-pollution and solvent recovery"] },
-  { k: "Local community", items: ["Valid operating licence", "Saudization certificate", "Compliance (Mowaamah) certificate"] },
-  { k: "International", items: ["Global trade compliance", "Certified shipping", "Safe, food-grade product"] },
-];
 ---
 <Base
-  title="Quality & Responsibility - Printopack"
-  description="Printopack's quality system and social responsibility: certified food-safe manufacturing, an in-house testing lab, environmental management and community compliance."
+  title="Quality System - Printopack"
+  description="Printopack's quality system: quality certificates, quality assurance, and an in-house laboratory and testing."
 >
   <!-- PAGE HEADER -->
   <section class="page-head">
     <div class="wrap-wide">
       <div class="page-head-inner">
-        <span class="eyebrow">Quality &amp; responsibility</span>
-        <h1>Held to a standard, in every sense.</h1>
+        <span class="eyebrow">Quality system</span>
+        <h1>Quality system.</h1>
         <p class="lede">
-          Quality and responsibility are not separate programmes at Printopack. Certified food-safe
-          production, an in-house lab, environmental management and full local compliance run through
-          everything we make.
+          Printopack's quality system spans three areas: quality certificates, quality assurance, and
+          an in-house laboratory and testing.
         </p>
       </div>
     </div>
@@ -67,33 +63,7 @@ const responsibility = [
     </div>
   </section>
 
-  <!-- SOCIAL RESPONSIBILITY -->
-  <section class="resp" id="responsibility">
-    <div class="wrap-wide">
-      <div class="section-head">
-        <span class="eyebrow">Social responsibility</span>
-        <h2>Responsible to the environment, the community and the world.</h2>
-      </div>
-      <div class="resp-grid">
-        {responsibility.map((r) => (
-          <div class="resp-col">
-            <h3>{r.k}</h3>
-            <ul>
-              {r.items.map((it) => (
-                <li>
-                  <span class="tick" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4.5 4.5L19 7"/></svg>
-                  </span>
-                  {it}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-      <p class="resp-note">Certificate documents and numbers are published and kept current by Printopack through the site's admin.</p>
-    </div>
-  </section>
+  <p class="qnote wrap-wide">Certificate documents and numbers are provided by Printopack and appear here through the site's admin.</p>
 </Base>
 
 <style>
@@ -113,11 +83,5 @@ const responsibility = [
   .counters-row{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
   @media(max-width:640px){.counters-row{grid-template-columns:1fr;gap:40px}}
 
-  .resp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(28px,4vw,56px)}
-  .resp-col h3{font-size:clamp(20px,2vw,26px);padding-bottom:16px;margin-bottom:20px;border-bottom:1px solid var(--line)}
-  .resp-col li{display:flex;align-items:flex-start;gap:12px;color:var(--muted);padding:9px 0}
-  .tick{flex:none;display:inline-flex;color:var(--gold);margin-top:3px}
-  .tick svg{width:17px;height:17px}
-  .resp-note{margin-top:clamp(36px,5vw,56px);color:var(--faint);font-size:14px}
-  @media(max-width:760px){.resp-grid{grid-template-columns:1fr;gap:32px}}
+  .qnote{display:block;margin-top:clamp(28px,4vw,44px);color:var(--faint);font-size:14px}
 </style>

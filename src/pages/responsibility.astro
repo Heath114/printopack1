@@ -1,0 +1,101 @@
+---
+import Base from '../layouts/Base.astro';
+
+// Social Responsibility, a subsection of About Us. The three groups and their items
+// are exactly what Nasser listed in his brief; nothing here is invented. The live
+// printopack.com.sa site has no social-responsibility content, so the actual
+// certificate documents, the licence number and the Saudization and Mowaamah
+// certificates are supplied by Printopack and replace the placeholders below.
+const groups = [
+  {
+    name: "Environment",
+    icon: '<path d="M4 20c8 0 16-4 16-16C12 4 4 8 4 20z"/><path d="M4 20c4-6 8-8 12-9"/>',
+    items: [
+      "ISO 14000 certificates and its family of standards",
+      "Safety system",
+      "Pollution-protection system",
+    ],
+  },
+  {
+    name: "Local community",
+    icon: '<circle cx="9" cy="8" r="3"/><path d="M3.5 20c0-3 2.6-5 5.5-5s5.5 2 5.5 5"/><circle cx="17.5" cy="9" r="2.2"/><path d="M15.5 20c0-2.4 1.8-4 3.8-4"/>',
+    items: [
+      "Licence number",
+      "Saudization certificate",
+      "Mowaamah certificate",
+    ],
+  },
+  {
+    name: "International community",
+    icon: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/>',
+    items: [
+      "Global trade",
+      "Certified shipping",
+      "Safe product",
+    ],
+  },
+];
+---
+<Base
+  title="Social Responsibility - Printopack"
+  description="Printopack's social responsibility across three areas: the environment, the local community, and the international community."
+>
+  <!-- PAGE HEADER -->
+  <section class="page-head">
+    <div class="wrap-wide">
+      <div class="page-head-inner">
+        <span class="eyebrow">Social responsibility</span>
+        <h1>Social responsibility.</h1>
+        <p class="lede">
+          Printopack's social responsibility covers three areas: the environment, the local community,
+          and the international community.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- THREE GROUPS -->
+  <section class="groups">
+    <div class="wrap-wide">
+      <div class="group-grid">
+        {groups.map((g) => (
+          <div class="group">
+            <span class="group-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" set:html={g.icon} />
+            </span>
+            <h3>{g.name}</h3>
+            <ul>
+              {g.items.map((it) => (
+                <li>
+                  <span class="tick" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4.5 4.5L19 7"/></svg>
+                  </span>
+                  {it}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <p class="resp-note">Certificate documents, the licence number and the Saudization and Mowaamah certificates are provided by Printopack and appear here through the site's admin.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head{padding-block:clamp(56px,8vw,104px) clamp(30px,4vw,52px);background:var(--cream);border-bottom:1px solid var(--line)}
+  .page-head-inner{max-width:820px}
+  .page-head h1{margin:20px 0 22px;font-size:clamp(40px,6vw,78px)}
+  .page-head .lede{max-width:62ch}
+
+  .group-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+  .group{background:var(--cream);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(28px,3vw,38px)}
+  .group-icon{display:inline-flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;background:var(--gold-soft);color:var(--gold);margin-bottom:20px}
+  .group-icon svg{width:26px;height:26px}
+  .group h3{font-size:clamp(21px,2vw,26px);margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+  .group li{display:flex;align-items:flex-start;gap:11px;color:var(--ink);padding:8px 0;font-size:15px}
+  .tick{flex:none;display:inline-flex;color:var(--gold);margin-top:3px}
+  .tick svg{width:17px;height:17px}
+  .resp-note{margin-top:clamp(32px,4vw,48px);color:var(--faint);font-size:14px}
+  @media(max-width:820px){.group-grid{grid-template-columns:1fr;gap:20px}}
+</style>
