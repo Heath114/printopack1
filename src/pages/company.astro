@@ -44,7 +44,7 @@ const values = [
   </section>
 
   <!-- COUNTERS (autocounting years from 1997) -->
-  <section class="on-deep">
+  <section class="on-deep co-stats">
     <div class="wrap-wide counters-row">
       <Counter from="1997" value={year} label="In the market since 1997" />
       <Counter prefix="+" value="26" label="Countries served" />
@@ -79,7 +79,7 @@ const values = [
 
   <!-- VISION (navy editorial band) -->
   <section class="on-navy">
-    <div class="wrap">
+    <div class="wrap-wide">
       <div class="section-head">
         <span class="eyebrow">Our vision</span>
         <h2>Empowering brands through creative packaging excellence.</h2>
@@ -90,7 +90,7 @@ const values = [
 
   <!-- MISSION -->
   <section>
-    <div class="wrap">
+    <div class="wrap-wide">
       <div class="section-head">
         <span class="eyebrow">Our mission</span>
         <h2>The driving force behind brands' packaging evolution.</h2>
@@ -134,6 +134,7 @@ const values = [
   .page-head h1{margin:20px 0 22px;font-size:clamp(40px,6vw,78px)}
   .page-head .lede{max-width:60ch}
 
+  .co-stats{padding-block:clamp(52px,6vw,80px)}
   .counters-row{display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
   @media(max-width:760px){.counters-row{grid-template-columns:1fr 1fr;gap:40px 24px}}
 
