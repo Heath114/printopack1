@@ -1,38 +1,76 @@
 ---
 import Base from '../layouts/Base.astro';
 import Counter from '../components/Counter.astro';
-// Years in the market: computed live so it is always current (climbs from 1997).
+import Bi from '../components/Bi.astro';
 const year = new Date().getFullYear();
 
-// Team. Employee count is known (~400). Individual manager names and photos are
-// provided by the client and added via the admin CMS, so leadership is shown here
-// by role with monogram placeholders (no invented names). The client swaps each
-// monogram for a photo and adds the person's name when ready.
-const leaders = [
-  { role: "General Management", mono: "GM", desc: "Sets direction and holds every run to the Printopack standard." },
-  { role: "Operations", mono: "OP", desc: "Keeps the plant running to plan, safely and on time." },
-  { role: "Production", mono: "PR", desc: "Owns the press floor, from substrate to finished reel." },
-  { role: "Engraving & Prepress", mono: "EP", desc: "Turns artwork into engraved cylinders, ready to print." },
-  { role: "Quality & Compliance", mono: "QC", desc: "Guards food safety and quality from incoming goods to dispatch." },
-  { role: "Commercial & Export", mono: "CX", desc: "Partners with brands across 26 countries and beyond." },
-  { role: "Supply Chain", mono: "SC", desc: "Plans materials and delivery so orders land on time." },
-  { role: "IT & Systems", mono: "IT", desc: "Runs the systems behind the factory and the customer portal." },
-];
+// ── EDITABLE CONTENT (bilingual) ─────────────────────────────────────────────
+// Team (Nasser's Page 1 subsection). He asked for manager names + photos; the live
+// site has no team page, so names/photos are client-gated: leadership is shown by role
+// with a photo/monogram slot (no invented names). The admin swaps each slot for a real
+// name + photo. Employee count (~400) is real. NOTE: Nasser also wanted total-years and
+// average-years-of-experience counters; those numbers are client-provided (pending).
+const content = {
+  meta: {
+    title: "Our Team - Printopack",
+    description: "The people behind Printopack: a team of around 400 across production, quality, engraving and commercial, led by experienced managers in Jeddah.",
+  },
+  header: {
+    eyebrow: { en: "Our team", ar: "فريق العمل" },
+    title: { en: "The people behind Printopack.", ar: "الأشخاص الذين يقفون خلف برنتوباك." },
+    lede: {
+      en: "Packaging is made by people. Around 400 of them, across the press floor, the engraving room, the lab and the offices, turn each brief into a finished product, run after run.",
+      ar: "التغليف يصنعه الناس؛ نحو 400 شخص في أرضية المصنع وغرفة الحفر والمختبر والمكاتب يحوّلون كل موجزٍ إلى منتجٍ نهائي، تشغيلةً بعد أخرى.",
+    },
+  },
+  counters: [
+    { prefix: "~", value: 400, label: { en: "Team members", ar: "عضو في الفريق" } },
+    { from: 1997, value: year, label: { en: "Operating since 1997", ar: "نعمل منذ 1997" } },
+    { value: 5, label: { en: "Production departments", ar: "أقسام إنتاجية" } },
+    { value: 6, label: { en: "Regional offices", ar: "مكاتب إقليمية" } },
+  ],
+  leadership: {
+    eyebrow: { en: "Leadership", ar: "القيادة" },
+    title: { en: "Led by people who know packaging.", ar: "يقودها أشخاص يعرفون التغليف." },
+    lede: {
+      en: "Each part of the business is run by a manager with deep experience in flexible packaging.",
+      ar: "يدير كل جزء من الأعمال مديرٌ ذو خبرة عميقة في التغليف المرن.",
+    },
+    members: [
+      { mono: "GM", role: { en: "General Management", ar: "الإدارة العامة" }, desc: { en: "Sets direction and holds every run to the Printopack standard.", ar: "يرسم التوجّه ويُخضع كل تشغيلة لمعيار برنتوباك." } },
+      { mono: "OP", role: { en: "Operations", ar: "العمليات" }, desc: { en: "Keeps the plant running to plan, safely and on time.", ar: "يُبقي المصنع يعمل وفق الخطة، بأمانٍ وفي الوقت المحدد." } },
+      { mono: "PR", role: { en: "Production", ar: "الإنتاج" }, desc: { en: "Owns the press floor, from substrate to finished reel.", ar: "مسؤول عن أرضية الطباعة، من المادة الخام إلى اللفّة النهائية." } },
+      { mono: "EP", role: { en: "Engraving & Prepress", ar: "الحفر والتجهيز" }, desc: { en: "Turns artwork into engraved cylinders, ready to print.", ar: "يحوّل التصاميم إلى أسطوانات محفورة جاهزة للطباعة." } },
+      { mono: "QC", role: { en: "Quality & Compliance", ar: "الجودة والامتثال" }, desc: { en: "Guards food safety and quality from incoming goods to dispatch.", ar: "يحمي سلامة الغذاء والجودة من استلام المواد حتى التسليم." } },
+      { mono: "CX", role: { en: "Commercial & Export", ar: "التجارة والتصدير" }, desc: { en: "Partners with brands across 26 countries and beyond.", ar: "يتعاون مع علاماتٍ في أكثر من 26 دولة." } },
+      { mono: "SC", role: { en: "Supply Chain", ar: "سلسلة الإمداد" }, desc: { en: "Plans materials and delivery so orders land on time.", ar: "يخطّط للمواد والتسليم لتصل الطلبات في وقتها." } },
+      { mono: "IT", role: { en: "IT & Systems", ar: "تقنية المعلومات والأنظمة" }, desc: { en: "Runs the systems behind the factory and the customer portal.", ar: "يُدير الأنظمة خلف المصنع وبوابة العملاء." } },
+    ],
+  },
+  culture: {
+    eyebrow: { en: "Life at Printopack", ar: "الحياة في برنتوباك" },
+    quote: {
+      en: "We hire for craft and care, then give people the tools and the standard to do their best work.",
+      ar: "نوظّف على أساس الإتقان والاهتمام، ثم نمنح الناس الأدوات والمعيار ليقدّموا أفضل ما لديهم.",
+    },
+    link: { en: "Explore careers", ar: "استكشف الوظائف" },
+  },
+  cta: {
+    eyebrow: { en: "Work with our team", ar: "اعمل مع فريقنا" },
+    title: { en: "Have a project in mind?", ar: "لديك مشروع في ذهنك؟" },
+    button: { en: "Request a quote", ar: "اطلب عرض سعر" },
+  },
+};
+const c = content;
 ---
-<Base
-  title="Our Team - Printopack"
-  description="The people behind Printopack: a team of around 400 across production, quality, engraving and commercial, led by experienced managers in Jeddah."
->
+<Base title={c.meta.title} description={c.meta.description}>
   <!-- PAGE HEADER -->
   <section class="page-head">
     <div class="wrap-wide">
       <div class="page-head-inner">
-        <span class="eyebrow" data-reveal>Our team</span>
-        <h1 data-reveal>The people behind Printopack.</h1>
-        <p class="lede" data-reveal>
-          Packaging is made by people. Around 400 of them, across the press floor, the engraving
-          room, the lab and the offices, turn each brief into a finished product, run after run.
-        </p>
+        <span class="eyebrow"><Bi en={c.header.eyebrow.en} ar={c.header.eyebrow.ar} /></span>
+        <h1><Bi en={c.header.title.en} ar={c.header.title.ar} /></h1>
+        <p class="lede"><Bi en={c.header.lede.en} ar={c.header.lede.ar} /></p>
       </div>
     </div>
   </section>
@@ -40,27 +78,24 @@ const leaders = [
   <!-- COUNTERS -->
   <section class="on-deep team-stats">
     <div class="wrap-wide counters-row">
-      <Counter prefix="~" value="400" label="Team members" />
-      <Counter from="1997" value={year} label="Operating since 1997" />
-      <Counter value="5" label="Production departments" />
-      <Counter value="6" label="Regional offices" />
+      {c.counters.map((n) => <Counter from={n.from} prefix={n.prefix} value={n.value} label={n.label.en} labelAr={n.label.ar} />)}
     </div>
   </section>
 
   <!-- LEADERSHIP -->
   <section class="leadership">
     <div class="wrap-wide">
-      <div class="section-head" data-reveal>
-        <span class="eyebrow">Leadership</span>
-        <h2 style="margin-top:16px">Led by people who know packaging.</h2>
-        <p class="lede">Each part of the business is run by a manager with deep experience in flexible packaging. Names and photographs are being added.</p>
+      <div class="section-head">
+        <span class="eyebrow"><Bi en={c.leadership.eyebrow.en} ar={c.leadership.eyebrow.ar} /></span>
+        <h2 style="margin-top:16px"><Bi en={c.leadership.title.en} ar={c.leadership.title.ar} /></h2>
+        <p class="lede"><Bi en={c.leadership.lede.en} ar={c.leadership.lede.ar} /></p>
       </div>
       <div class="team-grid">
-        {leaders.map((l) => (
-          <div class="member" data-reveal>
-            <span class="avatar" aria-hidden="true">{l.mono}</span>
-            <h3 class="member-role">{l.role}</h3>
-            <p class="member-desc">{l.desc}</p>
+        {c.leadership.members.map((m) => (
+          <div class="member">
+            <span class="avatar" aria-hidden="true">{m.mono}</span>
+            <h3 class="member-role"><Bi en={m.role.en} ar={m.role.ar} /></h3>
+            <p class="member-desc"><Bi en={m.desc.en} ar={m.desc.ar} /></p>
           </div>
         ))}
       </div>
@@ -71,20 +106,18 @@ const leaders = [
   <section class="culture">
     <div class="culture-bg"><img src="/images/factory.jpg" alt="Inside the Printopack facility" loading="lazy" /></div>
     <div class="wrap culture-inner">
-      <span class="eyebrow" data-reveal style="color:var(--gold-bright)">Life at Printopack</span>
-      <p class="culture-quote" data-reveal>
-        We hire for craft and care, then give people the tools and the standard to do their best work.
-      </p>
-      <a href="/careers" class="link-line" data-reveal style="color:var(--gold-bright);border-color:var(--gold-bright)">Explore careers</a>
+      <span class="eyebrow" style="color:var(--gold-bright)"><Bi en={c.culture.eyebrow.en} ar={c.culture.eyebrow.ar} /></span>
+      <p class="culture-quote"><Bi en={c.culture.quote.en} ar={c.culture.quote.ar} /></p>
+      <a href="/careers" class="link-line" style="color:var(--gold-bright);border-color:var(--gold-bright)"><Bi en={c.culture.link.en} ar={c.culture.link.ar} /></a>
     </div>
   </section>
 
   <!-- CTA -->
   <section class="cta">
     <div class="wrap" style="text-align:center">
-      <span class="eyebrow plain" data-reveal style="color:var(--gold)">Work with our team</span>
-      <h2 data-reveal style="margin:16px 0 26px">Have a project in mind?</h2>
-      <a href="/contact" class="btn btn-gold" data-reveal>Request a quote</a>
+      <span class="eyebrow plain" style="color:var(--gold)"><Bi en={c.cta.eyebrow.en} ar={c.cta.eyebrow.ar} /></span>
+      <h2 style="margin:16px 0 26px"><Bi en={c.cta.title.en} ar={c.cta.title.ar} /></h2>
+      <a href="/contact" class="btn btn-gold"><Bi en={c.cta.button.en} ar={c.cta.button.ar} /></a>
     </div>
   </section>
 </Base>
@@ -98,7 +131,6 @@ const leaders = [
   .team-stats{padding-block:clamp(52px,6vw,78px)}
   .counters-row{display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
 
-  /* leadership grid */
   .leadership .section-head{max-width:640px}
   .leadership .lede{margin-top:18px}
   .team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(26px,3vw,44px)}
@@ -112,13 +144,12 @@ const leaders = [
   .member-role{font-size:clamp(18px,1.5vw,21px);margin-bottom:10px}
   .member-desc{font-size:14.5px;color:var(--muted);line-height:1.6;max-width:30ch}
 
-  /* culture band */
   .culture{position:relative;color:var(--paper);overflow:hidden;padding-block:clamp(88px,12vw,150px)}
   .culture-bg{position:absolute;inset:0}
   .culture-bg img{width:100%;height:100%;object-fit:cover}
   .culture-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,24,41,.72),rgba(9,24,41,.86))}
   .culture-inner{position:relative;z-index:2;text-align:center;max-width:900px}
-  .culture-quote{font-family:var(--display);font-weight:300;font-size:clamp(24px,3.4vw,42px);line-height:1.28;margin:22px auto 28px;max-width:22ch}
+  .culture-quote{font-family:var(--display);font-weight:300;font-size:clamp(24px,3.4vw,42px);line-height:1.28;margin:22px auto 28px;max-width:24ch}
 
   @media(max-width:1000px){
     .counters-row{grid-template-columns:repeat(2,1fr);gap:36px 24px}
