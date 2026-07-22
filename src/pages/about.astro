@@ -1,24 +1,29 @@
 ---
 import Base from '../layouts/Base.astro';
+import Bi from '../components/Bi.astro';
 
-// ── EDITABLE CONTENT ────────────────────────────────────────────────────────
-// About Us is a concise hub (Nasser's Page 1): a short intro that routes into the
-// four subpages. All copy/images are fields here (the admin's editable surface).
+// ── EDITABLE CONTENT (bilingual) ─────────────────────────────────────────────
+// About Us is a concise hub routing into the four subpages. Arabic uses Nasser's own
+// section names (الشركة، المسؤولية الاجتماعية، أقسام المصنع، فريق العمل).
 const content = {
   meta: {
     title: "About Us - Printopack",
     description: "Get to know Printopack: the company, our social responsibility, our factory departments and our team.",
   },
   header: {
-    eyebrow: "About us",
-    title: "About Printopack.",
-    lede: "Get to know the company behind the packaging, our responsibility, our plant and our people. Choose a section to explore.",
+    eyebrow: { en: "About us", ar: "من نحن" },
+    title: { en: "About Printopack.", ar: "عن برنتوباك." },
+    lede: {
+      en: "Get to know the company behind the packaging, our responsibility, our plant and our people. Choose a section to explore.",
+      ar: "تعرّف على الشركة التي تقف وراء التغليف، ومسؤوليتنا، ومصنعنا، وفريقنا. اختر قسماً لاستكشافه.",
+    },
   },
+  go: { en: "Explore", ar: "استكشف" },
   subpages: [
-    { title: "The Company", desc: "History, ownership, mission, vision and values.", href: "/company", img: "/images/factory.jpg" },
-    { title: "Social Responsibility", desc: "Environment, local community and international commitments.", href: "/responsibility", img: "/images/dept-5.jpg" },
-    { title: "Factory Departments", desc: "Inside the plant: printing, engraving, converting and more.", href: "/factory", img: "/images/dept-1.jpg" },
-    { title: "Our Team", desc: "The people who run the press floor and the offices.", href: "/team", img: "/images/dept-4.jpg" },
+    { title: { en: "The Company", ar: "الشركة" }, desc: { en: "History, ownership, mission, vision and values.", ar: "التاريخ والملكية والرسالة والرؤية والقيم." }, href: "/company", img: "/images/factory.jpg" },
+    { title: { en: "Social Responsibility", ar: "المسؤولية الاجتماعية" }, desc: { en: "Environment, local community and international commitments.", ar: "البيئة والمجتمع المحلي والالتزامات الدولية." }, href: "/responsibility", img: "/images/dept-5.jpg" },
+    { title: { en: "Factory Departments", ar: "أقسام المصنع" }, desc: { en: "Inside the plant: printing, engraving, converting and more.", ar: "داخل المصنع: الطباعة والحفر والتحويل والمزيد." }, href: "/factory", img: "/images/dept-1.jpg" },
+    { title: { en: "Our Team", ar: "فريق العمل" }, desc: { en: "The people who run the press floor and the offices.", ar: "الأشخاص الذين يديرون أرضية المصنع والمكاتب." }, href: "/team", img: "/images/dept-4.jpg" },
   ],
 };
 const c = content;
@@ -28,9 +33,9 @@ const c = content;
   <section class="page-head">
     <div class="wrap-wide">
       <div class="page-head-inner">
-        <span class="eyebrow">{c.header.eyebrow}</span>
-        <h1>{c.header.title}</h1>
-        <p class="lede">{c.header.lede}</p>
+        <span class="eyebrow"><Bi en={c.header.eyebrow.en} ar={c.header.eyebrow.ar} /></span>
+        <h1><Bi en={c.header.title.en} ar={c.header.title.ar} /></h1>
+        <p class="lede"><Bi en={c.header.lede.en} ar={c.header.lede.ar} /></p>
       </div>
     </div>
   </section>
@@ -41,11 +46,11 @@ const c = content;
       <div class="sub-grid">
         {c.subpages.map((s) => (
           <a class="sub-card" href={s.href}>
-            <span class="card-img"><img src={s.img} alt={s.title} loading="lazy" /></span>
+            <span class="card-img"><img src={s.img} alt={s.title.en} loading="lazy" /></span>
             <span class="sub-body">
-              <span class="sub-title">{s.title}</span>
-              <span class="sub-desc">{s.desc}</span>
-              <span class="sub-go">Explore &rarr;</span>
+              <span class="sub-title"><Bi en={s.title.en} ar={s.title.ar} /></span>
+              <span class="sub-desc"><Bi en={s.desc.en} ar={s.desc.ar} /></span>
+              <span class="sub-go"><Bi en={c.go.en} ar={c.go.ar} /> &rarr;</span>
             </span>
           </a>
         ))}

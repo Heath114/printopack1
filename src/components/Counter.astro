@@ -1,9 +1,10 @@
 ---
+import Bi from './Bi.astro';
 // A single stat / counter - the client's signature device. Reused across sections.
 // Optional `from`: when set, the number ticks up from `from` to `value` (used for the
-// "years in the market" counter, which climbs from 1997 to the current year). This is
-// the one deliberate exception to the no-motion rule, at the client's request.
-const { prefix = "", value, suffix = "", label, from = null } = Astro.props;
+// "years in the market" counter). Optional `labelAr`: Arabic label; when present the
+// label becomes bilingual and shows per the document language.
+const { prefix = "", value, suffix = "", label, labelAr = null, from = null } = Astro.props;
 ---
 <div class="counter" data-reveal>
   <div class="counter-num">
@@ -12,7 +13,7 @@ const { prefix = "", value, suffix = "", label, from = null } = Astro.props;
     {suffix && <span class="counter-fix">{suffix}</span>}
   </div>
   <div class="counter-rule"></div>
-  <div class="counter-label">{label}</div>
+  <div class="counter-label">{labelAr ? <Bi en={label} ar={labelAr} /> : label}</div>
 </div>
 
 <style>
