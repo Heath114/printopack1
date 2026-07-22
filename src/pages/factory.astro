@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import Counter from '../components/Counter.astro';
+// Years in the market: computed live so it is always current (climbs from 1997).
+const year = new Date().getFullYear();
 
 // Factory Departments. The five departments and the warehouse are Printopack's real
 // production stages. Photos are the client's real factory images. Descriptions are a
@@ -43,7 +45,7 @@ const departments = [
   <section class="on-deep fac-stats">
     <div class="wrap-wide counters-row">
       <Counter prefix="" value="5" label="Production departments" />
-      <Counter prefix="+" value="25" label="Years of manufacturing" />
+      <Counter from="1997" value={year} label="Manufacturing since 1997" />
       <Counter prefix="~" value="400" label="People on the floor" />
     </div>
   </section>

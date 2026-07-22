@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import Counter from '../components/Counter.astro';
+// Years in the market: computed live so it is always current (climbs from 1997).
+const year = new Date().getFullYear();
 
 // Success Partners. The 20 client logos are real. Per-client names and countries
 // are supplied by the client and managed in the admin CMS; the logos stand on their
@@ -32,7 +34,7 @@ const markets = ["Saudi Arabia", "Kuwait", "Jordan", "Egypt", "Sudan", "Tunisia"
     <div class="wrap-wide counters-row">
       <Counter prefix="+" value="20" label="Brand partners" />
       <Counter prefix="+" value="26" label="Countries served" />
-      <Counter prefix="+" value="25" label="Years of printing" />
+      <Counter from="1997" value={year} label="Printing since 1997" />
       <Counter prefix="~" value="400" label="Team members" />
     </div>
   </section>

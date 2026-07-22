@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import Counter from '../components/Counter.astro';
+// Years in the market: computed live so it is always current (climbs from 1997).
+const year = new Date().getFullYear();
 import { categories, groups } from '../data/products';
 
 // Grove catalogue model: browse categories, open a category for detail, enquire
@@ -93,7 +95,7 @@ const steps = [
   <!-- STATS -->
   <section class="on-deep prod-stats">
     <div class="wrap-wide counters-row">
-      <Counter prefix="+" value="25" label="Years of printing" />
+      <Counter from="1997" value={year} label="Printing since 1997" />
       <Counter prefix="+" value="26" label="Countries served" />
       <Counter prefix="~" value="400" label="Team members" />
       <Counter value="5" label="Production departments" />

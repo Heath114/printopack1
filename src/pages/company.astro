@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import Counter from '../components/Counter.astro';
+// Years in the market: computed live so it is always current (climbs from 1997).
+const year = new Date().getFullYear();
 
 // Company hub. The "Company" nav item gathers the sections about the organisation.
 // This page introduces Printopack and routes to each sub-section.
@@ -34,7 +36,7 @@ const sections = [
   <!-- COUNTERS -->
   <section class="on-deep co-stats">
     <div class="wrap-wide counters-row">
-      <Counter prefix="+" value="25" label="Years in the market" />
+      <Counter from="1997" value={year} label="In the market since 1997" />
       <Counter prefix="+" value="26" label="Countries served" />
       <Counter prefix="~" value="400" label="Team members" />
       <Counter prefix="" value="6" label="Regional offices" />

@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import Counter from '../components/Counter.astro';
+// Years in the market: computed live so it is always current (climbs from 1997).
+const year = new Date().getFullYear();
 
 // Quality & Responsibility. Combines the Quality System and Social Responsibility
 // sections the client asked for. Certificate names are representative placeholders:
@@ -60,7 +62,7 @@ const responsibility = [
   <section class="on-deep q-stats">
     <div class="wrap-wide counters-row">
       <Counter prefix="" value="100" suffix="%" label="Food-grade materials" />
-      <Counter prefix="+" value="25" label="Years certified" />
+      <Counter from="1997" value={year} label="Certified since 1997" />
       <Counter prefix="+" value="26" label="Export markets" />
     </div>
   </section>

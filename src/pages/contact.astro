@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import Counter from '../components/Counter.astro';
+// Years in the market: computed live so it is always current (climbs from 1997).
+const year = new Date().getFullYear();
 
 // Contact page (lean first pass). All emails, the HQ address and phone are the
 // client's real published details. Regional office phone numbers and staff names
@@ -122,7 +124,7 @@ const topics = [
     <div class="wrap-wide counters-row">
       <Counter value="6" label="Regional offices" />
       <Counter prefix="+" value="26" label="Countries served" />
-      <Counter prefix="+" value="25" label="Years in the market" />
+      <Counter from="1997" value={year} label="In the market since 1997" />
     </div>
   </section>
 </Base>

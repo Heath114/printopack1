@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import Counter from '../components/Counter.astro';
+// Years in the market: computed live so it is always current (climbs from 1997).
+const year = new Date().getFullYear();
 
 // Team. Employee count is known (~400). Individual manager names and photos are
 // provided by the client and added via the admin CMS, so leadership is shown here
@@ -39,7 +41,7 @@ const leaders = [
   <section class="on-deep team-stats">
     <div class="wrap-wide counters-row">
       <Counter prefix="~" value="400" label="Team members" />
-      <Counter prefix="+" value="25" label="Years operating" />
+      <Counter from="1997" value={year} label="Operating since 1997" />
       <Counter value="5" label="Production departments" />
       <Counter value="6" label="Regional offices" />
     </div>

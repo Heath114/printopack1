@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import Counter from '../components/Counter.astro';
+// Years in the market: computed live so it is always current (climbs from 1997).
+const year = new Date().getFullYear();
 
 // Careers. The three roles below are the client's real openings from the admin data.
 // Roles, requirements and the careers inbox are managed in the admin CMS. Applicants
@@ -37,7 +39,7 @@ const email = "careers@printopack.com.sa";
   <section class="on-deep car-stats">
     <div class="wrap-wide counters-row">
       <Counter prefix="~" value="400" label="People on the team" />
-      <Counter prefix="+" value="25" label="Years of stability" />
+      <Counter from="1997" value={year} label="Serving since 1997" />
       <Counter prefix="" value="6" label="Regional offices" />
     </div>
   </section>
