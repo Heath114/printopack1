@@ -4,19 +4,18 @@ import Counter from '../components/Counter.astro';
 // Years in the market: computed live so it is always current (climbs from 1997).
 const year = new Date().getFullYear();
 
-// "The Company" subsection of About Us. Vision and Mission below are the client's
-// real published text, taken verbatim from printopack.com.sa/about. The history is
-// written from verified facts. Ownership is client-gated (no names invented). Values
-// are a scaffold drawn from the mission language, for the client to confirm/edit.
+// "The Company" subsection of About Us. Vision and Mission are the client's real
+// published text, verbatim from printopack.com.sa/about. History is from verified
+// facts. Ownership is client-gated (no names invented). Values are a scaffold drawn
+// from the mission language, for the client to confirm. Built with the same layout
+// patterns as the rest of the site (story block, section heads, values grid).
 const vision = [
   "Printopack's vision is to redefine packaging as a transformative brand experience, fostering a sustainable and captivating future for industries worldwide. Our dedication to innovative solutions and responsible practices will shape a world where packaging becomes an enduring testament to brand values and consumer trust.",
   "We envision a world where packaging transcends its functional role, becoming an artful representation of brand values, consumer trust, and environmental responsibility. Our journey is fueled by the ambition to lead industries towards responsible packaging practices that resonate with consumers, empower businesses, and contribute to a more sustainable planet.",
-  "Through strategic partnerships, unwavering quality, and a passion for pushing boundaries, we aim to set new benchmarks in packaging excellence. Our vision is to inspire change, foster creativity, and craft a global legacy of responsible packaging that leaves a lasting impression on both brands and consumers alike.",
 ];
 const mission = [
   "At Printopack, our mission is to be the driving force behind brands' packaging evolution. With a legacy of expertise in flexible packaging solutions since 1997, we are dedicated to designing, developing, and producing responsible packaging that transcends mere functionality.",
-  "Through innovative design, cutting-edge technology, and a commitment to sustainability, we empower brands to create packaging experiences that captivate consumers and align with their values. Our mission extends to nurturing lasting partnerships with businesses across the globe, helping them navigate the dynamic landscape of packaging trends and consumer expectations.",
-  "We are guided by the principle that packaging should tell a story, reflect brand authenticity, and contribute to a better world. By merging creativity with purpose, we seek to redefine packaging's impact on industries, enrich consumer experiences, and leave a positive footprint on the planet we all share.",
+  "Through innovative design, cutting-edge technology, and a commitment to sustainability, we empower brands to create packaging experiences that captivate consumers and align with their values, nurturing lasting partnerships with businesses across the globe.",
 ];
 const values = [
   { t: "Quality without compromise", d: "Every reel is held to the Printopack standard, from incoming substrate to final dispatch." },
@@ -45,7 +44,7 @@ const values = [
   </section>
 
   <!-- COUNTERS (autocounting years from 1997) -->
-  <section class="on-deep co-stats">
+  <section class="on-deep">
     <div class="wrap-wide counters-row">
       <Counter from="1997" value={year} label="In the market since 1997" />
       <Counter prefix="+" value="26" label="Countries served" />
@@ -54,11 +53,13 @@ const values = [
     </div>
   </section>
 
-  <!-- HISTORY -->
-  <section class="history">
-    <div class="wrap-wide hist-grid">
-      <div class="hist-media"><div class="card-img"><img src="/images/factory.jpg" alt="The Printopack plant in Jeddah" /></div></div>
-      <div class="hist-body">
+  <!-- HISTORY (two-column story block, same as /about) -->
+  <section class="story">
+    <div class="wrap-wide story-grid">
+      <div class="story-media">
+        <div class="card-img"><img src="/images/factory.jpg" alt="The Printopack plant in Jeddah" /></div>
+      </div>
+      <div class="story-body">
         <span class="eyebrow">Our history</span>
         <h2>From one line in 1997 to brands across 26 countries.</h2>
         <p class="lede">
@@ -68,56 +69,38 @@ const values = [
           finishing and solvent recovery, all under one roof.
         </p>
         <p class="lede">
-          Today the company serves food, beverage, pharmaceutical and personal-care brands across more
-          than 26 countries, supported by six regional offices and a team of around 400. The detailed
-          founding story is expanded by Printopack through the site's admin.
+          Today the company is family-owned and Saudi-operated, serving food, beverage, pharmaceutical
+          and consumer brands across more than 26 countries through six regional offices. Ownership and
+          the full founding story are added by Printopack through the site's admin.
         </p>
       </div>
     </div>
   </section>
 
-  <!-- OWNERSHIP -->
-  <section class="owners">
-    <div class="wrap-wide">
+  <!-- VISION (navy editorial band) -->
+  <section class="on-navy">
+    <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">Ownership</span>
-        <h2>The people who own Printopack.</h2>
-      </div>
-      <div class="owner-card">
-        <p>Ownership and leadership details are added by Printopack through the admin. Names, roles and
-          photographs of the owners appear here once provided.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- VISION -->
-  <section class="on-navy vision">
-    <div class="wrap-wide vm-grid">
-      <div class="vm-head">
         <span class="eyebrow">Our vision</span>
         <h2>Empowering brands through creative packaging excellence.</h2>
       </div>
-      <div class="vm-body">
-        {vision.map((p) => <p>{p}</p>)}
-      </div>
+      <div class="prose">{vision.map((p) => <p class="lede">{p}</p>)}</div>
     </div>
   </section>
 
   <!-- MISSION -->
-  <section class="mission">
-    <div class="wrap-wide vm-grid">
-      <div class="vm-head">
+  <section>
+    <div class="wrap">
+      <div class="section-head">
         <span class="eyebrow">Our mission</span>
         <h2>The driving force behind brands' packaging evolution.</h2>
       </div>
-      <div class="vm-body">
-        {mission.map((p) => <p>{p}</p>)}
-      </div>
+      <div class="prose">{mission.map((p) => <p class="lede">{p}</p>)}</div>
     </div>
   </section>
 
-  <!-- VALUES -->
-  <section class="values">
+  <!-- VALUES (grid, same as /about) -->
+  <section class="values" style="background:var(--cream)">
     <div class="wrap-wide">
       <div class="section-head">
         <span class="eyebrow">What we stand for</span>
@@ -135,15 +118,12 @@ const values = [
     </div>
   </section>
 
-  <!-- EXPLORE THE REST OF ABOUT US -->
-  <section class="on-deep explore">
-    <div class="wrap-wide">
-      <span class="eyebrow">More about us</span>
-      <div class="explore-links">
-        <a href="/factory">Factory Departments &rarr;</a>
-        <a href="/team">Our Team &rarr;</a>
-        <a href="/quality#responsibility">Social Responsibility &rarr;</a>
-      </div>
+  <!-- CTA (same as /about) -->
+  <section class="on-deep">
+    <div class="wrap" style="text-align:center">
+      <span class="eyebrow plain" style="color:var(--gold-bright)">Work with us</span>
+      <h2 style="margin:14px 0 26px">Let's build packaging that performs.</h2>
+      <a href="/contact" class="btn btn-gold">Request a quote</a>
     </div>
   </section>
 </Base>
@@ -157,32 +137,19 @@ const values = [
   .counters-row{display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
   @media(max-width:760px){.counters-row{grid-template-columns:1fr 1fr;gap:40px 24px}}
 
-  .hist-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(36px,6vw,84px);align-items:center}
-  .hist-media .card-img{aspect-ratio:4/3;border-radius:var(--radius)}
-  .hist-body .eyebrow{margin-bottom:16px}
-  .hist-body h2{margin-bottom:22px}
-  .hist-body .lede + .lede{margin-top:18px}
-  @media(max-width:860px){.hist-grid{grid-template-columns:1fr;gap:36px}}
+  .story-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(36px,6vw,84px);align-items:center}
+  .story-media .card-img{aspect-ratio:4/3;border-radius:var(--radius)}
+  .story-body .eyebrow{margin-bottom:16px}
+  .story-body h2{margin-bottom:22px}
+  .story-body .lede + .lede{margin-top:18px}
+  @media(max-width:860px){.story-grid{grid-template-columns:1fr;gap:36px}}
 
-  .owners{background:var(--cream)}
-  .owner-card{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:var(--radius);padding:clamp(24px,3vw,34px);max-width:760px}
-  .owner-card p{color:var(--muted);max-width:none}
-
-  .vm-grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:clamp(32px,5vw,72px);align-items:start}
-  .vm-head{position:sticky;top:120px}
-  .vm-head h2{margin-top:14px}
-  .vm-body p{margin-bottom:18px}
-  .vision .vm-body p{color:rgba(250,246,238,.82)}
-  .mission .vm-body p{color:var(--muted)}
-  @media(max-width:860px){.vm-grid{grid-template-columns:1fr;gap:24px}.vm-head{position:static}}
+  .prose{max-width:760px}
+  .prose .lede + .lede{margin-top:18px}
 
   .values-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:40px 56px}
   .value-rule{display:block;width:34px;height:2px;background:var(--gold);margin-bottom:20px}
   .value h3{font-size:clamp(20px,2vw,26px);margin-bottom:12px}
   .value p{color:var(--muted)}
   @media(max-width:760px){.values-grid{grid-template-columns:1fr;gap:32px}}
-
-  .explore-links{display:flex;flex-wrap:wrap;gap:14px 40px;margin-top:22px}
-  .explore-links a{font-family:var(--display);font-size:clamp(18px,2vw,24px);font-weight:300;color:var(--paper)}
-  .explore-links a:hover{color:var(--gold-bright)}
 </style>
