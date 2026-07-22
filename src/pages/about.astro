@@ -1,56 +1,25 @@
 ---
 import Base from '../layouts/Base.astro';
-import Counter from '../components/Counter.astro';
-// Years in the market: computed live so it is always current (climbs from 1997).
-const year = new Date().getFullYear();
 
 // ── EDITABLE CONTENT ────────────────────────────────────────────────────────
-// Every text/image on this page is a field here (the admin's editable surface).
-// The markup is a pure template. Vision/Mission are the client's real published
-// statements; history/values are a scaffold the client refines in the admin.
+// About Us is a concise hub (Nasser's Page 1): a short intro that routes into the
+// four subpages. All copy/images are fields here (the admin's editable surface).
 const content = {
   meta: {
     title: "About Us - Printopack",
-    description: "Printopack, Saudi Modern Packaging Factory, has produced responsible flexible packaging in Jeddah since 1997 for food, beverage and consumer brands across 26+ countries.",
+    description: "Get to know Printopack: the company, our social responsibility, our factory departments and our team.",
   },
   header: {
     eyebrow: "About us",
-    title: "Packaging with a legacy since 1997.",
-    lede: "Printopack, the Saudi Modern Packaging Factory, develops and produces responsible flexible packaging from Jeddah for food, beverage, pharmaceutical and personal-care brands across the region and beyond.",
+    title: "About Printopack.",
+    lede: "Get to know the company behind the packaging, our responsibility, our plant and our people. Choose a section to explore.",
   },
-  counters: [
-    { from: 1997, value: year, label: "In the market since 1997" },
-    { prefix: "+", value: 26, label: "Countries served" },
-    { prefix: "~", value: 400, label: "Team members" },
-    { value: 6, label: "Regional offices" },
+  subpages: [
+    { title: "The Company", desc: "History, ownership, mission, vision and values.", href: "/company", img: "/images/factory.jpg" },
+    { title: "Social Responsibility", desc: "Environment, local community and international commitments.", href: "/responsibility", img: "/images/dept-5.jpg" },
+    { title: "Factory Departments", desc: "Inside the plant: printing, engraving, converting and more.", href: "/factory", img: "/images/dept-1.jpg" },
+    { title: "Our Team", desc: "The people who run the press floor and the offices.", href: "/team", img: "/images/dept-4.jpg" },
   ],
-  story: {
-    eyebrow: "Our story",
-    title: "From a Jeddah factory to brands across 26 countries.",
-    image: "/images/factory.jpg",
-    imageAlt: "Printopack production in Jeddah",
-    paragraphs: [
-      "Founded in 1997, Printopack has grown from a single flexible-packaging line into a full converter: rotogravure printing, in-house cylinder engraving, bag making, finishing and solvent recovery, all under one roof.",
-      "The company is family-owned and Saudi-operated, and today serves leading food and beverage names through a network of six regional offices. This section will carry the full history and the owners' story once the client provides them.",
-    ],
-  },
-  mv: {
-    eyebrow: "What drives us",
-    title: "Vision, mission and values.",
-    vision: "Empowering brands through creative packaging excellence.",
-    mission: "To be the driving force behind brands' packaging evolution, with a legacy of expertise in flexible packaging solutions since 1997.",
-    values: [
-      { title: "Quality without compromise", text: "Every reel is held to the Printopack standard, from incoming substrate to final dispatch." },
-      { title: "Responsible by design", text: "Food-safe materials, solvent recovery and efficient production run through everything we make." },
-      { title: "Partnership, not supply", text: "We advise on structure and print from the first brief, so the packaging fits the product and the line." },
-      { title: "Built to deliver", text: "Planned materials and export logistics mean orders land on time, run after run." },
-    ],
-  },
-  cta: {
-    eyebrow: "Work with us",
-    title: "Let's build packaging that performs.",
-    button: { label: "Request a quote", href: "/contact" },
-  },
 };
 const c = content;
 ---
@@ -66,68 +35,21 @@ const c = content;
     </div>
   </section>
 
-  <!-- COUNTERS -->
-  <section class="on-deep about-stats">
-    <div class="wrap-wide counters-row">
-      {c.counters.map((n) => <Counter {...n} />)}
-    </div>
-  </section>
-
-  <!-- STORY -->
-  <section class="story">
-    <div class="wrap-wide story-grid">
-      <div class="story-media">
-        <div class="card-img"><img src={c.story.image} alt={c.story.imageAlt} /></div>
+  <!-- SUBPAGE CARDS -->
+  <section class="sub">
+    <div class="wrap-wide">
+      <div class="sub-grid">
+        {c.subpages.map((s) => (
+          <a class="sub-card" href={s.href}>
+            <span class="card-img"><img src={s.img} alt={s.title} loading="lazy" /></span>
+            <span class="sub-body">
+              <span class="sub-title">{s.title}</span>
+              <span class="sub-desc">{s.desc}</span>
+              <span class="sub-go">Explore &rarr;</span>
+            </span>
+          </a>
+        ))}
       </div>
-      <div class="story-body">
-        <span class="eyebrow">{c.story.eyebrow}</span>
-        <h2>{c.story.title}</h2>
-        {c.story.paragraphs.map((p) => <p class="lede">{p}</p>)}
-      </div>
-    </div>
-  </section>
-
-  <!-- VISION / MISSION / VALUES (tabbed device) -->
-  <section class="on-navy mv">
-    <div class="wrap mv-inner">
-      <div class="mv-head">
-        <span class="eyebrow">{c.mv.eyebrow}</span>
-        <h2>{c.mv.title}</h2>
-      </div>
-      <div class="mv-tabs" role="tablist" aria-label="Vision, mission and values">
-        <button class="mv-tab is-active" role="tab" aria-selected="true" id="tab-vision" aria-controls="panel-vision" data-tab="vision">Vision</button>
-        <button class="mv-tab" role="tab" aria-selected="false" id="tab-mission" aria-controls="panel-mission" data-tab="mission">Mission</button>
-        <button class="mv-tab" role="tab" aria-selected="false" id="tab-values" aria-controls="panel-values" data-tab="values">Values</button>
-      </div>
-      <div class="mv-panels">
-        <div class="mv-panel is-active" role="tabpanel" id="panel-vision" aria-labelledby="tab-vision" data-panel="vision">
-          <p class="mv-statement">{c.mv.vision}</p>
-        </div>
-        <div class="mv-panel" role="tabpanel" id="panel-mission" aria-labelledby="tab-mission" data-panel="mission" hidden>
-          <p class="mv-statement">{c.mv.mission}</p>
-        </div>
-        <div class="mv-panel" role="tabpanel" id="panel-values" aria-labelledby="tab-values" data-panel="values" hidden>
-          <div class="mv-values">
-            {c.mv.values.map((v) => (
-              <div class="mv-value">
-                <span class="mv-value-tick" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4.5 4.5L19 7"/></svg>
-                </span>
-                <div><h3>{v.title}</h3><p>{v.text}</p></div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="on-deep about-cta">
-    <div class="wrap" style="text-align:center">
-      <span class="eyebrow plain" style="color:var(--gold-bright)">{c.cta.eyebrow}</span>
-      <h2 style="margin:14px 0 26px">{c.cta.title}</h2>
-      <a href={c.cta.button.href} class="btn btn-gold">{c.cta.button.label}</a>
     </div>
   </section>
 </Base>
@@ -138,52 +60,14 @@ const c = content;
   .page-head h1{margin:20px 0 22px;font-size:clamp(40px,6vw,78px)}
   .page-head .lede{max-width:60ch}
 
-  .counters-row{display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
-  @media(max-width:760px){.counters-row{grid-template-columns:1fr 1fr;gap:40px 24px}}
-
-  .story-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(36px,6vw,84px);align-items:center}
-  .story-media .card-img{aspect-ratio:4/3;border-radius:var(--radius)}
-  .story-body .eyebrow{margin-bottom:16px}
-  .story-body h2{margin-bottom:22px}
-  .story-body .lede + .lede{margin-top:18px}
-  @media(max-width:860px){.story-grid{grid-template-columns:1fr;gap:36px}}
-
-  .mv-inner{max-width:920px}
-  .mv-head{margin-bottom:30px}
-  .mv-head h2{margin-top:14px}
-  .mv-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line-dark);margin-bottom:34px}
-  .mv-tab{font-family:var(--display);font-size:13px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(250,246,238,.55);padding:14px 22px;border-bottom:2px solid transparent;margin-bottom:-1px}
-  .mv-tab:hover{color:var(--paper)}
-  .mv-tab.is-active{color:var(--gold-bright);border-bottom-color:var(--gold-bright)}
-  .mv-panel[hidden]{display:none}
-  .mv-statement{font-family:var(--display);font-weight:var(--w-light);font-size:clamp(24px,3.4vw,42px);line-height:1.24;color:var(--paper);max-width:26ch}
-  .mv-values{display:grid;grid-template-columns:1fr 1fr;gap:26px 44px}
-  .mv-value{display:flex;gap:14px;align-items:flex-start}
-  .mv-value-tick{flex:none;color:var(--gold-bright);margin-top:4px}
-  .mv-value-tick svg{width:18px;height:18px}
-  .mv-value h3{font-size:20px;margin-bottom:6px}
-  .mv-value p{color:rgba(250,246,238,.7)}
-  @media(max-width:640px){.mv-values{grid-template-columns:1fr}.mv-tabs{overflow-x:auto}}
+  .sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+  .sub-card{display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .sub-card:hover{border-color:var(--navy);box-shadow:0 20px 40px rgba(14,35,64,.08)}
+  .sub-card .card-img{aspect-ratio:16/9}
+  .sub-card:hover .card-img img{opacity:.92}
+  .sub-body{display:flex;flex-direction:column;padding:24px 26px 26px}
+  .sub-title{font-family:var(--display);font-size:clamp(21px,2vw,26px);font-weight:var(--w-light);color:var(--ink)}
+  .sub-desc{color:var(--muted);font-size:15px;margin:10px 0 18px}
+  .sub-go{font-family:var(--display);font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-top:auto}
+  @media(max-width:640px){.sub-grid{grid-template-columns:1fr}}
 </style>
-
-<script>
-  // Vision/Mission/Values tabs. Instant switch, no motion, keyboard accessible.
-  const tabs = Array.from(document.querySelectorAll('.mv-tab'));
-  const panels = Array.from(document.querySelectorAll('.mv-panel'));
-  function select(tab) {
-    tabs.forEach((t) => { t.classList.remove('is-active'); t.setAttribute('aria-selected', 'false'); });
-    panels.forEach((p) => { p.classList.remove('is-active'); p.setAttribute('hidden', ''); });
-    tab.classList.add('is-active'); tab.setAttribute('aria-selected', 'true');
-    const panel = document.getElementById('panel-' + tab.dataset.tab);
-    panel?.classList.add('is-active'); panel?.removeAttribute('hidden');
-  }
-  tabs.forEach((t, i) => {
-    t.addEventListener('click', () => select(t));
-    t.addEventListener('keydown', (e) => {
-      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      e.preventDefault();
-      const next = e.key === 'ArrowRight' ? (i + 1) % tabs.length : (i - 1 + tabs.length) % tabs.length;
-      tabs[next].focus(); select(tabs[next]);
-    });
-  });
-</script>
