@@ -1,17 +1,21 @@
 ---
+import Bi from './Bi.astro';
 // Global footer: newsletter band + deep navy footer with columns, QR, offices, legal.
 const year = new Date().getFullYear();
-const offices = ["Kuwait", "Jordan", "Egypt", "Sudan", "Tunisia", "Algeria"];
+const offices = [
+  { en: "Kuwait", ar: "الكويت" }, { en: "Jordan", ar: "الأردن" }, { en: "Egypt", ar: "مصر" },
+  { en: "Sudan", ar: "السودان" }, { en: "Tunisia", ar: "تونس" }, { en: "Algeria", ar: "الجزائر" },
+];
 ---
 <!-- newsletter band -->
 <section class="news-band">
   <div class="wrap" style="text-align:center">
-    <span class="eyebrow plain" data-reveal style="color:var(--gold)">Stay ahead</span>
-    <h2 data-reveal style="margin:14px 0 8px">News from Printopack</h2>
-    <p class="lede" data-reveal style="margin:0 auto 28px">Be the first to hear about new capabilities, certifications and exhibitions.</p>
-    <form class="news-form" data-reveal onsubmit="return false">
-      <input type="email" placeholder="Your email address" required />
-      <button class="btn btn-solid" type="submit">Subscribe</button>
+    <span class="eyebrow plain" style="color:var(--gold)"><Bi en="Stay ahead" ar="ابقَ على اطّلاع" /></span>
+    <h2 style="margin:14px 0 8px"><Bi en="News from Printopack" ar="أخبار برنتوباك" /></h2>
+    <p class="lede" style="margin:0 auto 28px"><Bi en="Be the first to hear about new capabilities, certifications and exhibitions." ar="كن أول من يعلم بأحدث الإمكانات والشهادات والمعارض." /></p>
+    <form class="news-form" onsubmit="return false">
+      <input type="email" placeholder="Your email address" data-ph-ar="بريدك الإلكتروني" required />
+      <button class="btn btn-solid" type="submit"><Bi en="Subscribe" ar="اشترك" /></button>
     </form>
   </div>
 </section>
@@ -21,47 +25,47 @@ const offices = ["Kuwait", "Jordan", "Egypt", "Sudan", "Tunisia", "Algeria"];
     <div class="foot-grid">
       <div class="foot-brand">
         <a href="/" class="wordmark" aria-label="Printopack home"><img src="/images/printopack-logo-white.png" alt="Printopack, Saudi Modern Packaging Factory" width="1600" height="562" /></a>
-        <p>Flexible packaging, printed and finished in Jeddah for brands across 26+ countries since 1997.</p>
+        <p><Bi en="Flexible packaging, printed and finished in Jeddah for brands across 26+ countries since 1997." ar="تغليف مرن، يُطبع ويُجهّز في جدة لعلامات تجارية في أكثر من 26 دولة منذ عام 1997." /></p>
         <div class="qr">
           <div class="qr-box" aria-hidden="true">
             <svg viewBox="0 0 100 100"><rect width="100" height="100" fill="none"/><g fill="currentColor"><rect x="6" y="6" width="26" height="26"/><rect x="12" y="12" width="14" height="14" fill="var(--navy-deep)"/><rect x="68" y="6" width="26" height="26"/><rect x="74" y="12" width="14" height="14" fill="var(--navy-deep)"/><rect x="6" y="68" width="26" height="26"/><rect x="12" y="74" width="14" height="14" fill="var(--navy-deep)"/><rect x="42" y="6" width="8" height="8"/><rect x="54" y="14" width="8" height="8"/><rect x="42" y="26" width="8" height="8"/><rect x="60" y="42" width="8" height="8"/><rect x="42" y="42" width="8" height="8"/><rect x="74" y="42" width="8" height="8"/><rect x="86" y="42" width="8" height="8"/><rect x="42" y="54" width="8" height="8"/><rect x="42" y="68" width="8" height="8"/><rect x="54" y="60" width="8" height="8"/><rect x="66" y="66" width="8" height="8"/><rect x="78" y="60" width="8" height="8"/><rect x="86" y="72" width="8" height="8"/><rect x="66" y="84" width="8" height="8"/><rect x="54" y="84" width="8" height="8"/><rect x="42" y="84" width="8" height="8"/></g></svg>
           </div>
-          <span>Scan for our<br>digital profile</span>
+          <span><Bi en="Scan for our digital profile" ar="امسح للوصول إلى ملفنا الرقمي" /></span>
         </div>
       </div>
 
       <div class="foot-col">
-        <h4>Company</h4>
-        <a href="/about">About Us</a>
-        <a href="/team">Our Team</a>
-        <a href="/careers">Careers</a>
-        <a href="/responsibility">Social Responsibility</a>
+        <h4><Bi en="Company" ar="الشركة" /></h4>
+        <a href="/about"><Bi en="About Us" ar="من نحن" /></a>
+        <a href="/team"><Bi en="Our Team" ar="فريق العمل" /></a>
+        <a href="/careers"><Bi en="Careers" ar="الوظائف" /></a>
+        <a href="/responsibility"><Bi en="Social Responsibility" ar="المسؤولية الاجتماعية" /></a>
       </div>
       <div class="foot-col">
-        <h4>Explore</h4>
-        <a href="/products">Products</a>
-        <a href="/quality">Quality System</a>
-        <a href="/factory">Factory</a>
-        <a href="/gallery">Gallery</a>
-        <a href="/news">News &amp; Events</a>
+        <h4><Bi en="Explore" ar="استكشف" /></h4>
+        <a href="/products"><Bi en="Products" ar="المنتجات" /></a>
+        <a href="/quality"><Bi en="Quality System" ar="نظام الجودة" /></a>
+        <a href="/factory"><Bi en="Factory" ar="أقسام المصنع" /></a>
+        <a href="/gallery"><Bi en="Gallery" ar="معرض الصور" /></a>
+        <a href="/news"><Bi en="News & Events" ar="الأخبار والأحداث" /></a>
       </div>
       <div class="foot-col foot-visit">
-        <h4>Visit Us</h4>
-        <p>Industrial Area 5, Unit 10, 8508<br>Jeddah 22428, Saudi Arabia</p>
+        <h4><Bi en="Visit Us" ar="زورونا" /></h4>
+        <p><Bi en="Industrial Area 5, Unit 10, 8508, Jeddah 22428, Saudi Arabia" ar="المنطقة الصناعية 5، وحدة 10، 8508، جدة 22428، السعودية" /></p>
         <a href="mailto:info@printopack.com.sa">info@printopack.com.sa</a>
         <a href="tel:+966126081074">+966 12 608 1074</a>
         <div class="offices">
-          <span class="offices-label">Regional offices</span>
-          <div class="offices-list">{offices.map((o) => <span>{o}</span>)}</div>
+          <span class="offices-label"><Bi en="Regional offices" ar="المكاتب الإقليمية" /></span>
+          <div class="offices-list">{offices.map((o) => <span><Bi en={o.en} ar={o.ar} /></span>)}</div>
         </div>
       </div>
     </div>
 
     <div class="foot-bottom">
-      <span>© {year} Printopack, Saudi Modern Packaging Factory Co. Ltd. All rights reserved.</span>
+      <span>© {year} <Bi en="Printopack, Saudi Modern Packaging Factory Co. Ltd. All rights reserved." ar="برنتوباك، مصنع التغليف السعودي الحديث المحدود. جميع الحقوق محفوظة." /></span>
       <div class="foot-legal">
-        <a href="/privacy">Privacy</a>
-        <a href="/conditions">Conditions</a>
+        <a href="/privacy"><Bi en="Privacy" ar="الخصوصية" /></a>
+        <a href="/conditions"><Bi en="Conditions" ar="الشروط" /></a>
         <a href="https://www.linkedin.com/company/80331793/" target="_blank" rel="noopener">LinkedIn</a>
         <a href="#" target="_blank" rel="noopener">Facebook</a>
       </div>

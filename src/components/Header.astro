@@ -1,41 +1,41 @@
 ---
-// Global header: slim bar with centered wordmark + category nav with a mega-menu.
-// The client's seven main routes (his 7-page sitemap). About Us and News & Gallery
-// carry mega-menus to their sub-sections; the rest link straight through.
+import Bi from './Bi.astro';
+// Global header. The client's seven main routes (his 7-page sitemap). Labels are
+// bilingual { en, ar }; the Arabic is Nasser's own wording from his brief.
 const nav = [
   {
-    label: "About Us", href: "/about",
+    label: { en: "About Us", ar: "من نحن" }, href: "/about",
     mega: {
       links: [
-        { label: "The Company", href: "/company" },
-        { label: "Factory Departments", href: "/factory" },
-        { label: "Our Team", href: "/team" },
-        { label: "Social Responsibility", href: "/responsibility" },
+        { label: { en: "The Company", ar: "الشركة" }, href: "/company" },
+        { label: { en: "Factory Departments", ar: "أقسام المصنع" }, href: "/factory" },
+        { label: { en: "Our Team", ar: "فريق العمل" }, href: "/team" },
+        { label: { en: "Social Responsibility", ar: "المسؤولية الاجتماعية" }, href: "/responsibility" },
       ],
       featured: [
-        { img: "/images/dept-1.jpg", label: "Rotogravure", href: "/factory" },
-        { img: "/images/factory.jpg", label: "Our Plant", href: "/about" },
+        { img: "/images/dept-1.jpg", label: { en: "Rotogravure", ar: "الطباعة الروتوغرافية" }, href: "/factory" },
+        { img: "/images/factory.jpg", label: { en: "Our Plant", ar: "مصنعنا" }, href: "/about" },
       ],
     },
   },
-  { label: "Products", href: "/products" },
-  { label: "Quality System", href: "/quality" },
-  { label: "Success Partners", href: "/partners" },
-  { label: "Careers", href: "/careers" },
+  { label: { en: "Products", ar: "المنتجات" }, href: "/products" },
+  { label: { en: "Quality System", ar: "نظام الجودة" }, href: "/quality" },
+  { label: { en: "Success Partners", ar: "شركاء النجاح" }, href: "/partners" },
+  { label: { en: "Careers", ar: "الوظائف" }, href: "/careers" },
   {
-    label: "News & Gallery", href: "/news",
+    label: { en: "News & Gallery", ar: "الأخبار والمعرض" }, href: "/news",
     mega: {
       links: [
-        { label: "News & Events", href: "/news" },
-        { label: "Gallery", href: "/gallery" },
+        { label: { en: "News & Events", ar: "الأخبار والأحداث" }, href: "/news" },
+        { label: { en: "Gallery", ar: "معرض الصور" }, href: "/gallery" },
       ],
       featured: [
-        { img: "/images/lineup.jpg", label: "Latest news", href: "/news" },
-        { img: "/images/dept-2.jpg", label: "Gallery", href: "/gallery" },
+        { img: "/images/lineup.jpg", label: { en: "Latest news", ar: "أحدث الأخبار" }, href: "/news" },
+        { img: "/images/dept-2.jpg", label: { en: "Gallery", ar: "معرض الصور" }, href: "/gallery" },
       ],
     },
   },
-  { label: "Contact", href: "/contact" },
+  { label: { en: "Contact", ar: "التواصل" }, href: "/contact" },
 ];
 ---
 <!-- Utility strip: surfaced contact details + social, in navy chrome. Scrolls away;
@@ -53,11 +53,11 @@ const nav = [
       </a>
       <span class="util-item util-addr">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-        <span>Industrial Area 5, Jeddah, Saudi Arabia</span>
+        <span><Bi en="Industrial Area 5, Jeddah, Saudi Arabia" ar="المنطقة الصناعية 5، جدة، السعودية" /></span>
       </span>
     </div>
     <div class="util-social">
-      <span class="util-follow">Follow us</span>
+      <span class="util-follow"><Bi en="Follow us" ar="تابعنا" /></span>
       <a href="https://www.linkedin.com/company/80331793/" target="_blank" rel="noopener" aria-label="LinkedIn">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 1 5 8.5a2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.4c0-1.3 0-2.95-1.8-2.95s-2.08 1.4-2.08 2.85V21H9z"/></svg>
       </a>
@@ -75,7 +75,7 @@ const nav = [
   <div class="wrap-wide hdr-top">
     <button class="hdr-icon hdr-left" aria-label="Search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-      <span>Search</span>
+      <span><Bi en="Search" ar="البحث" /></span>
     </button>
     <a href="/" class="wordmark" aria-label="Printopack home"><img src="/images/printopack-logo.png" alt="Printopack, Saudi Modern Packaging Factory" width="1600" height="562" /></a>
     <div class="hdr-right">
@@ -83,11 +83,11 @@ const nav = [
       <!-- Two distinct logins: customers go to their POS portal, staff to the CMS -->
       <a href="https://printopack.azurewebsites.net/" target="_blank" rel="noopener" class="hdr-icon" title="Existing customers: orders, statements and documents">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg>
-        <span>Customer Login</span>
+        <span><Bi en="Customer Login" ar="دخول العملاء" /></span>
       </a>
       <a href="/admin" class="hdr-icon hdr-admin" title="Printopack staff: site administration">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l7 3v5c0 4.4-3 8.4-7 10-4-1.6-7-5.6-7-10V6z"/><path d="M9.2 12l2 2 3.6-4"/></svg>
-        <span>Admin</span>
+        <span><Bi en="Admin" ar="الإدارة" /></span>
       </a>
       <!-- Unified QR: the client's fourth header control. Opens a small still panel
            with the scannable code linking to Printopack's digital profile. -->
@@ -100,7 +100,7 @@ const nav = [
           <div class="qr-pop-box" aria-hidden="true">
             <svg viewBox="0 0 100 100"><g fill="var(--navy-deep)"><rect x="6" y="6" width="26" height="26"/><rect x="12" y="12" width="14" height="14" fill="var(--paper)"/><rect x="68" y="6" width="26" height="26"/><rect x="74" y="12" width="14" height="14" fill="var(--paper)"/><rect x="6" y="68" width="26" height="26"/><rect x="12" y="74" width="14" height="14" fill="var(--paper)"/><rect x="42" y="6" width="8" height="8"/><rect x="54" y="14" width="8" height="8"/><rect x="42" y="26" width="8" height="8"/><rect x="60" y="42" width="8" height="8"/><rect x="42" y="42" width="8" height="8"/><rect x="74" y="42" width="8" height="8"/><rect x="86" y="42" width="8" height="8"/><rect x="42" y="54" width="8" height="8"/><rect x="42" y="68" width="8" height="8"/><rect x="54" y="60" width="8" height="8"/><rect x="66" y="66" width="8" height="8"/><rect x="78" y="60" width="8" height="8"/><rect x="86" y="72" width="8" height="8"/><rect x="66" y="84" width="8" height="8"/><rect x="54" y="84" width="8" height="8"/><rect x="42" y="84" width="8" height="8"/></g></svg>
           </div>
-          <span class="qr-pop-cap">Scan for Printopack's<br>digital profile</span>
+          <span class="qr-pop-cap"><Bi en="Scan for Printopack's digital profile" ar="امسح للوصول إلى الملف الرقمي لبرنتوباك" /></span>
         </div>
       </div>
     </div>
@@ -111,20 +111,20 @@ const nav = [
     <ul class="wrap-wide">
       {nav.map((item) => (
         <li class={item.mega ? "has-mega" : ""}>
-          <a href={item.href}>{item.label}</a>
+          <a href={item.href}><Bi en={item.label.en} ar={item.label.ar} /></a>
           {item.mega && (
             <div class="mega">
               <div class="mega-inner wrap-wide">
                 <div class="mega-links">
-                  <span class="mega-kicker">Explore</span>
-                  {item.mega.links.map((l) => <a href={l.href}>{l.label}</a>)}
-                  <a href={item.href} class="mega-all">View all &rarr;</a>
+                  <span class="mega-kicker"><Bi en="Explore" ar="استكشف" /></span>
+                  {item.mega.links.map((l) => <a href={l.href}><Bi en={l.label.en} ar={l.label.ar} /></a>)}
+                  <a href={item.href} class="mega-all"><Bi en="View all" ar="عرض الكل" /> &rarr;</a>
                 </div>
                 <div class="mega-feature">
                   {item.mega.featured.map((f) => (
                     <a href={f.href} class="mega-card">
-                      <span class="mega-card-img"><img src={f.img} alt={f.label} /></span>
-                      <span class="mega-card-label">{f.label}</span>
+                      <span class="mega-card-img"><img src={f.img} alt={f.label.en} /></span>
+                      <span class="mega-card-label"><Bi en={f.label.en} ar={f.label.ar} /></span>
                     </a>
                   ))}
                 </div>
@@ -142,13 +142,13 @@ const nav = [
 <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile" hidden>
   {nav.map((item) => (
     <div class="mnav-group">
-      <a href={item.href} class="mnav-link">{item.label}</a>
-      {item.mega && item.mega.links.map((l) => <a href={l.href} class="mnav-sub">{l.label}</a>)}
+      <a href={item.href} class="mnav-link"><Bi en={item.label.en} ar={item.label.ar} /></a>
+      {item.mega && item.mega.links.map((l) => <a href={l.href} class="mnav-sub"><Bi en={l.label.en} ar={l.label.ar} /></a>)}
     </div>
   ))}
   <div class="mnav-group mnav-logins">
-    <a href="https://printopack.azurewebsites.net/" target="_blank" rel="noopener" class="mnav-link">Customer Login</a>
-    <a href="/admin" class="mnav-sub">Site administration</a>
+    <a href="https://printopack.azurewebsites.net/" target="_blank" rel="noopener" class="mnav-link"><Bi en="Customer Login" ar="دخول العملاء" /></a>
+    <a href="/admin" class="mnav-sub"><Bi en="Site administration" ar="إدارة الموقع" /></a>
   </div>
 </nav>
 
@@ -282,14 +282,23 @@ const nav = [
 
   // Language toggle: flip EN/AR, set dir, persist, and show the OTHER language on the button.
   const langBtn = document.querySelector('.lang');
+  const swapAttrs = (l) => {
+    document.querySelectorAll('[data-ph-ar]').forEach((el) => {
+      if (!el.dataset.phEn) el.dataset.phEn = el.getAttribute('placeholder') || '';
+      el.setAttribute('placeholder', l === 'ar' ? el.dataset.phAr : el.dataset.phEn);
+    });
+  };
   const applyLang = (l) => {
     document.documentElement.lang = l;
     document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
     try { localStorage.setItem('lang', l); } catch (e) {}
     if (langBtn) langBtn.textContent = l === 'ar' ? 'EN' : 'ع';
+    swapAttrs(l);
   };
+  const curLang = document.documentElement.dir === 'rtl' ? 'ar' : 'en';
   if (langBtn) {
-    langBtn.textContent = document.documentElement.dir === 'rtl' ? 'EN' : 'ع';
+    langBtn.textContent = curLang === 'ar' ? 'EN' : 'ع';
     langBtn.addEventListener('click', () => applyLang(document.documentElement.dir === 'rtl' ? 'en' : 'ar'));
   }
+  swapAttrs(curLang);
 </script>
