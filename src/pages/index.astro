@@ -5,55 +5,129 @@ import Counter from '../components/Counter.astro';
 // Years in the market: computed live so it is always current (climbs from 1997).
 const year = new Date().getFullYear();
 
-const capabilities = [
-  { img: "/images/dept-1.jpg", label: "Rotogravure Printing", href: "/factory" },
-  { img: "/images/dept-4.jpg", label: "Cylinder Engraving", href: "/factory" },
-  { img: "/images/dept-2.jpg", label: "Bag Making", href: "/factory" },
-  { img: "/images/dept-3.jpg", label: "Punching & Finishing", href: "/factory" },
-];
-const news = [
-  { date: "10 Feb 2023", cat: "General", title: "The Future of Packaging in Saudi Arabia", img: "/images/lineup.jpg" },
-  { date: "06 May 2023", cat: "General", title: "The Benefits of Flexible Packaging: Durability, Versatility & Eco-Friendliness", img: "/images/factory.jpg" },
-  { date: "20 Jun 2022", cat: "General", title: "PVC vs PET-G Shrink Films", img: "/images/dept-5.jpg" },
-];
-const products = [
-  { name: "Chips & Snacks", img: "/images/cat-1.png" },
-  { name: "Chocolates", img: "/images/cat-2.png" },
-  { name: "Bakery Products", img: "/images/cat-3.png" },
-  { name: "Candy", img: "/images/cat-4.png" },
-  { name: "Breads", img: "/images/cat-5.png" },
-  { name: "Bottle Labels", img: "/images/cat-6.png" },
-  { name: "Lids", img: "/images/cat-7.png" },
-  { name: "Ice Cream", img: "/images/cat-8.png" },
-];
-const clients = Array.from({ length: 20 }, (_, i) => `/images/clients/client-${i + 1}.png`);
-
-// "Why Printopack": four icon value-props, janasmart's card device rendered with gold.
-const why = [
-  { t: "Everything under one roof", d: "Engraving, printing, converting and finishing in one Jeddah plant: faster proofs, tighter control.",
-    icon: '<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 12l9 5 9-5"/>' },
-  { t: "Food-safe certified", d: "Certified food-contact materials and an in-house lab checking every run before it ships.",
-    icon: '<path d="M12 3l7 3v5c0 4.4-3 8.4-7 10-4-1.6-7-5.6-7-10V6z"/><path d="M9.2 12l2 2 3.6-4"/>' },
-  { t: "26 countries served", d: "Export logistics and regional offices that get your order to the line on time.",
-    icon: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/>' },
-  { t: "25 years of expertise", d: "A flexible-packaging legacy since 1997, trusted by leading regional brands.",
-    icon: '<circle cx="12" cy="9" r="6"/><path d="M8.5 14l-1.5 7 5-3 5 3-1.5-7"/>' },
-];
-
-// Vision/Mission/Values for the tabbed band.
-const mvValues = ["Quality without compromise", "Responsible by design", "Partnership, not supply", "Built to deliver on time"];
+// ── EDITABLE CONTENT ────────────────────────────────────────────────────────
+// Every text and image on this page is a field in this object: the exact surface
+// the admin dashboard edits. The markup below is a pure template that renders
+// whatever is here, robust to different lengths and item counts. Swap this object
+// for a CMS/API read later without touching the template.
+const content = {
+  hero: {
+    eyebrow: "Since 1997 · Jeddah, Saudi Arabia",
+    titleHtml: 'Where technology<br>meets <span class="serif-note" style="color:var(--gold-bright)">vision.</span>',
+    lede: "A global leader in developing and producing responsible packaging for food, beverage, pharmaceutical, medical, home and personal-care brands.",
+    image: "/images/hero.jpg",
+    imageAlt: "Printopack production",
+    ctas: [
+      { label: "Explore our products", href: "/products", cls: "btn btn-gold" },
+      { label: "Request a quote", href: "/contact", cls: "btn btn-outline-light" },
+    ],
+  },
+  counters: [
+    { from: 1997, value: year, label: "In the market since 1997" },
+    { prefix: "+", value: 26, label: "Countries served" },
+    { value: 6, label: "Regional offices" },
+    { prefix: "~", value: 400, label: "Team members" },
+  ],
+  why: {
+    eyebrow: "Why Printopack",
+    title: "Built to perform, end to end.",
+    cards: [
+      { title: "Everything under one roof", text: "Engraving, printing, converting and finishing in one Jeddah plant: faster proofs, tighter control.",
+        icon: '<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 12l9 5 9-5"/>' },
+      { title: "Food-safe certified", text: "Certified food-contact materials and an in-house lab checking every run before it ships.",
+        icon: '<path d="M12 3l7 3v5c0 4.4-3 8.4-7 10-4-1.6-7-5.6-7-10V6z"/><path d="M9.2 12l2 2 3.6-4"/>' },
+      { title: "26 countries served", text: "Export logistics and regional offices that get your order to the line on time.",
+        icon: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/>' },
+      { title: "25 years of expertise", text: "A flexible-packaging legacy since 1997, trusted by leading regional brands.",
+        icon: '<circle cx="12" cy="9" r="6"/><path d="M8.5 14l-1.5 7 5-3 5 3-1.5-7"/>' },
+    ],
+  },
+  intro: {
+    eyebrow: "Who we are",
+    title: "Pioneering flexible packaging, refined until it performs.",
+    text: "From our Jeddah facility, every structure, laminate and print run is developed until it meets the Printopack standard, then delivered on time, to leading brands across the region and beyond.",
+    link: { label: "Our story", href: "/about" },
+  },
+  products: {
+    eyebrow: "What we make",
+    title: "Packaging for every category",
+    link: { label: "All products", href: "/products" },
+    items: [
+      { name: "Chips & Snacks", img: "/images/cat-1.png" },
+      { name: "Chocolates", img: "/images/cat-2.png" },
+      { name: "Bakery Products", img: "/images/cat-3.png" },
+      { name: "Candy", img: "/images/cat-4.png" },
+      { name: "Breads", img: "/images/cat-5.png" },
+      { name: "Bottle Labels", img: "/images/cat-6.png" },
+      { name: "Lids", img: "/images/cat-7.png" },
+      { name: "Ice Cream", img: "/images/cat-8.png" },
+    ],
+  },
+  capabilities: {
+    eyebrow: "What we do",
+    title: "Capabilities, end to end.",
+    items: [
+      { label: "Rotogravure Printing", img: "/images/dept-1.jpg", href: "/factory" },
+      { label: "Cylinder Engraving", img: "/images/dept-4.jpg", href: "/factory" },
+      { label: "Bag Making", img: "/images/dept-2.jpg", href: "/factory" },
+      { label: "Punching & Finishing", img: "/images/dept-3.jpg", href: "/factory" },
+    ],
+  },
+  vmv: {
+    eyebrow: "What drives us",
+    title: "Vision, mission and values.",
+    image: "/images/lineup.jpg",
+    imageAlt: "Printopack finished packaging",
+    vision: "Empowering brands through creative packaging excellence.",
+    mission: "To be the driving force behind brands' packaging evolution, with a legacy of expertise in flexible packaging since 1997.",
+    values: ["Quality without compromise", "Responsible by design", "Partnership, not supply", "Built to deliver on time"],
+    link: { label: "Read our philosophy", href: "/about" },
+  },
+  qualityTeaser: {
+    eyebrow: "Quality & responsibility",
+    title: "Certified at every step.",
+    text: "From food-safe production to responsible, low-impact manufacturing, quality is built into every run, not inspected in at the end. It is how we have earned the trust of brands across 26 countries.",
+    image: "/images/dept-5.jpg",
+    imageAlt: "Quality and responsibility at Printopack",
+    link: { label: "Our standards", href: "/quality" },
+  },
+  partners: {
+    eyebrow: "Success partners",
+    title: "Trusted by leading brands",
+    logos: Array.from({ length: 20 }, (_, i) => ({ img: `/images/clients/client-${i + 1}.png`, alt: "Client brand" })),
+    counters: [
+      { prefix: "+", value: 26, label: "Countries served" },
+      { prefix: "+", value: 20, label: "Brand partners" },
+    ],
+  },
+  news: {
+    eyebrow: "News & events",
+    title: "The latest from Printopack",
+    link: { label: "All news", href: "/news" },
+    items: [
+      { date: "10 Feb 2023", cat: "General", title: "The Future of Packaging in Saudi Arabia", img: "/images/lineup.jpg", href: "/news" },
+      { date: "06 May 2023", cat: "General", title: "The Benefits of Flexible Packaging: Durability, Versatility & Eco-Friendliness", img: "/images/factory.jpg", href: "/news" },
+      { date: "20 Jun 2022", cat: "General", title: "PVC vs PET-G Shrink Films", img: "/images/dept-5.jpg", href: "/news" },
+    ],
+  },
+  cta: {
+    eyebrow: "Let's talk packaging",
+    title: "Set the standard in your industry.",
+    button: { label: "Request a quote", href: "/contact" },
+  },
+};
+const c = content;
 ---
 <Base>
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-bg"><img src="/images/hero.jpg" alt="Printopack production" fetchpriority="high" /></div>
+    <div class="hero-bg"><img src={c.hero.image} alt={c.hero.imageAlt} fetchpriority="high" /></div>
     <div class="wrap-wide hero-inner">
-      <span class="eyebrow" style="color:var(--gold-bright)">Since 1997 · Jeddah, Saudi Arabia</span>
-      <h1 class="display-xl">Where technology<br>meets <span class="serif-note" style="color:var(--gold-bright)">vision.</span></h1>
-      <p class="hero-lede">A global leader in developing and producing responsible packaging for food, beverage, pharmaceutical, medical, home and personal-care brands.</p>
+      <span class="eyebrow" style="color:var(--gold-bright)">{c.hero.eyebrow}</span>
+      <h1 class="display-xl" set:html={c.hero.titleHtml} />
+      <p class="hero-lede">{c.hero.lede}</p>
       <div class="hero-cta">
-        <a href="/products" class="btn btn-gold">Explore our products</a>
-        <a href="/contact" class="btn btn-outline-light">Request a quote</a>
+        {c.hero.ctas.map((b) => <a href={b.href} class={b.cls}>{b.label}</a>)}
       </div>
     </div>
   </section>
@@ -61,10 +135,7 @@ const mvValues = ["Quality without compromise", "Responsible by design", "Partne
   <!-- COUNTERS -->
   <section class="counters on-deep">
     <div class="wrap-wide counters-grid">
-      <Counter from="1997" value={year} label="In the market since 1997" />
-      <Counter prefix="+" value="26" label="Countries served" />
-      <Counter value="6" label="Regional offices" />
-      <Counter prefix="~" value="400" label="Team members" />
+      {c.counters.map((n) => <Counter {...n} />)}
     </div>
   </section>
 
@@ -72,17 +143,17 @@ const mvValues = ["Quality without compromise", "Responsible by design", "Partne
   <section class="why">
     <div class="wrap-wide">
       <div class="section-head center">
-        <span class="eyebrow plain" style="color:var(--gold)">Why Printopack</span>
-        <h2 style="margin-top:14px">Built to perform, end to end.</h2>
+        <span class="eyebrow plain" style="color:var(--gold)">{c.why.eyebrow}</span>
+        <h2 style="margin-top:14px">{c.why.title}</h2>
       </div>
       <div class="why-grid">
-        {why.map((w) => (
+        {c.why.cards.map((w) => (
           <div class="why-card">
             <span class="why-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" set:html={w.icon} />
             </span>
-            <h3>{w.t}</h3>
-            <p>{w.d}</p>
+            <h3>{w.title}</h3>
+            <p>{w.text}</p>
           </div>
         ))}
       </div>
@@ -92,13 +163,13 @@ const mvValues = ["Quality without compromise", "Responsible by design", "Partne
   <!-- INTRO -->
   <section>
     <div class="wrap intro-grid">
-      <div data-reveal>
-        <span class="eyebrow">Who we are</span>
-        <h2 style="margin-top:16px">Pioneering flexible packaging, refined until it performs.</h2>
+      <div>
+        <span class="eyebrow">{c.intro.eyebrow}</span>
+        <h2 style="margin-top:16px">{c.intro.title}</h2>
       </div>
-      <div data-reveal>
-        <p class="lede">From our Jeddah facility, every structure, laminate and print run is developed until it meets the Printopack standard, then delivered on time, to leading brands across the region and beyond.</p>
-        <a href="/about" class="link-line" style="margin-top:26px">Our story</a>
+      <div>
+        <p class="lede">{c.intro.text}</p>
+        <a href={c.intro.link.href} class="link-line" style="margin-top:26px">{c.intro.link.label}</a>
       </div>
     </div>
   </section>
@@ -108,14 +179,14 @@ const mvValues = ["Quality without compromise", "Responsible by design", "Partne
     <div class="wrap-wide">
       <div class="section-head split-head">
         <div>
-          <span class="eyebrow" data-reveal>What we make</span>
-          <h2 data-reveal style="margin-top:16px">Packaging for every category</h2>
+          <span class="eyebrow">{c.products.eyebrow}</span>
+          <h2 style="margin-top:16px">{c.products.title}</h2>
         </div>
-        <a href="/products" class="link-line" data-reveal>All products</a>
+        <a href={c.products.link.href} class="link-line">{c.products.link.label}</a>
       </div>
       <div class="prod-grid">
-        {products.map((p) => (
-          <a href="/products" class="card prod-card" data-reveal>
+        {c.products.items.map((p) => (
+          <a href="/products" class="card prod-card">
             <span class="card-img prod-img"><img src={p.img} alt={p.name} loading="lazy" decoding="async" /></span>
             <span class="prod-label">{p.name}</span>
           </a>
@@ -128,14 +199,14 @@ const mvValues = ["Quality without compromise", "Responsible by design", "Partne
   <section style="padding-top:0">
     <div class="wrap-wide">
       <div class="section-head">
-        <span class="eyebrow" data-reveal>What we do</span>
-        <h2 data-reveal>Capabilities, end to end.</h2>
+        <span class="eyebrow">{c.capabilities.eyebrow}</span>
+        <h2>{c.capabilities.title}</h2>
       </div>
       <div class="cap-grid">
-        {capabilities.map((c) => (
-          <a href={c.href} class="card cap-card" data-reveal>
-            <span class="card-img cap-img"><img src={c.img} alt={c.label} loading="lazy" decoding="async" /></span>
-            <span class="cap-label">{c.label}</span>
+        {c.capabilities.items.map((cap) => (
+          <a href={cap.href} class="card cap-card">
+            <span class="card-img cap-img"><img src={cap.img} alt={cap.label} loading="lazy" decoding="async" /></span>
+            <span class="cap-label">{cap.label}</span>
           </a>
         ))}
       </div>
@@ -145,10 +216,10 @@ const mvValues = ["Quality without compromise", "Responsible by design", "Partne
   <!-- VISION / MISSION / VALUES (tabbed band, image + tabs + checklist) -->
   <section class="on-navy vmv">
     <div class="wrap-wide vmv-grid">
-      <div class="vmv-media"><img src="/images/lineup.jpg" alt="Printopack finished packaging" loading="lazy" decoding="async" /></div>
+      <div class="vmv-media"><img src={c.vmv.image} alt={c.vmv.imageAlt} loading="lazy" decoding="async" /></div>
       <div class="vmv-body">
-        <span class="eyebrow">What drives us</span>
-        <h2 style="margin:14px 0 26px">Vision, mission and values.</h2>
+        <span class="eyebrow">{c.vmv.eyebrow}</span>
+        <h2 style="margin:14px 0 26px">{c.vmv.title}</h2>
         <div class="vmv-tabs" role="tablist" aria-label="Vision, mission and values">
           <button class="vmv-tab is-active" role="tab" aria-selected="true" id="h-vision" aria-controls="p-vision" data-tab="vision">Vision</button>
           <button class="vmv-tab" role="tab" aria-selected="false" id="h-mission" aria-controls="p-mission" data-tab="mission">Mission</button>
@@ -156,14 +227,14 @@ const mvValues = ["Quality without compromise", "Responsible by design", "Partne
         </div>
         <div class="vmv-panels">
           <div class="vmv-panel is-active" role="tabpanel" id="p-vision" aria-labelledby="h-vision" data-panel="vision">
-            <p class="vmv-statement">Empowering brands through creative packaging excellence.</p>
+            <p class="vmv-statement">{c.vmv.vision}</p>
           </div>
           <div class="vmv-panel" role="tabpanel" id="p-mission" aria-labelledby="h-mission" data-panel="mission" hidden>
-            <p class="vmv-statement">To be the driving force behind brands' packaging evolution, with a legacy of expertise in flexible packaging since 1997.</p>
+            <p class="vmv-statement">{c.vmv.mission}</p>
           </div>
           <div class="vmv-panel" role="tabpanel" id="p-values" aria-labelledby="h-values" data-panel="values" hidden>
             <ul class="vmv-list">
-              {mvValues.map((v) => (
+              {c.vmv.values.map((v) => (
                 <li>
                   <span class="vmv-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4.5 4.5L19 7"/></svg></span>
                   {v}
@@ -172,7 +243,7 @@ const mvValues = ["Quality without compromise", "Responsible by design", "Partne
             </ul>
           </div>
         </div>
-        <a href="/about" class="link-line vmv-link">Read our philosophy</a>
+        <a href={c.vmv.link.href} class="link-line vmv-link">{c.vmv.link.label}</a>
       </div>
     </div>
   </section>
@@ -180,12 +251,12 @@ const mvValues = ["Quality without compromise", "Responsible by design", "Partne
   <!-- QUALITY & RESPONSIBILITY TEASER -->
   <section style="background:var(--cream)">
     <div class="wrap split">
-      <div class="split-media" data-reveal><img src="/images/dept-5.jpg" alt="Quality and responsibility at Printopack" loading="lazy" decoding="async" /></div>
-      <div data-reveal>
-        <span class="eyebrow">Quality &amp; responsibility</span>
-        <h2 style="margin:16px 0 20px">Certified at every step.</h2>
-        <p class="lede">From ISO-certified food-safety systems to responsible, low-impact production, quality is built into every run, not inspected in at the end. It is how we have earned the trust of brands across 26 countries.</p>
-        <a href="/quality" class="link-line" style="margin-top:26px">Our standards</a>
+      <div class="split-media"><img src={c.qualityTeaser.image} alt={c.qualityTeaser.imageAlt} loading="lazy" decoding="async" /></div>
+      <div>
+        <span class="eyebrow">{c.qualityTeaser.eyebrow}</span>
+        <h2 style="margin:16px 0 20px">{c.qualityTeaser.title}</h2>
+        <p class="lede">{c.qualityTeaser.text}</p>
+        <a href={c.qualityTeaser.link.href} class="link-line" style="margin-top:26px">{c.qualityTeaser.link.label}</a>
       </div>
     </div>
   </section>
@@ -194,17 +265,16 @@ const mvValues = ["Quality without compromise", "Responsible by design", "Partne
   <section>
     <div class="wrap-wide">
       <div class="section-head center">
-        <span class="eyebrow plain" data-reveal style="color:var(--gold)">Success partners</span>
-        <h2 data-reveal style="margin-top:14px">Trusted by leading brands</h2>
+        <span class="eyebrow plain" style="color:var(--gold)">{c.partners.eyebrow}</span>
+        <h2 style="margin-top:14px">{c.partners.title}</h2>
       </div>
       <div class="logo-grid">
-        {clients.map((c) => (
-          <span class="logo" data-reveal><img src={c} alt="Client brand" loading="lazy" /></span>
+        {c.partners.logos.map((l) => (
+          <span class="logo"><img src={l.img} alt={l.alt} loading="lazy" /></span>
         ))}
       </div>
       <div class="partner-counters">
-        <Counter prefix="+" value="26" label="Countries served" />
-        <Counter prefix="+" value="20" label="Brand partners" />
+        {c.partners.counters.map((n) => <Counter {...n} />)}
       </div>
     </div>
   </section>
@@ -214,14 +284,14 @@ const mvValues = ["Quality without compromise", "Responsible by design", "Partne
     <div class="wrap-wide">
       <div class="section-head" style="display:flex;justify-content:space-between;align-items:flex-end;max-width:none">
         <div>
-          <span class="eyebrow" data-reveal>News &amp; events</span>
-          <h2 data-reveal style="margin-top:16px">The latest from Printopack</h2>
+          <span class="eyebrow">{c.news.eyebrow}</span>
+          <h2 style="margin-top:16px">{c.news.title}</h2>
         </div>
-        <a href="/news" class="link-line" data-reveal>All news</a>
+        <a href={c.news.link.href} class="link-line">{c.news.link.label}</a>
       </div>
       <div class="news-grid">
-        {news.map((n) => (
-          <a href="/news" class="card news-card" data-reveal>
+        {c.news.items.map((n) => (
+          <a href={n.href} class="card news-card">
             <span class="card-img news-img"><img src={n.img} alt="" loading="lazy" decoding="async" /></span>
             <span class="news-meta">{n.cat} · {n.date}</span>
             <h3 class="news-title">{n.title}</h3>
@@ -235,9 +305,9 @@ const mvValues = ["Quality without compromise", "Responsible by design", "Partne
   <!-- CTA -->
   <section class="cta on-deep">
     <div class="wrap" style="text-align:center">
-      <span class="eyebrow plain" data-reveal style="color:var(--gold-bright)">Let's talk packaging</span>
-      <h2 data-reveal style="margin:16px 0 26px">Set the standard in your industry.</h2>
-      <a href="/contact" class="btn btn-gold" data-reveal>Request a quote</a>
+      <span class="eyebrow plain" style="color:var(--gold-bright)">{c.cta.eyebrow}</span>
+      <h2 style="margin:16px 0 26px">{c.cta.title}</h2>
+      <a href={c.cta.button.href} class="btn btn-gold">{c.cta.button.label}</a>
     </div>
   </section>
 </Base>
