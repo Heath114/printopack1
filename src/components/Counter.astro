@@ -1,11 +1,14 @@
 ---
 // A single stat / counter - the client's signature device. Reused across sections.
-const { prefix = "", value, suffix = "", label } = Astro.props;
+// Optional `from`: when set, the number ticks up from `from` to `value` (used for the
+// "years in the market" counter, which climbs from 1997 to the current year). This is
+// the one deliberate exception to the no-motion rule, at the client's request.
+const { prefix = "", value, suffix = "", label, from = null } = Astro.props;
 ---
 <div class="counter" data-reveal>
   <div class="counter-num">
     {prefix && <span class="counter-fix">{prefix}</span>}
-    <span class="counter-val" data-count={value}>{value}</span>
+    <span class="counter-val" data-count={value} data-from={from ?? undefined}>{value}</span>
     {suffix && <span class="counter-fix">{suffix}</span>}
   </div>
   <div class="counter-rule"></div>
@@ -22,5 +25,33 @@ const { prefix = "", value, suffix = "", label } = Astro.props;
   .on-navy .counter-num,.on-deep .counter-num,.on-navy .counter-fix,.on-deep .counter-fix{color:var(--gold-bright)}
 </style>
 
-<!-- No-animation policy: the count-up script was removed; the server-rendered
-     final values are always shown, still. -->
+<!-- Counters count up once when they scroll into view: the years counter from 1997,
+     all others from 0. This is the client's signature "counting" device and the one
+     deliberate motion on the site; it respects prefers-reduced-motion. -->
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.counter-val').forEach((el) => {
+    const to = parseInt(el.dataset.count, 10);
+    if (Number.isNaN(to)) return;
+    const from = el.dataset.from != null ? parseInt(el.dataset.from, 10) : 0;
+    if (reduce || Number.isNaN(from)) { el.textContent = String(to); return; }
+    el.textContent = String(from);
+    const run = (t0) => {
+      const dur = 2800; // slow count
+      const step = (now) => {
+        const p = Math.min((now - t0) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = String(Math.round(from + (to - from) * eased));
+        if (p < 1) requestAnimationFrame(step);
+        else el.textContent = String(to);
+      };
+      requestAnimationFrame(step);
+    };
+    const io = new IntersectionObserver((entries, obs) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { requestAnimationFrame(run); obs.disconnect(); }
+      });
+    }, { threshold: 0.4 });
+    io.observe(el);
+  });
+</script>

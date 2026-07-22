@@ -2,6 +2,9 @@
 import Base from '../layouts/Base.astro';
 import Counter from '../components/Counter.astro';
 
+// Years in the market: computed live so it is always current (climbs from 1997).
+const year = new Date().getFullYear();
+
 const capabilities = [
   { img: "/images/dept-1.jpg", label: "Rotogravure Printing", href: "/factory" },
   { img: "/images/dept-4.jpg", label: "Cylinder Engraving", href: "/factory" },
@@ -58,9 +61,9 @@ const mvValues = ["Quality without compromise", "Responsible by design", "Partne
   <!-- COUNTERS -->
   <section class="counters on-deep">
     <div class="wrap-wide counters-grid">
-      <Counter value="6" label="Regional offices" />
+      <Counter from="1997" value={year} label="In the market since 1997" />
       <Counter prefix="+" value="26" label="Countries served" />
-      <Counter prefix="+" value="25" label="Years of printing" />
+      <Counter value="6" label="Regional offices" />
       <Counter prefix="~" value="400" label="Team members" />
     </div>
   </section>

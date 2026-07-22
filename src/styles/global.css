@@ -5,19 +5,19 @@
 :root{
   /* --- brand palette --- */
   --ink:        #17191d;   /* primary text */
-  --navy:       #0e2340;   /* brand deep navy */
-  --navy-deep:  #091829;   /* darkest band */
-  --navy-soft:  #1b3a63;   /* raised navy */
-  --blue:       #1f4f92;   /* interactive blue */
+  --navy:       #16457f;   /* brand blue (from the Printopack logo) */
+  --navy-deep:  #0e2b52;   /* darkest blue band */
+  --navy-soft:  #1f5aa0;   /* raised blue */
+  --blue:       #1a4fa0;   /* logo-exact interactive blue */
 
   --paper:      #faf6ee;   /* warm ivory base (never stark white) */
   --cream:      #f2ebdc;   /* soft surface */
   --sand:       #e8ddc8;   /* deeper surface */
   --white:      #ffffff;
 
-  --gold:       #b1873a;   /* metallic gold accent */
-  --gold-bright:#caa054;   /* gold hover / on-dark */
-  --gold-soft:  rgba(177,135,58,.14);
+  --gold:       #ef8b1f;   /* brand orange accent (from the logo) */
+  --gold-bright:#f7a53c;   /* orange hover / on-dark */
+  --gold-soft:  rgba(239,139,31,.14);
 
   --muted:      #6d685c;   /* secondary text */
   --faint:      #9a9385;
