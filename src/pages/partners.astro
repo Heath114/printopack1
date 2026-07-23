@@ -1,92 +1,207 @@
 ---
 import Base from '../layouts/Base.astro';
 import Counter from '../components/Counter.astro';
-// Years in the market: computed live so it is always current (climbs from 1997).
+import Bi from '../components/Bi.astro';
+import { reachMap } from '../data/reach-map';
+import { collection } from '../lib/content';
 const year = new Date().getFullYear();
 
-// Success Partners. The 20 client logos are real. Per-client names and countries
-// are supplied by the client and managed in the admin CMS; the logos stand on their
-// own here. Markets shown are Printopack's real regional offices plus HQ.
-const clients = Array.from({ length: 20 }, (_, i) => `/images/clients/client-${i + 1}.png`);
-const markets = ["Saudi Arabia", "Kuwait", "Jordan", "Egypt", "Sudan", "Tunisia", "Algeria"];
+// Success Partners (Nasser's Page 4). His brief: client names + logos + country, a
+// counter for countries and a counter for customers.
+//
+// TEMPLATE-FIRST: everything below is the editable surface the admin dashboard writes
+// to. `partners` is the unbreakable list template: the grid renders whatever is in it,
+// for any count, any name/country length, EN or AR. The 20 logos are the client's real
+// logos; per-client names are blank in their API, so the name field is left for the
+// admin to fill (it renders above the country only when present). Countries are seeded
+// from Printopack's real markets as placeholders and corrected per client via the admin
+// (see `.pnote`, a build-only helper to strip before production).
+
+// The 20 client logos + names/countries come from the content store (admin-managed).
+// The grid renders whatever the admin sets: logo, name and country per card.
+const partners = collection('partners').map((p) => ({
+  logo: p.image,
+  name: { en: p.name, ar: p.nameAr },
+  country: { en: p.country, ar: p.countryAr },
+}));
+
+const content = {
+  meta: {
+    title: "Success Partners - Printopack",
+    description: "Printopack prints and packs for leading food, beverage and consumer brands across more than 35 countries. Meet some of our success partners.",
+  },
+  header: {
+    eyebrow: { en: "Success Partners", ar: "شركاء النجاح" },
+    title: { en: "The brands we pack for.", ar: "علاماتٌ نعبّئ لها." },
+    lede: {
+      en: "From regional champions to household names, brands come to Printopack for packaging that guards their product and carries their identity. These are some of the partners we print and pack for, across the region and beyond.",
+      ar: "من روّاد المنطقة إلى الأسماء الأكثر حضوراً في البيوت، تأتي العلامات إلى برنتوباك بحثاً عن تغليفٍ يحمي منتجها ويحمل هويتها. هؤلاء بعض شركائنا الذين نطبع ونعبّئ لهم، في المنطقة وخارجها.",
+    },
+  },
+  // The two counters Nasser named (countries, customers) come first; years and team add
+  // the substance he likes. Counters count up once in view; nothing else moves.
+  counters: [
+    { prefix: "+", value: 35, label: { en: "Countries served", ar: "دولة نصل إليها" } },
+    { prefix: "+", value: 1000, label: { en: "Customers", ar: "عميل" } },
+    { from: 1997, value: year, label: { en: "Printing since 1997", ar: "نطبع منذ 1997" } },
+    { prefix: "~", value: 400, label: { en: "Team members", ar: "عضو في الفريق" } },
+  ],
+  wall: {
+    eyebrow: { en: "Our partners", ar: "شركاؤنا" },
+    title: { en: "Brands that trust our print.", ar: "علاماتٌ تثق بطباعتنا." },
+    note: {
+      en: "Partner names and countries shown here are placeholders; Printopack fills in each partner through the site's admin.",
+      ar: "أسماء الشركاء ودولهم المعروضة هنا عناصر مبدئية؛ وتُدخل برنتوباك بيانات كل شريك عبر لوحة تحكم الموقع.",
+    },
+  },
+  // "Where we deliver": interactive regional map. Click a country (or its chip) to
+  // highlight it and see that office, with an optional route through to Contact. The
+  // office details are the editable admin surface; regional-office phones/addresses are
+  // client-gated (blank until Amal provides them, the popup simply omits what is empty).
+  reach: {
+    eyebrow: { en: "Where we deliver", ar: "أين نصل" },
+    title: { en: "Across the region and beyond.", ar: "عبر المنطقة وأبعد منها." },
+    lede: {
+      en: "With a network of regional offices and export to more than 35 countries, we keep partners supplied wherever their brands sell. Select a market to see its office.",
+      ar: "بشبكةٍ من المكاتب الإقليمية وتصديرٍ إلى أكثر من 35 دولة، نُبقي شركاءنا مزوَّدين أينما تُباع علاماتهم. اختر سوقاً لعرض مكتبه.",
+    },
+    hint: { en: "Select a country to see its office", ar: "اختر دولة لعرض مكتبها" },
+    contact: { en: "Contact this office", ar: "تواصل مع هذا المكتب" },
+    // Keyed by the map's country codes. HQ carries its real address and phone; the six
+    // regional offices carry their real routing email (phone/address filled via admin).
+    offices: {
+      sa: { name: { en: "Saudi Arabia", ar: "المملكة العربية السعودية" }, role: { en: "Head Office", ar: "المقر الرئيسي" }, place: { en: "Industrial Area 5, Jeddah", ar: "المنطقة الصناعية 5، جدة" }, email: "info@printopack.com.sa", phone: "+966 12 608 1074" },
+      kw: { name: { en: "Kuwait", ar: "الكويت" }, role: { en: "Regional Office", ar: "مكتب إقليمي" }, place: { en: "", ar: "" }, email: "kuwait@printopack.com.sa", phone: "+965 97707578" },
+      jo: { name: { en: "Jordan", ar: "الأردن" }, role: { en: "Regional Office", ar: "مكتب إقليمي" }, place: { en: "Jordan & Iraq office", ar: "مكتب الأردن والعراق" }, email: "jordan@printopack.com.sa", phone: "+962 7 8570 6299" },
+      iq: { name: { en: "Iraq", ar: "العراق" }, role: { en: "Regional Office", ar: "مكتب إقليمي" }, place: { en: "Jordan & Iraq office", ar: "مكتب الأردن والعراق" }, email: "jordan@printopack.com.sa", phone: "+962 7 8570 6299" },
+      eg: { name: { en: "Egypt", ar: "مصر" }, role: { en: "Regional Office", ar: "مكتب إقليمي" }, place: { en: "", ar: "" }, email: "egypt@printopack.com.sa", phone: "+20 111 171 2221" },
+      sd: { name: { en: "Sudan", ar: "السودان" }, role: { en: "Regional Office", ar: "مكتب إقليمي" }, place: { en: "", ar: "" }, email: "sudan@printopack.com.sa", phone: "+966 55 421 9918" },
+      tn: { name: { en: "Tunisia", ar: "تونس" }, role: { en: "Regional Office", ar: "مكتب إقليمي" }, place: { en: "", ar: "" }, email: "tunisia@printopack.com.sa", phone: "+216 28534504" },
+      ly: { name: { en: "Libya", ar: "ليبيا" }, role: { en: "Regional Office", ar: "مكتب إقليمي" }, place: { en: "Tunisia & Libya office", ar: "مكتب تونس وليبيا" }, email: "tunisia@printopack.com.sa", phone: "+216 28534504" },
+      dz: { name: { en: "Algeria", ar: "الجزائر" }, role: { en: "Regional Office", ar: "مكتب إقليمي" }, place: { en: "", ar: "" }, email: "info-algeria@printopack.com.sa", phone: "+213 553038979" },
+      ma: { name: { en: "Morocco", ar: "المغرب" }, role: { en: "Regional Office", ar: "مكتب إقليمي" }, place: { en: "", ar: "" }, email: "moroccooffice@printopack.com.sa", phone: "+966 55 421 9918" },
+      ye: { name: { en: "Yemen", ar: "اليمن" }, role: { en: "Regional Office", ar: "مكتب إقليمي" }, place: { en: "", ar: "" }, email: "yemen@printopack.com.sa", phone: "+967 775299991" },
+      sy: { name: { en: "Syria", ar: "سوريا" }, role: { en: "Regional Office", ar: "مكتب إقليمي" }, place: { en: "", ar: "" }, email: "bsh_moneer@hotmail.com", phone: "+963 933431615" },
+    },
+  },
+  why: {
+    eyebrow: { en: "Why brands stay", ar: "لماذا تبقى العلامات معنا" },
+    quote: {
+      en: "A partner, not just a supplier: consistent print, structures made to spec, and delivery you can plan around, order after order.",
+      ar: "شريكٌ لا مجرّد مورّد: طباعةٌ ثابتة، وتراكيب تُصنع وفق المواصفات، وتسليمٌ يمكنكم التخطيط عليه، طلباً بعد طلب.",
+    },
+    link: { en: "Become a partner", ar: "كن شريكاً" },
+  },
+  cta: {
+    eyebrow: { en: "Let's talk packaging", ar: "لنتحدّث عن التغليف" },
+    title: { en: "Put your brand in good company.", ar: "ضع علامتك في صحبةٍ كريمة." },
+    button: { en: "Request a quote", ar: "اطلب عرض سعر" },
+  },
+};
+const c = content;
 ---
-<Base
-  title="Success Partners - Printopack"
-  description="Printopack is trusted by leading food, beverage and consumer brands across 26+ countries. Meet some of the partners we print and pack for."
->
+<Base title={c.meta.title} description={c.meta.description}>
   <!-- PAGE HEADER -->
   <section class="page-head">
     <div class="wrap-wide">
       <div class="page-head-inner">
-        <span class="eyebrow" data-reveal>Success partners</span>
-        <h1 data-reveal>Trusted by leading brands.</h1>
-        <p class="lede" data-reveal>
-          From regional champions to household names, brands come to Printopack for packaging that
-          protects their product and carries their identity. Here are some of the partners we print
-          and pack for.
-        </p>
+        <span class="eyebrow"><Bi en={c.header.eyebrow.en} ar={c.header.eyebrow.ar} /></span>
+        <h1><Bi en={c.header.title.en} ar={c.header.title.ar} /></h1>
+        <p class="lede"><Bi en={c.header.lede.en} ar={c.header.lede.ar} /></p>
       </div>
     </div>
   </section>
 
-  <!-- COUNTERS -->
+  <!-- COUNTERS (countries + customers first, per the brief) -->
   <section class="on-deep partner-stats">
     <div class="wrap-wide counters-row">
-      <Counter prefix="+" value="20" label="Brand partners" />
-      <Counter prefix="+" value="26" label="Countries served" />
-      <Counter from="1997" value={year} label="Printing since 1997" />
-      <Counter prefix="~" value="400" label="Team members" />
+      {c.counters.map((n) => <Counter from={n.from} prefix={n.prefix} value={n.value} label={n.label.en} labelAr={n.label.ar} />)}
     </div>
   </section>
 
-  <!-- LOGO GRID -->
+  <!-- PARTNERS WALL: logo + (name) + country. Renders whatever the admin puts in. -->
   <section class="partners-wall">
     <div class="wrap-wide">
-      <div class="section-head center" data-reveal>
-        <span class="eyebrow plain" style="color:var(--gold)">Our partners</span>
-        <h2 style="margin-top:14px">Brands that trust our print.</h2>
+      <div class="section-head center">
+        <span class="eyebrow plain" style="color:var(--gold)"><Bi en={c.wall.eyebrow.en} ar={c.wall.eyebrow.ar} /></span>
+        <h2 style="margin-top:14px"><Bi en={c.wall.title.en} ar={c.wall.title.ar} /></h2>
       </div>
-      <div class="logo-grid">
-        {clients.map((c) => (
-          <span class="logo" data-reveal><img src={c} alt="Client brand" loading="lazy" /></span>
+      <ul class="pgrid">
+        {partners.map((p) => (
+          <li class="pcard">
+            <span class="pcard-logo"><img src={p.logo} alt={p.name.en || "Client brand"} loading="lazy" decoding="async" /></span>
+            <span class="pcard-meta">
+              {(p.name.en || p.name.ar) && (
+                <span class="pcard-name"><Bi en={p.name.en} ar={p.name.ar} /></span>
+              )}
+              {(p.country.en || p.country.ar) && (
+                <span class="pcard-country">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                  <Bi en={p.country.en} ar={p.country.ar} />
+                </span>
+              )}
+            </span>
+          </li>
         ))}
-      </div>
+      </ul>
+      <!-- build-only helper: remove before production (see PRODUCTION_TODO.md) -->
+      <p class="pnote"><Bi en={c.wall.note.en} ar={c.wall.note.ar} /></p>
     </div>
   </section>
 
-  <!-- MARKETS -->
-  <section class="markets">
-    <div class="wrap markets-inner">
-      <div data-reveal>
-        <span class="eyebrow">Where we deliver</span>
-        <h2 style="margin:16px 0 18px">Across the region and beyond.</h2>
-        <p class="lede">With six regional offices and export to more than 26 countries, we keep partners supplied wherever their brands sell.</p>
+  <!-- WHERE WE DELIVER: interactive regional map -->
+  <section class="reach">
+    <div class="wrap">
+      <div class="reach-head">
+        <span class="eyebrow"><Bi en={c.reach.eyebrow.en} ar={c.reach.eyebrow.ar} /></span>
+        <h2 style="margin:16px 0 18px"><Bi en={c.reach.title.en} ar={c.reach.title.ar} /></h2>
+        <p class="lede"><Bi en={c.reach.lede.en} ar={c.reach.lede.ar} /></p>
       </div>
-      <div class="markets-tags" data-reveal>
-        {markets.map((m) => <span class="tag">{m}</span>)}
-        <span class="tag tag-more">+ 19 more markets</span>
+
+      <div class="reach-map-wrap">
+        <div class="mapwrap">
+          <svg class="reach-map" viewBox={reachMap.viewBox} role="group" aria-label="Map of the markets Printopack serves" preserveAspectRatio="xMidYMid meet">
+            <path class="rc-ctx" d={reachMap.context} aria-hidden="true" />
+            {Object.entries(reachMap.served).map(([cc, d]) => (
+              <path class="rc" d={d} data-cc={cc} tabindex="0" role="button" aria-label={c.reach.offices[cc].name.en} />
+            ))}
+          </svg>
+          <div class="map-pop" id="map-pop" role="dialog" hidden></div>
+        </div>
+
+        <!-- selector mirroring the map. Desktop: a pill list. Mobile: a pull-down that
+             opens an organised list, taps to select and closes. -->
+        <div class="reach-select">
+          <button class="chips-toggle" aria-expanded="false" aria-controls="reach-chips">
+            <span class="chips-toggle-label"><Bi en="Select a country" ar="اختر دولة" /></span>
+            <svg class="chips-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="reach-chips" id="reach-chips" role="list">
+            {Object.entries(reachMap.served).map(([cc]) => (
+              <button class="reach-chip" data-cc={cc} role="listitem"><Bi en={c.reach.offices[cc].name.en} ar={c.reach.offices[cc].name.ar} /></button>
+            ))}
+          </div>
+        </div>
       </div>
+      <span class="map-hint"><Bi en={c.reach.hint.en} ar={c.reach.hint.ar} /></span>
     </div>
   </section>
 
-  <!-- PARTNERSHIP BAND -->
+  <!-- WHY BRANDS STAY -->
   <section class="on-navy editorial">
     <div class="wrap editorial-inner">
-      <span class="eyebrow" data-reveal>Why brands stay</span>
-      <p class="editorial-quote" data-reveal>
-        A partner, not just a supplier: consistent print, structures made to spec and delivery you
-        can plan around, order after order.
-      </p>
-      <a href="/contact" class="link-line" data-reveal style="color:var(--gold-bright);border-color:var(--gold-bright)">Become a partner</a>
+      <span class="eyebrow"><Bi en={c.why.eyebrow.en} ar={c.why.eyebrow.ar} /></span>
+      <p class="editorial-quote"><Bi en={c.why.quote.en} ar={c.why.quote.ar} /></p>
+      <a href="/contact" class="link-line" style="color:var(--gold-bright);border-color:var(--gold-bright)"><Bi en={c.why.link.en} ar={c.why.link.ar} /></a>
     </div>
   </section>
 
   <!-- CTA -->
   <section class="cta">
     <div class="wrap" style="text-align:center">
-      <span class="eyebrow plain" data-reveal style="color:var(--gold)">Let's talk packaging</span>
-      <h2 data-reveal style="margin:16px 0 26px">Put your brand in good company.</h2>
-      <a href="/contact" class="btn btn-gold" data-reveal>Request a quote</a>
+      <span class="eyebrow plain" style="color:var(--gold)"><Bi en={c.cta.eyebrow.en} ar={c.cta.eyebrow.ar} /></span>
+      <h2 style="margin:16px 0 26px"><Bi en={c.cta.title.en} ar={c.cta.title.ar} /></h2>
+      <a href="/contact" class="btn btn-gold"><Bi en={c.cta.button.en} ar={c.cta.button.ar} /></a>
     </div>
   </section>
 </Base>
@@ -100,30 +215,171 @@ const markets = ["Saudi Arabia", "Kuwait", "Jordan", "Egypt", "Sudan", "Tunisia"
   .partner-stats{padding-block:clamp(52px,6vw,78px)}
   .counters-row{display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
 
-  /* logo wall (fuller than the home strip) */
-  .logo-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
-  .logo{position:relative;background:var(--paper);aspect-ratio:16/10}
-  .logo img{position:absolute;inset:0;margin:auto;max-width:calc(100% - 56px);max-height:calc(100% - 56px);mix-blend-mode:multiply}
-  .logo:hover img{filter:grayscale(1);opacity:.55}
+  /* partners wall: logo + name + country cards. The card body is only rendered when
+     there is name/country text, so an all-logo state stays clean and a filled state
+     grows without breaking. */
+  .pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:clamp(30px,4vw,48px)}
+  .pcard{background:var(--paper);display:flex;flex-direction:column}
+  .pcard-logo{position:relative;aspect-ratio:16/10;display:block}
+  .pcard-logo img{position:absolute;inset:0;margin:auto;max-width:calc(100% - 24px);max-height:calc(100% - 26px);mix-blend-mode:multiply}
+  .pcard:hover .pcard-logo img{filter:grayscale(1);opacity:.55}
+  .pcard-meta:empty{display:none}
+  .pcard-meta{display:flex;flex-direction:column;gap:5px;padding:0 18px 18px;margin-top:-4px}
+  .pcard-name{font-family:var(--display);font-size:16px;font-weight:400;color:var(--ink);line-height:1.2}
+  .pcard-country{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;letter-spacing:.02em;color:var(--muted)}
+  .pcard-country svg{width:14px;height:14px;color:var(--gold);flex:none}
 
-  /* markets */
-  .markets{background:var(--cream);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-  .markets-inner{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,72px);align-items:center}
-  .markets-tags{display:flex;flex-wrap:wrap;gap:12px}
-  .tag{font-family:var(--display);font-size:14px;letter-spacing:.03em;color:var(--ink);border:1px solid var(--line);background:var(--paper);padding:11px 20px;border-radius:2px}
-  .tag-more{color:var(--gold);border-color:var(--gold-soft);background:var(--gold-soft)}
+  .pnote{margin-top:22px;font-size:13px;font-style:italic;color:var(--faint);max-width:62ch}
 
-  /* editorial (shared with home) */
+  /* where we deliver: interactive map */
+  .reach{background:var(--cream);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .reach-head{max-width:620px;margin-bottom:clamp(26px,4vw,40px)}
+  .reach-map-wrap{display:grid;grid-template-columns:1.55fr 1fr;gap:clamp(24px,4vw,56px);align-items:center}
+  .mapwrap{position:relative;min-width:0}
+  .reach-map{display:block;width:100%;height:auto}
+  .reach-map path{stroke-linejoin:round;stroke-linecap:round}
+  .rc-ctx{fill:var(--sand);stroke:var(--cream);stroke-width:.14;pointer-events:none}
+  .rc{fill:var(--blue);stroke:var(--paper);stroke-width:.18;cursor:pointer;outline:none}
+  .rc:hover{fill:var(--navy-soft)}
+  .rc:focus-visible{stroke:var(--gold);stroke-width:.45}
+  .rc.active{fill:var(--gold)}
+
+  /* office popup: floats by the country on desktop (JS-positioned), sits as a panel
+     under the map on small screens (see media query) */
+  .map-pop{position:absolute;z-index:6;width:min(266px,80vw);background:var(--paper);border:1px solid var(--line);box-shadow:0 24px 46px rgba(14,35,64,.20);border-radius:var(--radius);padding:16px 18px;display:flex;flex-direction:column;gap:4px}
+  .map-pop[hidden]{display:none}
+  /* The popup's inner nodes are injected via innerHTML at runtime, so they never
+     receive Astro's scope attribute. These rules are :global (kept contained under
+     .map-pop) so they actually apply to that dynamic content. */
+  .map-pop :global(.pop-close){position:absolute;top:6px;inset-inline-end:9px;font-size:19px;line-height:1;color:var(--faint)}
+  .map-pop :global(.pop-close:hover){color:var(--ink)}
+  .map-pop :global(.pop-role){font-family:var(--display);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+  .map-pop :global(.pop-name){font-family:var(--display);font-size:19px;color:var(--ink);line-height:1.15;margin-bottom:2px}
+  .map-pop :global(.pop-line){font-size:13.5px;color:var(--muted);line-height:1.5}
+  .map-pop :global(a.pop-line:hover){color:var(--gold)}
+  .map-pop :global(.pop-cta){margin-top:11px;font-family:var(--display);font-size:11.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);border-top:1px solid var(--line);padding-top:12px;width:fit-content}
+  .map-pop :global(.pop-cta:hover){color:var(--gold)}
+  .map-pop :global(.pop-arrow){display:inline-block}
+  [dir="rtl"] .map-pop :global(.pop-arrow){transform:scaleX(-1)}
+
+  .chips-toggle{display:none}
+  /* desktop: an ordered two-column grid of square-cornered office buttons */
+  .reach-chips{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .reach-chip{font-family:var(--display);font-size:14px;letter-spacing:.02em;color:var(--ink);border:1px solid var(--line);background:var(--paper);padding:12px 16px;border-radius:var(--radius);text-align:start}
+  .reach-chip:hover{border-color:var(--navy);color:var(--navy)}
+  .reach-chip.active{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+
+  .map-hint{display:block;margin-top:16px;font-family:var(--display);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+
+  /* why band */
   .editorial-inner{max-width:920px;text-align:center;margin-inline:auto}
   .editorial-quote{font-family:var(--display);font-weight:300;font-size:clamp(24px,3.2vw,40px);line-height:1.28;color:var(--paper);margin:24px auto 30px;max-width:none}
 
   @media(max-width:1000px){
     .counters-row{grid-template-columns:repeat(2,1fr);gap:36px 24px}
-    .logo-grid{grid-template-columns:repeat(3,1fr)}
-    .markets-inner{grid-template-columns:1fr;gap:26px}
+    .pgrid{grid-template-columns:repeat(3,1fr)}
+    .reach-map-wrap{grid-template-columns:1fr;gap:24px}
+    /* countries become a pull-down: full-width trigger + organised list */
+    .reach-select{position:relative}
+    .chips-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:14px 18px;border:1px solid var(--line);border-radius:6px;background:var(--paper);font-family:var(--display);font-size:15px;color:var(--ink)}
+    .chips-chevron{width:19px;height:19px;color:var(--muted);flex:none}
+    .chips-toggle[aria-expanded="true"] .chips-chevron{transform:rotate(180deg)}
+    .reach-chips{display:none;flex-direction:column;gap:0;margin-top:8px;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+    .reach-select.open .reach-chips{display:flex}
+    .reach-chip{width:100%;border:none;border-bottom:1px solid var(--line-soft);border-radius:0;text-align:start;padding:13px 18px;font-size:15px}
+    .reach-chip:last-child{border-bottom:none}
+    .reach-chip:hover{background:var(--cream)}
+    .reach-chip.active{background:var(--gold);color:var(--navy)}
   }
-  @media(max-width:520px){
+  @media(max-width:620px){
+    /* on small screens the popup is a panel below the map, not a floating tooltip,
+       so it is always readable; JS skips positioning when this matches */
+    .map-pop{position:static;width:auto;margin-top:16px;box-shadow:none;inset:auto}
+  }
+  @media(max-width:560px){
     .counters-row{grid-template-columns:1fr}
-    .logo-grid{grid-template-columns:repeat(2,1fr)}
+    .pgrid{grid-template-columns:repeat(2,1fr)}
   }
 </style>
+
+<script define:vars={{ OFFICES: c.reach.offices, CONTACT: c.reach.contact }}>
+  // Interactive reach map: click a country (or its chip) to highlight it and show its
+  // office. No auto-motion; fills change instantly. The office strings come from the
+  // page content (trusted), so innerHTML is safe here.
+  const wrap = document.querySelector('.mapwrap');
+  const pop = document.getElementById('map-pop');
+  const paths = Array.from(document.querySelectorAll('.rc'));
+  const chips = Array.from(document.querySelectorAll('.reach-chip'));
+  if (wrap && pop && paths.length) {
+    const lang = () => (document.documentElement.dir === 'rtl' ? 'ar' : 'en');
+    const isPanel = () => matchMedia('(max-width:620px)').matches;
+    // mobile pull-down for the country selector
+    const reachSelect = document.querySelector('.reach-select');
+    const chipsToggle = document.querySelector('.chips-toggle');
+    const chipsToggleLabel = document.querySelector('.chips-toggle-label');
+    const setChipsOpen = (open) => {
+      reachSelect?.classList.toggle('open', open);
+      chipsToggle?.setAttribute('aria-expanded', String(open));
+    };
+    chipsToggle?.addEventListener('click', (e) => { e.stopPropagation(); setChipsOpen(!reachSelect?.classList.contains('open')); });
+
+    const render = (cc) => {
+      const o = OFFICES[cc]; const L = lang();
+      const rows = [`<button class="pop-close" aria-label="Close">×</button>`,
+        `<span class="pop-role">${o.role[L]}</span>`,
+        `<span class="pop-name">${o.name[L]}</span>`];
+      if (o.place && o.place[L]) rows.push(`<span class="pop-line">${o.place[L]}</span>`);
+      rows.push(`<a class="pop-line" href="mailto:${o.email}" dir="ltr">${o.email}</a>`);
+      if (o.phone) rows.push(`<span class="pop-line" dir="ltr">${o.phone}</span>`);
+      rows.push(`<a class="pop-cta" href="/contact?office=${cc}#enquire">${CONTACT[L]} <span class="pop-arrow">&rarr;</span></a>`);
+      pop.innerHTML = rows.join('');
+      pop.querySelector('.pop-close').addEventListener('click', hide);
+    };
+    const position = (path) => {
+      if (isPanel()) { pop.style.left = pop.style.top = ''; return; }
+      const cr = wrap.getBoundingClientRect(), pr = path.getBoundingClientRect();
+      const cx = pr.left + pr.width / 2 - cr.left, topY = pr.top - cr.top;
+      const pw = pop.offsetWidth, ph = pop.offsetHeight;
+      let left = Math.max(8, Math.min(cx - pw / 2, cr.width - pw - 8));
+      let top = topY - ph - 12;
+      if (top < 6) top = (pr.bottom - cr.top) + 12;
+      pop.style.left = left + 'px'; pop.style.top = top + 'px';
+    };
+    const select = (cc) => {
+      const path = paths.find((p) => p.dataset.cc === cc);
+      paths.forEach((p) => p.classList.toggle('active', p === path));
+      const chip = chips.find((ch) => ch.dataset.cc === cc);
+      chips.forEach((ch) => ch.classList.toggle('active', ch === chip));
+      render(cc);
+      pop.hidden = false;
+      if (path) position(path);
+      // reflect the choice in the mobile pull-down and close it
+      if (chipsToggleLabel && chip) chipsToggleLabel.innerHTML = chip.innerHTML;
+      setChipsOpen(false);
+    };
+    const hide = () => {
+      pop.hidden = true;
+      paths.forEach((p) => p.classList.remove('active'));
+      chips.forEach((ch) => ch.classList.remove('active'));
+    };
+    const bind = (el) => {
+      el.addEventListener('click', (e) => { e.stopPropagation(); select(el.dataset.cc); });
+      el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(el.dataset.cc); } });
+    };
+    paths.forEach(bind);
+    chips.forEach(bind);
+    // click anywhere outside the map closes the popup, except the language toggle
+    // (switching language keeps the selection and re-renders it in the new language)
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.reach-map-wrap') && !e.target.closest('.lang')) hide();
+      if (!e.target.closest('.reach-select')) setChipsOpen(false);
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hide(); });
+    // keep the popup correct when the language flips or the viewport resizes.
+    // Observe the real dir/lang change (not the toggle click) so it never races.
+    const active = () => paths.find((p) => p.classList.contains('active'));
+    new MutationObserver(() => { const a = active(); if (a && !pop.hidden) { render(a.dataset.cc); position(a); } })
+      .observe(document.documentElement, { attributes: true, attributeFilter: ['dir', 'lang'] });
+    window.addEventListener('resize', () => { const a = active(); if (a && !pop.hidden) position(a); });
+  }
+</script>

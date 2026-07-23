@@ -10,3 +10,6 @@ npm-debug.log*
 
 # Local content reference scraped from the live site (not shipped)
 reference/
+.wrangler
+node_modules
+dist

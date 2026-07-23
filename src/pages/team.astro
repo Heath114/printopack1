@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Counter from '../components/Counter.astro';
 import Bi from '../components/Bi.astro';
+import { collection } from '../lib/content';
 const year = new Date().getFullYear();
 
 // ── EDITABLE CONTENT (bilingual) ─────────────────────────────────────────────
@@ -39,16 +40,14 @@ const content = {
     // Each member has a name slot (client-gated, filled via admin) + role, photo/monogram
     // and a concise note. When `name` is filled it becomes the heading and the role moves
     // to a subtitle; until then the role heads the card. The admin adds/edits/removes these.
-    members: [
-      { photo: "", mono: "GM", name: { en: "Nasser Nabil", ar: "ناصر نبيل" }, role: { en: "General Manager", ar: "المدير العام" }, desc: { en: "Direction and the Printopack standard.", ar: "التوجّه ومعيار برنتوباك." } },
-      { photo: "", mono: "OP", name: { en: "", ar: "" }, role: { en: "Operations", ar: "العمليات" }, desc: { en: "Keeps the plant running to plan.", ar: "يُبقي المصنع يعمل وفق الخطة." } },
-      { photo: "", mono: "PR", name: { en: "", ar: "" }, role: { en: "Production", ar: "الإنتاج" }, desc: { en: "Owns the press floor.", ar: "المسؤولية عن أرضية الطباعة." } },
-      { photo: "", mono: "EP", name: { en: "", ar: "" }, role: { en: "Engraving & Prepress", ar: "الحفر والتجهيز" }, desc: { en: "Artwork to engraved cylinders.", ar: "من التصميم إلى الأسطوانات المحفورة." } },
-      { photo: "", mono: "QC", name: { en: "", ar: "" }, role: { en: "Quality & Compliance", ar: "الجودة والامتثال" }, desc: { en: "Food safety and quality, end to end.", ar: "سلامة الغذاء والجودة من البداية للنهاية." } },
-      { photo: "", mono: "CX", name: { en: "", ar: "" }, role: { en: "Commercial & Export", ar: "التجارة والتصدير" }, desc: { en: "Partners with brands across markets.", ar: "التعاون مع العلامات في مختلف الأسواق." } },
-      { photo: "", mono: "SC", name: { en: "", ar: "" }, role: { en: "Supply Chain", ar: "سلسلة الإمداد" }, desc: { en: "Materials and delivery, on time.", ar: "المواد والتسليم في الوقت المحدد." } },
-      { photo: "", mono: "IT", name: { en: "", ar: "" }, role: { en: "IT & Systems", ar: "تقنية المعلومات والأنظمة" }, desc: { en: "The systems behind the plant.", ar: "الأنظمة خلف المصنع." } },
-    ],
+    // Sourced from the content store (admin-managed). Blank name -> the card shows the role
+    // as its heading (no invented name), exactly as before.
+    members: collection('team').map((m) => ({
+      photo: m.photo, mono: m.mono,
+      name: { en: m.name, ar: m.nameAr },
+      role: { en: m.role, ar: m.roleAr },
+      desc: { en: m.bio, ar: m.bioAr },
+    })),
   },
   culture: {
     eyebrow: { en: "Life at Printopack", ar: "الحياة في برنتوباك" },

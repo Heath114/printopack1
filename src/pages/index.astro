@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Counter from '../components/Counter.astro';
+import Bi from '../components/Bi.astro';
 
 // Years in the market: computed live so it is always current (climbs from 1997).
 const year = new Date().getFullYear();
@@ -8,265 +9,160 @@ const year = new Date().getFullYear();
 // ── EDITABLE CONTENT ────────────────────────────────────────────────────────
 // Every text and image on this page is a field in this object: the exact surface
 // the admin dashboard edits. The markup below is a pure template that renders
-// whatever is here, robust to different lengths and item counts. Swap this object
-// for a CMS/API read later without touching the template.
+// whatever is here. Bilingual fields are { en, ar } (natural fusha, not literal).
+//
+// STRUCTURE (Nasser's brief): the homepage is a still "magazine cover" that
+// welcomes entry; scrolling down reveals the "الفهرس / contents": a horizontal
+// shelf of seven routable section covers. Each card opens that section's page;
+// you side-scroll through the rest. Photos are section-cover placeholders in the
+// right shape, swapped for Amal's real assets via the admin.
 const content = {
-  hero: {
-    eyebrow: "Since 1997 · Jeddah, Saudi Arabia",
-    titleHtml: 'Where technology<br>meets <span class="serif-note" style="color:var(--gold-bright)">vision.</span>',
-    lede: "A global leader in developing and producing responsible packaging for food, beverage, pharmaceutical, medical, home and personal-care brands.",
+  cover: {
+    eyebrow: { en: "Since 1997 · Jeddah, Saudi Arabia", ar: "منذ عام 1997 · جدة، المملكة العربية السعودية" },
+    titleHtml: {
+      en: 'Where technology<br>meets <span class="serif-note" style="color:var(--gold-bright)">vision.</span>',
+      ar: 'حيث تلتقي التقنية<br>مع <span class="serif-note" style="color:var(--gold-bright)">الرؤية.</span>',
+    },
+    lede: {
+      en: "A global leader in developing and producing responsible packaging for food, beverage, pharmaceutical, medical, home and personal-care brands.",
+      ar: "شركة رائدة عالمياً في تطوير وإنتاج تغليف مسؤول لعلامات الأغذية والمشروبات والأدوية والمنتجات الطبية ومستلزمات المنزل والعناية الشخصية.",
+    },
     image: "/images/hero.jpg",
-    imageAlt: "Printopack production",
-    ctas: [
-      { label: "Explore our products", href: "/products", cls: "btn btn-gold" },
-      { label: "Request a quote", href: "/contact", cls: "btn btn-outline-light" },
+    imageAlt: { en: "Printopack production", ar: "الإنتاج في برنتوباك" },
+    scroll: { en: "Scroll to explore", ar: "مرّر للاستكشاف" },
+  },
+  contents: {
+    eyebrow: { en: "The contents", ar: "الفهرس" },
+    title: { en: "Explore Printopack", ar: "استكشف برنتوباك" },
+    lede: {
+      en: "Seven sections, one factory. Open any part of the company, then move sideways through the rest.",
+      ar: "سبعة أقسام، مصنع واحد. افتح أي جزء من الشركة، ثم تنقّل جانبياً عبر البقية.",
+    },
+    swipe: { en: "Swipe to see all seven", ar: "اسحب لعرض الأقسام السبعة" },
+    open: { en: "Open section", ar: "افتح القسم" },
+    // The seven main sections, in Nasser's order. Each routes to its landing page.
+    cards: [
+      { href: "/about",    img: "/images/factory.jpg",           name: { en: "About Us",         ar: "من نحن" },          desc: { en: "Our story, people, plant and responsibility since 1997.", ar: "قصتنا وفريقنا ومصنعنا ومسؤوليتنا منذ عام 1997." } },
+      { href: "/quality",  img: "/images/factory-engraving.jpg",  name: { en: "Quality System",   ar: "نظام الجودة" },      desc: { en: "Certificates, quality assurance and in-house lab testing.", ar: "الشهادات وضمان الجودة والفحص المخبري الداخلي." } },
+      { href: "/products", img: "/images/lineup.jpg",             name: { en: "Products",         ar: "المنتجات" },        desc: { en: "Flexible packaging for every category, made to order.", ar: "تغليف مرن لكل فئة، يُصنع حسب الطلب." } },
+      { href: "/partners", img: "/images/factory-bagging.jpg",    name: { en: "Success Partners", ar: "شركاء النجاح" },    desc: { en: "The brands we print for, across 35 countries.", ar: "العلامات التي نطبع لها في أكثر من 35 دولة." } },
+      { href: "/careers",  img: "/images/dept-3.jpg",             name: { en: "Careers",          ar: "الوظائف" },         desc: { en: "Open roles and how to join the Printopack team.", ar: "الوظائف المتاحة وكيفية الانضمام إلى فريق برنتوباك." } },
+      { href: "/news-gallery", img: "/images/dept-1.jpg",         name: { en: "News & Gallery",   ar: "الأخبار والمعرض" }, desc: { en: "Latest news and events, plus our photo and video gallery.", ar: "أحدث الأخبار والفعاليات ومعرض الصور والفيديو." } },
+      { href: "/contact",  img: "/images/factory.jpg",            name: { en: "Contact",          ar: "التواصل" },         desc: { en: "Reach our head office and regional offices across the region.", ar: "تواصل مع مقرنا الرئيسي ومكاتبنا الإقليمية في المنطقة." } },
     ],
   },
   counters: [
-    { from: 1997, value: year, label: "In the market since 1997" },
-    { prefix: "+", value: 26, label: "Countries served" },
-    { value: 6, label: "Regional offices" },
-    { prefix: "~", value: 400, label: "Team members" },
+    { from: 1997, value: year, label: "In the market since 1997", labelAr: "في السوق منذ عام 1997" },
+    { prefix: "+", value: 35, label: "Countries served", labelAr: "دولة حول العالم" },
+    { value: 10, label: "Regional offices", labelAr: "مكاتب إقليمية" },
+    { prefix: "~", value: 400, label: "Team members", labelAr: "من أفراد الفريق" },
   ],
-  why: {
-    eyebrow: "Why Printopack",
-    title: "Built to perform, end to end.",
-    cards: [
-      { title: "Everything under one roof", text: "Engraving, printing, converting and finishing in one Jeddah plant: faster proofs, tighter control.",
-        icon: '<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 12l9 5 9-5"/>' },
-      { title: "Food-safe certified", text: "Certified food-contact materials and an in-house lab checking every run before it ships.",
-        icon: '<path d="M12 3l7 3v5c0 4.4-3 8.4-7 10-4-1.6-7-5.6-7-10V6z"/><path d="M9.2 12l2 2 3.6-4"/>' },
-      { title: "26 countries served", text: "Export logistics and regional offices that get your order to the line on time.",
-        icon: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/>' },
-      { title: "25 years of expertise", text: "A flexible-packaging legacy since 1997, trusted by leading regional brands.",
-        icon: '<circle cx="12" cy="9" r="6"/><path d="M8.5 14l-1.5 7 5-3 5 3-1.5-7"/>' },
-    ],
-  },
-  intro: {
-    eyebrow: "Who we are",
-    title: "Pioneering flexible packaging, refined until it performs.",
-    text: "From our Jeddah facility, every structure, laminate and print run is developed until it meets the Printopack standard, then delivered on time, to leading brands across the region and beyond.",
-    link: { label: "Our story", href: "/about" },
-  },
-  products: {
-    eyebrow: "What we make",
-    title: "Packaging for every category",
-    link: { label: "All products", href: "/products" },
-    items: [
-      { name: "Chips & Snacks", img: "/images/cat-1.png" },
-      { name: "Chocolates", img: "/images/cat-2.png" },
-      { name: "Bakery Products", img: "/images/cat-3.png" },
-      { name: "Candy", img: "/images/cat-4.png" },
-      { name: "Breads", img: "/images/cat-5.png" },
-      { name: "Bottle Labels", img: "/images/cat-6.png" },
-      { name: "Lids", img: "/images/cat-7.png" },
-      { name: "Ice Cream", img: "/images/cat-8.png" },
-    ],
-  },
-  capabilities: {
-    eyebrow: "What we do",
-    title: "Capabilities, end to end.",
-    items: [
-      { label: "Rotogravure Printing", img: "/images/dept-1.jpg", href: "/factory" },
-      { label: "Cylinder Engraving", img: "/images/dept-4.jpg", href: "/factory" },
-      { label: "Bag Making", img: "/images/dept-2.jpg", href: "/factory" },
-      { label: "Punching & Finishing", img: "/images/dept-3.jpg", href: "/factory" },
-    ],
-  },
-  vmv: {
-    eyebrow: "What drives us",
-    title: "Vision, mission and values.",
-    image: "/images/lineup.jpg",
-    imageAlt: "Printopack finished packaging",
-    vision: "Empowering brands through creative packaging excellence.",
-    mission: "To be the driving force behind brands' packaging evolution, with a legacy of expertise in flexible packaging since 1997.",
-    values: ["Quality without compromise", "Responsible by design", "Partnership, not supply", "Built to deliver on time"],
-    link: { label: "Read our philosophy", href: "/about" },
-  },
-  qualityTeaser: {
-    eyebrow: "Quality & responsibility",
-    title: "Certified at every step.",
-    text: "From food-safe production to responsible, low-impact manufacturing, quality is built into every run, not inspected in at the end. It is how we have earned the trust of brands across 26 countries.",
-    image: "/images/dept-5.jpg",
-    imageAlt: "Quality and responsibility at Printopack",
-    link: { label: "Our standards", href: "/quality" },
-  },
   partners: {
-    eyebrow: "Success partners",
-    title: "Trusted by leading brands",
+    eyebrow: { en: "Success partners", ar: "شركاء النجاح" },
+    title: { en: "Trusted by leading brands", ar: "موضع ثقة العلامات الرائدة" },
     logos: Array.from({ length: 20 }, (_, i) => ({ img: `/images/clients/client-${i + 1}.png`, alt: "Client brand" })),
     counters: [
-      { prefix: "+", value: 26, label: "Countries served" },
-      { prefix: "+", value: 20, label: "Brand partners" },
+      { prefix: "+", value: 35, label: "Countries served", labelAr: "دولة حول العالم" },
+      { prefix: "+", value: 20, label: "Brand partners", labelAr: "علامة شريكة" },
     ],
   },
   news: {
-    eyebrow: "News & events",
-    title: "The latest from Printopack",
-    link: { label: "All news", href: "/news" },
+    eyebrow: { en: "News & events", ar: "الأخبار والأحداث" },
+    title: { en: "The latest from Printopack", ar: "أحدث ما لدى برنتوباك" },
+    link: { en: "All news", ar: "كل الأخبار" },
+    read: { en: "Read more", ar: "اقرأ المزيد" },
+    cat: { en: "General Information", ar: "معلومات عامة" },
+    // The three latest real posts from api.printopack.com.sa (blogs), with their real images.
     items: [
-      { date: "10 Feb 2023", cat: "General", title: "The Future of Packaging in Saudi Arabia", img: "/images/lineup.jpg", href: "/news" },
-      { date: "06 May 2023", cat: "General", title: "The Benefits of Flexible Packaging: Durability, Versatility & Eco-Friendliness", img: "/images/factory.jpg", href: "/news" },
-      { date: "20 Jun 2022", cat: "General", title: "PVC vs PET-G Shrink Films", img: "/images/dept-5.jpg", href: "/news" },
+      { date: "27 Aug 2023", title: { en: "Pioneering Exceptional Packaging Solutions Since 1997: Your Path to Elevated Product Presentation", ar: "ريادة في حلول التغليف الاستثنائية منذ عام 1997: طريقك إلى عرضٍ أرقى لمنتجاتك" }, img: "/images/news/news-1.png", href: "/news" },
+      { date: "14 Aug 2023", title: { en: "Elevate Your Beverage Brand with Our Expertise in Flexible Packaging Solutions", ar: "ارتقِ بعلامتك للمشروبات مع خبرتنا في حلول التغليف المرن" }, img: "/images/news/news-2.jpeg", href: "/news" },
+      { date: "06 May 2023", title: { en: "Discover the Benefits of Flexible Packaging: Durability, Versatility and Eco-Friendliness", ar: "اكتشف مزايا التغليف المرن: المتانة والتنوّع والصداقة البيئية" }, img: "/images/news/news-3.png", href: "/news" },
     ],
   },
   cta: {
-    eyebrow: "Let's talk packaging",
-    title: "Set the standard in your industry.",
-    button: { label: "Request a quote", href: "/contact" },
+    eyebrow: { en: "Let's talk packaging", ar: "لنتحدّث عن التغليف" },
+    title: { en: "Set the standard in your industry.", ar: "ارتقِ بمعيار التغليف في قطاعك." },
+    button: { en: "Request a quote", ar: "اطلب عرض سعر" },
   },
 };
 const c = content;
+const pad = (n: number) => String(n).padStart(2, "0");
 ---
 <Base>
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-bg"><img src={c.hero.image} alt={c.hero.imageAlt} fetchpriority="high" /></div>
-    <div class="wrap-wide hero-inner">
-      <span class="eyebrow" style="color:var(--gold-bright)">{c.hero.eyebrow}</span>
-      <h1 class="display-xl" set:html={c.hero.titleHtml} />
-      <p class="hero-lede">{c.hero.lede}</p>
-      <div class="hero-cta">
-        {c.hero.ctas.map((b) => <a href={b.href} class={b.cls}>{b.label}</a>)}
-      </div>
+  <!-- ============ MAGAZINE COVER ============ -->
+  <section class="cover">
+    <div class="cover-bg"><img src={c.cover.image} alt={c.cover.imageAlt.en} fetchpriority="high" /></div>
+    <div class="wrap-wide cover-inner">
+      <span class="eyebrow" style="color:var(--gold-bright)"><Bi en={c.cover.eyebrow.en} ar={c.cover.eyebrow.ar} /></span>
+      <h1 class="display-xl">
+        <span class="i18n-en" set:html={c.cover.titleHtml.en} />
+        <span class="i18n-ar" lang="ar" set:html={c.cover.titleHtml.ar} />
+      </h1>
+      <p class="cover-lede"><Bi en={c.cover.lede.en} ar={c.cover.lede.ar} /></p>
     </div>
+    <a href="#contents" class="cover-scroll" aria-label="Scroll to contents">
+      <span><Bi en={c.cover.scroll.en} ar={c.cover.scroll.ar} /></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+    </a>
   </section>
 
-  <!-- COUNTERS -->
+  <!-- ============ THE CONTENTS (الفهرس): 7 routable section covers ============ -->
+  <section id="contents" class="contents">
+    <div class="wrap-wide">
+      <div class="contents-head">
+        <div>
+          <span class="eyebrow"><Bi en={c.contents.eyebrow.en} ar={c.contents.eyebrow.ar} /></span>
+          <h2 style="margin-top:14px"><Bi en={c.contents.title.en} ar={c.contents.title.ar} /></h2>
+          <p class="lede" style="margin-top:16px"><Bi en={c.contents.lede.en} ar={c.contents.lede.ar} /></p>
+        </div>
+        <div class="shelf-navs" aria-hidden="false">
+          <button class="shelf-nav prev" aria-label="Previous sections">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 5l-7 7 7 7"/></svg>
+          </button>
+          <button class="shelf-nav next" aria-label="More sections">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Horizontal shelf. User-driven side-scroll (no auto-motion): drag, snap + swipe
+         on touch, arrow buttons, every card tabbable for keyboard routing. The gutter
+         lives on the wrapper so the track's own width fits a whole number of cards. -->
+    <div class="shelf-wrap wrap-wide">
+      <ul class="shelf">
+        {c.contents.cards.map((s, i) => (
+          <li>
+            <a href={s.href} class="fcard" draggable="false">
+              <span class="fcard-media"><img src={s.img} alt={s.name.en} loading={i < 3 ? "eager" : "lazy"} decoding="async" draggable="false" /></span>
+              <span class="fcard-scrim"></span>
+              <span class="fcard-body">
+                <span class="fcard-num">{pad(i + 1)} <span class="fcard-of">/ 07</span></span>
+                <span class="fcard-name"><Bi en={s.name.en} ar={s.name.ar} /></span>
+                <span class="fcard-desc"><Bi en={s.desc.en} ar={s.desc.ar} /></span>
+                <span class="fcard-open"><Bi en={c.contents.open.en} ar={c.contents.open.ar} /> <span class="fcard-arrow" aria-hidden="true">&rarr;</span></span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <div class="wrap-wide"><span class="shelf-hint"><Bi en={c.contents.swipe.en} ar={c.contents.swipe.ar} /></span></div>
+  </section>
+
+  <!-- ============ COUNTERS ============ -->
   <section class="counters on-deep">
     <div class="wrap-wide counters-grid">
       {c.counters.map((n) => <Counter {...n} />)}
     </div>
   </section>
 
-  <!-- WHY PRINTOPACK (icon value cards) -->
-  <section class="why">
-    <div class="wrap-wide">
-      <div class="section-head center">
-        <span class="eyebrow plain" style="color:var(--gold)">{c.why.eyebrow}</span>
-        <h2 style="margin-top:14px">{c.why.title}</h2>
-      </div>
-      <div class="why-grid">
-        {c.why.cards.map((w) => (
-          <div class="why-card">
-            <span class="why-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" set:html={w.icon} />
-            </span>
-            <h3>{w.title}</h3>
-            <p>{w.text}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- INTRO -->
-  <section>
-    <div class="wrap intro-grid">
-      <div>
-        <span class="eyebrow">{c.intro.eyebrow}</span>
-        <h2 style="margin-top:16px">{c.intro.title}</h2>
-      </div>
-      <div>
-        <p class="lede">{c.intro.text}</p>
-        <a href={c.intro.link.href} class="link-line" style="margin-top:26px">{c.intro.link.label}</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- PRODUCTS PREVIEW -->
-  <section style="padding-top:0">
-    <div class="wrap-wide">
-      <div class="section-head split-head">
-        <div>
-          <span class="eyebrow">{c.products.eyebrow}</span>
-          <h2 style="margin-top:16px">{c.products.title}</h2>
-        </div>
-        <a href={c.products.link.href} class="link-line">{c.products.link.label}</a>
-      </div>
-      <div class="prod-grid">
-        {c.products.items.map((p) => (
-          <a href="/products" class="card prod-card">
-            <span class="card-img prod-img"><img src={p.img} alt={p.name} loading="lazy" decoding="async" /></span>
-            <span class="prod-label">{p.name}</span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- CAPABILITIES / FACTORY -->
-  <section style="padding-top:0">
-    <div class="wrap-wide">
-      <div class="section-head">
-        <span class="eyebrow">{c.capabilities.eyebrow}</span>
-        <h2>{c.capabilities.title}</h2>
-      </div>
-      <div class="cap-grid">
-        {c.capabilities.items.map((cap) => (
-          <a href={cap.href} class="card cap-card">
-            <span class="card-img cap-img"><img src={cap.img} alt={cap.label} loading="lazy" decoding="async" /></span>
-            <span class="cap-label">{cap.label}</span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- VISION / MISSION / VALUES (tabbed band, image + tabs + checklist) -->
-  <section class="on-navy vmv">
-    <div class="wrap-wide vmv-grid">
-      <div class="vmv-media"><img src={c.vmv.image} alt={c.vmv.imageAlt} loading="lazy" decoding="async" /></div>
-      <div class="vmv-body">
-        <span class="eyebrow">{c.vmv.eyebrow}</span>
-        <h2 style="margin:14px 0 26px">{c.vmv.title}</h2>
-        <div class="vmv-tabs" role="tablist" aria-label="Vision, mission and values">
-          <button class="vmv-tab is-active" role="tab" aria-selected="true" id="h-vision" aria-controls="p-vision" data-tab="vision">Vision</button>
-          <button class="vmv-tab" role="tab" aria-selected="false" id="h-mission" aria-controls="p-mission" data-tab="mission">Mission</button>
-          <button class="vmv-tab" role="tab" aria-selected="false" id="h-values" aria-controls="p-values" data-tab="values">Values</button>
-        </div>
-        <div class="vmv-panels">
-          <div class="vmv-panel is-active" role="tabpanel" id="p-vision" aria-labelledby="h-vision" data-panel="vision">
-            <p class="vmv-statement">{c.vmv.vision}</p>
-          </div>
-          <div class="vmv-panel" role="tabpanel" id="p-mission" aria-labelledby="h-mission" data-panel="mission" hidden>
-            <p class="vmv-statement">{c.vmv.mission}</p>
-          </div>
-          <div class="vmv-panel" role="tabpanel" id="p-values" aria-labelledby="h-values" data-panel="values" hidden>
-            <ul class="vmv-list">
-              {c.vmv.values.map((v) => (
-                <li>
-                  <span class="vmv-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4.5 4.5L19 7"/></svg></span>
-                  {v}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-        <a href={c.vmv.link.href} class="link-line vmv-link">{c.vmv.link.label}</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- QUALITY & RESPONSIBILITY TEASER -->
-  <section style="background:var(--cream)">
-    <div class="wrap split">
-      <div class="split-media"><img src={c.qualityTeaser.image} alt={c.qualityTeaser.imageAlt} loading="lazy" decoding="async" /></div>
-      <div>
-        <span class="eyebrow">{c.qualityTeaser.eyebrow}</span>
-        <h2 style="margin:16px 0 20px">{c.qualityTeaser.title}</h2>
-        <p class="lede">{c.qualityTeaser.text}</p>
-        <a href={c.qualityTeaser.link.href} class="link-line" style="margin-top:26px">{c.qualityTeaser.link.label}</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- SUCCESS PARTNERS -->
+  <!-- ============ SUCCESS PARTNERS ============ -->
   <section>
     <div class="wrap-wide">
       <div class="section-head center">
-        <span class="eyebrow plain" style="color:var(--gold)">{c.partners.eyebrow}</span>
-        <h2 style="margin-top:14px">{c.partners.title}</h2>
+        <span class="eyebrow plain" style="color:var(--gold)"><Bi en={c.partners.eyebrow.en} ar={c.partners.eyebrow.ar} /></span>
+        <h2 style="margin-top:14px"><Bi en={c.partners.title.en} ar={c.partners.title.ar} /></h2>
       </div>
       <div class="logo-grid">
         {c.partners.logos.map((l) => (
@@ -279,93 +175,116 @@ const c = content;
     </div>
   </section>
 
-  <!-- NEWS -->
-  <section>
+  <!-- ============ NEWS ============ -->
+  <section style="background:var(--cream)">
     <div class="wrap-wide">
-      <div class="section-head" style="display:flex;justify-content:space-between;align-items:flex-end;max-width:none">
+      <div class="section-head split-head">
         <div>
-          <span class="eyebrow">{c.news.eyebrow}</span>
-          <h2 style="margin-top:16px">{c.news.title}</h2>
+          <span class="eyebrow"><Bi en={c.news.eyebrow.en} ar={c.news.eyebrow.ar} /></span>
+          <h2 style="margin-top:16px"><Bi en={c.news.title.en} ar={c.news.title.ar} /></h2>
         </div>
-        <a href={c.news.link.href} class="link-line">{c.news.link.label}</a>
+        <a href="/news" class="link-line"><Bi en={c.news.link.en} ar={c.news.link.ar} /></a>
       </div>
       <div class="news-grid">
         {c.news.items.map((n) => (
           <a href={n.href} class="card news-card">
             <span class="card-img news-img"><img src={n.img} alt="" loading="lazy" decoding="async" /></span>
-            <span class="news-meta">{n.cat} · {n.date}</span>
-            <h3 class="news-title">{n.title}</h3>
-            <span class="link-line news-read">Read more</span>
+            <span class="news-meta"><Bi en={c.news.cat.en} ar={c.news.cat.ar} /> · <span dir="ltr">{n.date}</span></span>
+            <h3 class="news-title"><Bi en={n.title.en} ar={n.title.ar} /></h3>
+            <span class="link-line news-read"><Bi en={c.news.read.en} ar={c.news.read.ar} /></span>
           </a>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
+  <!-- ============ CTA ============ -->
   <section class="cta on-deep">
     <div class="wrap" style="text-align:center">
-      <span class="eyebrow plain" style="color:var(--gold-bright)">{c.cta.eyebrow}</span>
-      <h2 style="margin:16px 0 26px">{c.cta.title}</h2>
-      <a href={c.cta.button.href} class="btn btn-gold">{c.cta.button.label}</a>
+      <span class="eyebrow plain" style="color:var(--gold-bright)"><Bi en={c.cta.eyebrow.en} ar={c.cta.eyebrow.ar} /></span>
+      <h2 style="margin:16px 0 26px"><Bi en={c.cta.title.en} ar={c.cta.title.ar} /></h2>
+      <a href="/contact" class="btn btn-gold"><Bi en={c.cta.button.en} ar={c.cta.button.ar} /></a>
     </div>
   </section>
 </Base>
 
 <style>
-  /* hero */
-  .hero{position:relative;min-height:92vh;display:flex;align-items:flex-end;color:var(--paper);overflow:hidden}
-  .hero-bg{position:absolute;inset:0}
-  .hero-bg img{width:100%;height:100%;object-fit:cover}
-  .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,rgba(9,24,41,.78) 0%,rgba(9,24,41,.42) 42%,rgba(9,24,41,.12) 72%),linear-gradient(0deg,rgba(9,24,41,.88) 0%,rgba(9,24,41,.15) 46%,transparent 70%)}
-  .hero-inner{position:relative;z-index:2;padding-bottom:clamp(48px,7vw,88px)}
-  .hero h1{margin:20px 0 24px;max-width:16ch}
-  .hero-lede{font-size:clamp(16px,1.5vw,20px);color:rgba(250,246,238,.82);max-width:52ch;font-weight:300;line-height:1.6}
-  .hero-cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+  /* ---------- magazine cover ---------- */
+  .cover{position:relative;min-height:calc(100vh - 174px);min-height:86vh;display:flex;align-items:flex-end;color:var(--paper);overflow:hidden}
+  .cover-bg{position:absolute;inset:0}
+  .cover-bg img{width:100%;height:100%;object-fit:cover}
+  .cover-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,rgba(9,24,41,.82) 0%,rgba(9,24,41,.46) 44%,rgba(9,24,41,.12) 74%),linear-gradient(0deg,rgba(9,24,41,.9) 0%,rgba(9,24,41,.15) 46%,transparent 70%)}
+  .cover-inner{position:relative;z-index:2;padding-bottom:clamp(64px,9vw,120px)}
+  .cover h1{margin:20px 0 24px;max-width:16ch}
+  .cover-lede{font-size:clamp(16px,1.5vw,20px);color:rgba(250,246,238,.84);max-width:54ch;font-weight:300;line-height:1.6}
+  .cover-scroll{position:absolute;z-index:3;left:50%;transform:translateX(-50%);bottom:22px;display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(250,246,238,.78);font-family:var(--display);font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+  .cover-scroll:hover{color:var(--gold-bright)}
+  .cover-scroll svg{width:22px;height:22px}
+  [dir="rtl"] .cover-scroll{transform:translateX(50%)}
 
-  /* counters */
+  /* ---------- contents (الفهرس) ---------- */
+  .contents{padding-bottom:clamp(56px,7vw,90px)}
+  .contents-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px}
+  .contents-head .lede{max-width:56ch}
+  .shelf-navs{display:flex;gap:10px;flex:none}
+  .shelf-nav{width:52px;height:52px;border:1px solid var(--line);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:var(--navy);background:var(--paper)}
+  .shelf-nav:hover:not(:disabled){background:var(--navy);color:var(--paper);border-color:var(--navy)}
+  .shelf-nav:disabled{opacity:.32;cursor:default}
+  .shelf-nav svg{width:20px;height:20px}
+
+  .shelf-wrap{margin-top:clamp(30px,4vw,46px)}
+  /* The track shows a whole number of cards (--n) that EXACTLY fill its width, so a
+     card is never left half-shown: no clipping, no fade needed. Card width is derived
+     from --n and the gap, so the last card always ends flush with the edge. Mandatory
+     snap re-aligns to whole cards after any scroll or drag; grab-drag with a mouse. */
+  .shelf{
+    --n:4;--gap:22px;
+    display:flex;gap:var(--gap);overflow-x:auto;scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;padding-block:6px;cursor:grab;
+  }
+  .shelf::-webkit-scrollbar{display:none}
+  .shelf.grabbing{cursor:grabbing;user-select:none}
+  .shelf.no-snap{scroll-snap-type:none}
+  .shelf > li{flex:0 0 calc((100% - (var(--n) - 1) * var(--gap)) / var(--n));scroll-snap-align:start}
+  /* keep cards clickable during/after a drag (no pointer-events:none, which would
+     break the click target); just stop the browser's native link/image drag. */
+  .fcard,.fcard img{-webkit-user-drag:none;user-select:none}
+  @media(max-width:1140px){.shelf{--n:3}}
+  @media(max-width:840px){.shelf{--n:2}}
+  @media(max-width:560px){.shelf{--n:1;--gap:16px}}
+  .fcard{position:relative;display:block;height:clamp(420px,42vw,520px);border-radius:var(--radius);overflow:hidden;background:var(--navy-deep);border:1px solid var(--line)}
+  .fcard-media{position:absolute;inset:0}
+  .fcard-media img{width:100%;height:100%;object-fit:cover;filter:brightness(1.1) saturate(1.08)}
+  .fcard-scrim{position:absolute;inset:0;background:linear-gradient(0deg,rgba(9,24,41,.94) 0%,rgba(9,24,41,.72) 26%,rgba(9,24,41,.28) 52%,transparent 78%)}
+  .fcard:hover .fcard-media img{filter:brightness(1.2) saturate(1.12)}
+  .fcard-body{position:absolute;inset:auto 0 0 0;z-index:2;display:flex;flex-direction:column;padding:clamp(22px,2vw,28px);color:var(--paper)}
+  .fcard-num{font-family:var(--display);font-size:13px;font-weight:500;letter-spacing:.18em;color:var(--gold-bright);margin-bottom:12px}
+  .fcard-of{color:rgba(250,246,238,.5)}
+  .fcard-name{font-family:var(--display);font-weight:300;font-size:clamp(26px,2.4vw,32px);line-height:1.06}
+  .fcard-desc{margin-top:10px;font-size:14px;line-height:1.55;color:rgba(250,246,238,.82);max-width:34ch}
+  .fcard-open{margin-top:16px;font-family:var(--display);font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--paper);display:inline-flex;align-items:center;gap:9px}
+  .fcard:hover .fcard-open{color:var(--gold-bright)}
+  .fcard::after{content:"";position:absolute;inset:0;z-index:3;border:2px solid transparent;border-radius:var(--radius)}
+  .fcard:hover::after{border-color:var(--gold)}
+  [dir="rtl"] .fcard-arrow{display:inline-block;transform:scaleX(-1)}
+
+  /* touch-only hint: irrelevant to mouse users, who get the arrows */
+  .shelf-hint{display:none;margin-top:18px;font-family:var(--display);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+  @media(pointer:coarse){.shelf-hint{display:block}}
+
+  /* ---------- counters ---------- */
   .counters{padding-block:clamp(48px,6vw,72px)}
   .counters-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
 
-  /* intro */
-  .intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,6vw,80px);align-items:start}
+  /* ---------- partners ---------- */
+  .logo{position:relative;background:var(--paper);aspect-ratio:16/9}
+  .logo-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+  .logo img{position:absolute;inset:0;margin:auto;max-width:calc(100% - 52px);max-height:calc(100% - 52px);mix-blend-mode:multiply}
+  .logo:hover img{filter:grayscale(1);opacity:.55}
+  .partner-counters{display:flex;justify-content:center;gap:clamp(40px,8vw,120px);margin-top:clamp(44px,6vw,66px)}
 
-  /* capabilities */
-  .cap-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
-  .cap-img{aspect-ratio:4/5}
-  .cap-label{display:block;margin-top:16px;font-family:var(--display);font-size:15px;font-weight:400;letter-spacing:.04em;color:var(--ink)}
-  .cap-card:hover .cap-label{color:var(--gold)}
-
-  /* why-printopack icon cards */
-  .why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-  .why-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(26px,2.6vw,34px) clamp(22px,2.2vw,28px)}
-  .why-card:hover{border-color:var(--gold);box-shadow:0 20px 40px rgba(14,35,64,.07)}
-  .why-icon{display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;background:var(--gold-soft);color:var(--gold);margin-bottom:22px}
-  .why-icon svg{width:27px;height:27px}
-  .why-card h3{font-size:clamp(18px,1.7vw,22px);margin-bottom:12px;line-height:1.15}
-  .why-card p{color:var(--muted);font-size:14.5px;max-width:none}
-  @media(max-width:1000px){.why-grid{grid-template-columns:1fr 1fr;gap:20px}}
-  @media(max-width:560px){.why-grid{grid-template-columns:1fr}}
-
-  /* vision/mission/values tabbed band */
-  .vmv-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(32px,5vw,72px);align-items:center}
-  .vmv-media{aspect-ratio:4/3;overflow:hidden;border-radius:var(--radius);background:var(--navy-soft)}
-  .vmv-media img{width:100%;height:100%;object-fit:cover}
-  .vmv-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line-dark);margin-bottom:28px}
-  .vmv-tab{font-family:var(--display);font-size:13px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(250,246,238,.55);padding:12px 20px;border-bottom:2px solid transparent;margin-bottom:-1px}
-  .vmv-tab:hover{color:var(--paper)}
-  .vmv-tab.is-active{color:var(--gold-bright);border-bottom-color:var(--gold-bright)}
-  .vmv-panel[hidden]{display:none}
-  .vmv-panels{min-height:132px}
-  .vmv-statement{font-family:var(--display);font-weight:300;font-size:clamp(22px,2.7vw,33px);line-height:1.26;color:var(--paper);max-width:24ch}
-  .vmv-list{display:grid;gap:12px}
-  .vmv-list li{display:flex;align-items:center;gap:12px;color:rgba(250,246,238,.86);font-size:clamp(16px,1.4vw,18px)}
-  .vmv-tick{flex:none;display:inline-flex;color:var(--gold-bright)}
-  .vmv-tick svg{width:18px;height:18px}
-  .vmv-link{margin-top:30px;color:var(--gold-bright);border-color:var(--gold-bright)}
-  @media(max-width:860px){.vmv-grid{grid-template-columns:1fr;gap:32px}.vmv-media{order:2}}
-
-  /* news */
+  /* ---------- news ---------- */
+  .split-head{display:flex;justify-content:space-between;align-items:flex-end;max-width:none}
   .news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;align-items:stretch}
   .news-card{display:flex;flex-direction:column}
   .news-img{aspect-ratio:3/2}
@@ -373,70 +292,94 @@ const c = content;
   .news-title{margin:10px 0 16px;font-size:clamp(20px,1.7vw,25px)}
   .news-read{font-size:12px;margin-top:auto;align-self:flex-start}
 
-  /* section head with side link */
-  .split-head{display:flex;justify-content:space-between;align-items:flex-end;max-width:none}
-
-  /* products preview.
-     multiply melts each photo's baked-in white background into the cream
-     tile, so the product sits on the tile instead of inside a smaller white box. */
-  .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
-  .prod-img{aspect-ratio:1;background:var(--cream);display:grid;place-items:center}
-  .prod-img img{width:100%;height:100%;object-fit:contain;padding:10px;mix-blend-mode:multiply}
-  .prod-label{display:block;margin-top:14px;font-family:var(--display);font-size:15px;letter-spacing:.04em;color:var(--ink)}
-  .prod-card:hover .prod-label{color:var(--gold)}
-
-  /* split feature (quality teaser) */
-  .split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,6vw,74px);align-items:center}
-  .split-media{aspect-ratio:5/4;overflow:hidden;background:var(--sand)}
-  .split-media img{width:100%;height:100%;object-fit:cover}
-
-  /* partners logo grid.
-     The image is absolutely positioned: a percentage max-height inside an
-     aspect-ratio grid cell is circular and collapses the img to 0x0, while
-     an abs-pos child resolves against the cell and cannot inflate it.
-     mix-blend-mode melts the logos' baked-in white backgrounds into the paper. */
-  .logo{position:relative;background:var(--paper);aspect-ratio:16/9}
-  .logo-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
-  .logo img{position:absolute;inset:0;margin:auto;max-width:calc(100% - 52px);max-height:calc(100% - 52px);mix-blend-mode:multiply}
-  .logo:hover img{filter:grayscale(1);opacity:.55}
-  .partner-counters{display:flex;justify-content:center;gap:clamp(40px,8vw,120px);margin-top:clamp(44px,6vw,66px)}
-
   @media(max-width:1000px){
-    .counters-grid,.cap-grid,.prod-grid{grid-template-columns:repeat(2,1fr);gap:36px 24px}
-    .intro-grid,.news-grid,.split{grid-template-columns:1fr;gap:30px}
-    .news-grid{gap:40px}
+    .counters-grid{grid-template-columns:repeat(2,1fr);gap:36px 24px}
+    .news-grid{grid-template-columns:1fr;gap:40px}
     .split-head{flex-direction:column;align-items:flex-start;gap:16px}
     .logo-grid{grid-template-columns:repeat(3,1fr)}
+    /* stack the head, but KEEP the arrows: at these widths there is no visible
+       scrollbar and a mouse cannot swipe, so the arrows are the only way to reach
+       cards 4-7. They sit just under the intro. */
+    .contents-head{flex-direction:column;align-items:flex-start;gap:22px}
+    .shelf-nav{width:48px;height:48px}
   }
   @media(max-width:560px){
-    .counters-grid,.cap-grid{grid-template-columns:1fr}
-    .prod-grid{grid-template-columns:repeat(2,1fr);gap:18px}
-    .prod-img img{padding:8px}
-    .prod-label{font-size:13.5px}
+    .counters-grid{grid-template-columns:1fr}
     .logo-grid{grid-template-columns:repeat(2,1fr)}
-    .hero-cta{flex-direction:column;align-items:flex-start}
+    .cover{min-height:82vh}
     .partner-counters{gap:40px}
   }
 </style>
 
 <script>
-  // Vision/Mission/Values tabs on the home band. Instant, no motion, keyboard-friendly.
-  const tabs = Array.from(document.querySelectorAll('.vmv-tab'));
-  const panels = Array.from(document.querySelectorAll('.vmv-panel'));
-  function select(tab) {
-    tabs.forEach((t) => { t.classList.remove('is-active'); t.setAttribute('aria-selected', 'false'); });
-    panels.forEach((p) => { p.classList.remove('is-active'); p.setAttribute('hidden', ''); });
-    tab.classList.add('is-active'); tab.setAttribute('aria-selected', 'true');
-    const panel = document.getElementById('p-' + tab.dataset.tab);
-    panel?.classList.add('is-active'); panel?.removeAttribute('hidden');
-  }
-  tabs.forEach((t, i) => {
-    t.addEventListener('click', () => select(t));
-    t.addEventListener('keydown', (e) => {
-      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      e.preventDefault();
-      const next = e.key === 'ArrowRight' ? (i + 1) % tabs.length : (i - 1 + tabs.length) % tabs.length;
-      tabs[next].focus(); select(tabs[next]);
+  // Contents shelf: RTL-aware side-scroll by one card per arrow click. User-driven
+  // only; no auto-play. Smooth scroll is disabled for reduced-motion visitors.
+  const shelf = document.querySelector<HTMLElement>('.shelf');
+  const prev = document.querySelector<HTMLButtonElement>('.shelf-nav.prev');
+  const next = document.querySelector<HTMLButtonElement>('.shelf-nav.next');
+  if (shelf && prev && next) {
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isRtl = () => document.documentElement.dir === 'rtl';
+    const stepAmount = () => {
+      const card = shelf.querySelector<HTMLElement>('li');
+      const gap = parseFloat(getComputedStyle(shelf).columnGap) || 22;
+      return card ? card.getBoundingClientRect().width + gap : 360;
+    };
+    const go = (dir: number) => {
+      const signed = dir * stepAmount() * (isRtl() ? -1 : 1);
+      shelf.scrollBy({ left: signed, behavior: reduce ? 'auto' : 'smooth' });
+    };
+    prev.addEventListener('click', () => go(-1));
+    next.addEventListener('click', () => go(1));
+
+    // Disable the arrow at each true end. scrollLeft is negative in RTL, so abs()===0
+    // is the logical start in both directions.
+    const update = () => {
+      const max = shelf.scrollWidth - shelf.clientWidth - 2;
+      const pos = Math.abs(shelf.scrollLeft);
+      prev.disabled = pos <= 2;
+      next.disabled = pos >= max;
+    };
+    shelf.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    document.querySelector('.lang')?.addEventListener('click', () => setTimeout(update, 0));
+    update();
+
+    // Click-and-drag to scroll with a mouse (touch keeps native momentum scroll).
+    // Native snap is disabled while dragging; on release we glide gently onto the
+    // nearest whole card, then re-arm snap once settled, so it never yanks/springs.
+    let down = false, startX = 0, startScroll = 0, moved = false, snapTimer = 0;
+    shelf.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch') return;
+      clearTimeout(snapTimer);
+      down = true; moved = false; startX = e.clientX; startScroll = shelf.scrollLeft;
+      shelf.classList.add('grabbing', 'no-snap');
     });
-  });
+    window.addEventListener('pointermove', (e) => {
+      if (!down) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 4) moved = true;
+      shelf.scrollLeft = startScroll - dx;
+    });
+    const release = () => {
+      if (!down) return;
+      down = false;
+      shelf.classList.remove('grabbing');
+      if (moved) {
+        const step = stepAmount();
+        const target = Math.round(shelf.scrollLeft / step) * step;
+        shelf.scrollTo({ left: target, behavior: reduce ? 'auto' : 'smooth' });
+        // re-arm native snap only once the glide has settled: no second jump
+        snapTimer = window.setTimeout(() => { if (!down) shelf.classList.remove('no-snap'); }, reduce ? 0 : 420);
+      } else {
+        shelf.classList.remove('no-snap');
+      }
+    };
+    window.addEventListener('pointerup', release);
+    window.addEventListener('pointercancel', release);
+    // Swallow the click that follows a real drag so it does not open a section.
+    shelf.addEventListener('click', (e) => {
+      if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
+    }, true);
+  }
 </script>

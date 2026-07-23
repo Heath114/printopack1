@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Bi from '../components/Bi.astro';
+import { collection } from '../lib/content';
 
 // ── EDITABLE CONTENT (bilingual) ─────────────────────────────────────────────
 // Each visible string is { en, ar }. The Arabic is natural fusha, NOT a literal
@@ -53,16 +54,16 @@ const content = {
     eyebrow: { en: "Certifications", ar: "الشهادات" },
     title: { en: "Our certificates.", ar: "شهاداتنا" },
     note: {
-      en: "Certificate documents, the licence number and the Saudization and Mowaamah certificates are added and kept current by Printopack through the site's admin.",
-      ar: "تُضيف برنتوباك وثائق الشهادات ورقم الترخيص وشهادتَي السعودة والمواءمة، وتُحدّثها عبر لوحة تحكم الموقع.",
+      en: "Click any certificate to view it. Further certificates are published here as they are renewed.",
+      ar: "انقر على أي شهادة لعرضها. وتُنشر المزيد من الشهادات هنا عند تجديدها.",
     },
-    items: [
-      {
-        name: { en: "BRCGS Global Standard for Packaging Materials", ar: "معيار BRCGS العالمي لمواد التغليف" },
-        note: { en: "Grade A, issued by SGS", ar: "الدرجة A، صادرة عن SGS" },
-        image: "/images/cert-brcgs.jpg",
-      },
-    ],
+    // Full certificate list, sourced from the content store (admin-managed).
+    items: collection('responsibility').map((r) => ({
+      name: { en: r.title, ar: r.titleAr },
+      note: { en: r.description, ar: r.descriptionAr },
+      image: r.image,
+      href: r.link || undefined,
+    })),
   },
 };
 const c = content;
@@ -105,8 +106,8 @@ const c = content;
     </div>
   </section>
 
-  <!-- CERTIFICATES (content-editable slot; seeded with the real BRCGS certificate) -->
-  <section class="certs" style="background:var(--cream)">
+  <!-- CERTIFICATES (the full list of Printopack's certificates; other pages link here) -->
+  <section class="certs" id="certificates" style="background:var(--cream);scroll-margin-top:120px">
     <div class="wrap-wide">
       <div class="section-head">
         <span class="eyebrow"><Bi en={c.certifications.eyebrow.en} ar={c.certifications.eyebrow.ar} /></span>
@@ -114,7 +115,7 @@ const c = content;
       </div>
       <div class="cert-grid">
         {c.certifications.items.map((cert) => (
-          <a class="cert-card" href={cert.image} target="_blank" rel="noopener">
+          <a class="cert-card" href={cert.href ?? cert.image} target="_blank" rel="noopener">
             <span class="cert-thumb"><img src={cert.image} alt={cert.name.en} loading="lazy" /></span>
             <span class="cert-body">
               <span class="cert-name"><Bi en={cert.name.en} ar={cert.name.ar} /></span>

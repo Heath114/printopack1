@@ -1,0 +1,75 @@
+---
+import Base from '../layouts/Base.astro';
+import Bi from '../components/Bi.astro';
+
+// News & Gallery hub (Nasser's Page 6). Like the About hub, this is a concise landing that
+// routes into its two sub-pages (News & Events, Gallery) rather than jumping straight to one.
+const content = {
+  meta: {
+    title: "News & Gallery - Printopack",
+    description: "Printopack news and events, and a gallery of the plant, our production lines and finished work.",
+  },
+  header: {
+    eyebrow: { en: "News & Gallery", ar: "الأخبار والمعرض" },
+    title: { en: "News & Gallery.", ar: "الأخبار والمعرض." },
+    lede: {
+      en: "The latest from Printopack and a look inside the plant. Choose a section to explore.",
+      ar: "أحدث ما لدى برنتوباك ونظرة من داخل المصنع. اختر قسماً لاستكشافه.",
+    },
+  },
+  go: { en: "Explore", ar: "استكشف" },
+  subpages: [
+    { title: { en: "News & Events", ar: "الأخبار والأحداث" }, desc: { en: "Latest posts and updates, plus the exhibitions where you can meet us.", ar: "أحدث المنشورات والمستجدات، إضافةً إلى المعارض التي يمكنكم لقاؤنا فيها." }, href: "/news", img: "/images/news/news-1.png" },
+    { title: { en: "Gallery", ar: "معرض الصور" }, desc: { en: "Photos, videos and campaign work from inside Printopack.", ar: "صور ومقاطع فيديو وأعمال إعلانية من داخل برنتوباك." }, href: "/gallery", img: "/images/gallery/gallery_59bc0d73-c3fc-4180-b0af-32c002a968d2.JPG" },
+  ],
+};
+const c = content;
+---
+<Base title={c.meta.title} description={c.meta.description}>
+  <!-- PAGE HEADER -->
+  <section class="page-head">
+    <div class="wrap-wide">
+      <div class="page-head-inner">
+        <span class="eyebrow"><Bi en={c.header.eyebrow.en} ar={c.header.eyebrow.ar} /></span>
+        <h1><Bi en={c.header.title.en} ar={c.header.title.ar} /></h1>
+        <p class="lede"><Bi en={c.header.lede.en} ar={c.header.lede.ar} /></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUBPAGE CARDS -->
+  <section class="sub">
+    <div class="wrap-wide">
+      <div class="sub-grid">
+        {c.subpages.map((s) => (
+          <a class="sub-card" href={s.href}>
+            <span class="card-img"><img src={s.img} alt={s.title.en} loading="lazy" /></span>
+            <span class="sub-body">
+              <span class="sub-title"><Bi en={s.title.en} ar={s.title.ar} /></span>
+              <span class="sub-desc"><Bi en={s.desc.en} ar={s.desc.ar} /></span>
+              <span class="sub-go"><Bi en={c.go.en} ar={c.go.ar} /> &rarr;</span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head{padding-block:clamp(56px,8vw,104px) clamp(30px,4vw,52px);background:var(--cream);border-bottom:1px solid var(--line)}
+  .page-head-inner{max-width:820px}
+  .page-head h1{margin:20px 0 22px;font-size:clamp(40px,6vw,78px)}
+  .page-head .lede{max-width:60ch}
+
+  .sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+  .sub-card{display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .sub-card:hover{border-color:var(--navy);box-shadow:0 20px 40px rgba(14,35,64,.08)}
+  .sub-card .card-img{aspect-ratio:16/9}
+  .sub-card:hover .card-img img{opacity:.92}
+  .sub-body{display:flex;flex-direction:column;padding:24px 26px 26px}
+  .sub-title{font-family:var(--display);font-size:clamp(21px,2vw,26px);font-weight:var(--w-light);color:var(--ink)}
+  .sub-desc{color:var(--muted);font-size:15px;margin:10px 0 18px}
+  .sub-go{font-family:var(--display);font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-top:auto}
+  @media(max-width:640px){.sub-grid{grid-template-columns:1fr}}
+</style>

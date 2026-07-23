@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Bi from '../../components/Bi.astro';
+import { collection } from '../../lib/content';
 
 // ── EDITABLE CONTENT (bilingual) ─────────────────────────────────────────────
 // Quality Certificates (Nasser's Page 2, subsection 1). The certificate slot is a
@@ -21,16 +22,19 @@ const content = {
   },
   certs: {
     note: {
-      en: "More certificates are published here as they are issued and renewed.",
-      ar: "تُنشر المزيد من الشهادات هنا عند إصدارها وتجديدها.",
+      en: "The certificates shown here are our quality-specific certificates.",
+      ar: "الشهادات المعروضة هنا خاصّة بالجودة.",
     },
-    items: [
-      {
-        name: { en: "BRCGS Global Standard for Packaging Materials", ar: "معيار BRCGS العالمي لمواد التغليف" },
-        note: { en: "Grade A, issued by SGS", ar: "الدرجة A، صادرة عن SGS" },
-        image: "/images/cert-brcgs.jpg",
-      },
-    ],
+    fullList: {
+      en: "See our full list of certificates",
+      ar: "اطّلع على قائمة شهاداتنا الكاملة",
+    },
+    // Quality-specific certificates, from the content store (kind = Certificate).
+    items: collection('quality').filter((q) => q.kind === 'Certificate').map((q) => ({
+      name: { en: q.title, ar: q.titleAr },
+      note: { en: q.description, ar: q.descriptionAr },
+      image: q.image,
+    })),
   },
 };
 const c = content;
@@ -61,7 +65,10 @@ const c = content;
           </a>
         ))}
       </div>
-      <p class="cert-foot"><Bi en={c.certs.note.en} ar={c.certs.note.ar} /></p>
+      <p class="cert-foot">
+        <Bi en={c.certs.note.en} ar={c.certs.note.ar} />
+        <a class="cert-full-link" href="/responsibility#certificates"><Bi en={c.certs.fullList.en} ar={c.certs.fullList.ar} /> <span class="arr" aria-hidden="true">&rarr;</span></a>
+      </p>
     </div>
   </section>
 
@@ -93,6 +100,10 @@ const c = content;
   .cert-name{display:block;font-family:var(--display);font-size:16px;color:var(--ink);line-height:1.3}
   .cert-note{display:block;margin-top:6px;font-size:13px;color:var(--muted)}
   .cert-foot{margin-top:clamp(28px,4vw,44px);color:var(--faint);font-size:14px}
+  .cert-full-link{display:inline-block;margin-inline-start:6px;color:var(--navy);font-family:var(--display);font-weight:500}
+  .cert-full-link:hover{color:var(--gold)}
+  .cert-full-link .arr{display:inline-block}
+  [dir="rtl"] .cert-full-link .arr{transform:scaleX(-1)}
   @media(max-width:520px){.cert-grid{grid-template-columns:1fr}}
 
   .qnav{padding-block:clamp(40px,5vw,60px)}

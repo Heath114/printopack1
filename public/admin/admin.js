@@ -37,7 +37,7 @@ var ICON={
 function svg(n){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">'+(ICON[n]||'')+'</svg>';}
 
 /* ---------------- data layer ---------------- */
-var KEY='pp_admin_v2';
+var KEY='pp_admin_v4';
 var IMG={cat:function(i){return '/images/cat-'+i+'.png';},dept:function(i){return '/images/dept-'+i+'.jpg';},client:function(i){return '/images/clients/client-'+i+'.png';}};
 var SEED={
  news:[
@@ -113,13 +113,21 @@ var SEED={
   {id:uid(),title:"Printopack corporate film",titleAr:"الفيلم التعريفي لبرينتوباك",kind:"Video",image:"/images/factory.jpg",url:"https://"}
  ],
  offices:[
-  {id:uid(),city:"Jeddah (HQ)",country:"Saudi Arabia",phone:"+966 12 608 1074",email:"info@printopack.com.sa",staff:"Head office and production",hq:true},
-  {id:uid(),city:"Kuwait City",country:"Kuwait",phone:"",email:"kuwait@printopack.com.sa",staff:"",hq:false},
-  {id:uid(),city:"Amman",country:"Jordan",phone:"",email:"jordan@printopack.com.sa",staff:"",hq:false},
-  {id:uid(),city:"Cairo",country:"Egypt",phone:"",email:"egypt@printopack.com.sa",staff:"",hq:false},
-  {id:uid(),city:"Khartoum",country:"Sudan",phone:"",email:"sudan@printopack.com.sa",staff:"",hq:false},
-  {id:uid(),city:"Tunis",country:"Tunisia",phone:"",email:"tunisia@printopack.com.sa",staff:"",hq:false},
-  {id:uid(),city:"Algiers",country:"Algeria",phone:"",email:"algeria@printopack.com.sa",staff:"",hq:false}
+  {id:uid(),city:"Head Office, Jeddah",cityAr:"المقر الرئيسي، جدة",group:"Saudi Arabia",country:"Western Area",countryAr:"المنطقة الغربية",staffName:"Name Name",staffNameAr:"الاسم الاسم",staffRole:"Office manager",staffRoleAr:"مدير المكتب",phone:"+966 12 608 1074",email:"info@printopack.com.sa"},
+  {id:uid(),city:"Riyadh Office",cityAr:"مكتب الرياض",group:"Saudi Arabia",country:"Central Area",countryAr:"المنطقة الوسطى",staffName:"Name Name",staffNameAr:"الاسم الاسم",staffRole:"Office manager",staffRoleAr:"مدير المكتب",phone:"+966 57 675 8589",email:"riyadoffice@printopack.com.sa"},
+  {id:uid(),city:"Jeddah Office",cityAr:"مكتب جدة",group:"Saudi Arabia",country:"Western Area",countryAr:"المنطقة الغربية",staffName:"Name Name",staffNameAr:"الاسم الاسم",staffRole:"Office manager",staffRoleAr:"مدير المكتب",phone:"+966 566197783",email:"localsales@printopack.com.sa"},
+  {id:uid(),city:"Dammam Office",cityAr:"مكتب الدمام",group:"Saudi Arabia",country:"Eastern Area",countryAr:"المنطقة الشرقية",staffName:"Name Name",staffNameAr:"الاسم الاسم",staffRole:"Office manager",staffRoleAr:"مدير المكتب",phone:"+966 559226498",email:"wak@printopack.com.sa"},
+  {id:uid(),city:"Key Accounts",cityAr:"الحسابات الرئيسية",group:"Saudi Arabia",country:"Kingdom-wide",countryAr:"على مستوى المملكة",staffName:"Name Name",staffNameAr:"الاسم الاسم",staffRole:"Office manager",staffRoleAr:"مدير المكتب",phone:"+966 50 008 0791",email:"a.riaz@printopack.com.sa"},
+  {id:uid(),city:"Yemen",cityAr:"اليمن",group:"Regional & Export",country:"Yemen",countryAr:"اليمن",staffName:"Name Name",staffNameAr:"الاسم الاسم",staffRole:"Office manager",staffRoleAr:"مدير المكتب",phone:"+967 775299991",email:"yemen@printopack.com.sa"},
+  {id:uid(),city:"Tunisia & Libya",cityAr:"تونس وليبيا",group:"Regional & Export",country:"Tunisia & Libya",countryAr:"تونس وليبيا",staffName:"Sami Monser",staffNameAr:"سامي منصر",staffRole:"Regional Sales Manager",staffRoleAr:"مدير المبيعات الإقليمي",phone:"+216 28534504",email:"tunisia@printopack.com.sa"},
+  {id:uid(),city:"Kuwait",cityAr:"الكويت",group:"Regional & Export",country:"Kuwait",countryAr:"الكويت",staffName:"Nader Bilal",staffNameAr:"نادر بلال",staffRole:"Regional Sales Leader",staffRoleAr:"قائد المبيعات الإقليمي",phone:"+965 97707578",email:"kuwait@printopack.com.sa"},
+  {id:uid(),city:"Morocco",cityAr:"المغرب",group:"Regional & Export",country:"Morocco",countryAr:"المغرب",staffName:"Name Name",staffNameAr:"الاسم الاسم",staffRole:"Office manager",staffRoleAr:"مدير المكتب",phone:"+966 55 421 9918",email:"moroccooffice@printopack.com.sa"},
+  {id:uid(),city:"International Sales",cityAr:"المبيعات الدولية",group:"Regional & Export",country:"International",countryAr:"دولي",staffName:"Name Name",staffNameAr:"الاسم الاسم",staffRole:"Office manager",staffRoleAr:"مدير المكتب",phone:"+966 50 873 9828",email:"ibrahim.ismail@printopack.com.sa"},
+  {id:uid(),city:"Algeria",cityAr:"الجزائر",group:"Regional & Export",country:"Algeria",countryAr:"الجزائر",staffName:"Elhaoues Chemseddine",staffNameAr:"الهواس شمس الدين",staffRole:"Regional Sales Leader",staffRoleAr:"قائد المبيعات الإقليمي",phone:"+213 553038979",email:"info-algeria@printopack.com.sa"},
+  {id:uid(),city:"Egypt",cityAr:"مصر",group:"Regional & Export",country:"Egypt",countryAr:"مصر",staffName:"Name Name",staffNameAr:"الاسم الاسم",staffRole:"Office manager",staffRoleAr:"مدير المكتب",phone:"+20 111 171 2221",email:"egypt@printopack.com.sa"},
+  {id:uid(),city:"Sudan",cityAr:"السودان",group:"Regional & Export",country:"Sudan",countryAr:"السودان",staffName:"Name Name",staffNameAr:"الاسم الاسم",staffRole:"Office manager",staffRoleAr:"مدير المكتب",phone:"+966 55 421 9918",email:"sudan@printopack.com.sa"},
+  {id:uid(),city:"Jordan & Iraq",cityAr:"الأردن والعراق",group:"Regional & Export",country:"Jordan & Iraq",countryAr:"الأردن والعراق",staffName:"Name Name",staffNameAr:"الاسم الاسم",staffRole:"Office manager",staffRoleAr:"مدير المكتب",phone:"+962 7 8570 6299",email:"jordan@printopack.com.sa"},
+  {id:uid(),city:"Syria",cityAr:"سوريا",group:"Regional & Export",country:"Syria",countryAr:"سوريا",staffName:"Name Name",staffNameAr:"الاسم الاسم",staffRole:"Office manager",staffRoleAr:"مدير المكتب",phone:"+963 933431615",email:"bsh_moneer@hotmail.com"}
  ],
  about:{
   heroTitle:"Where technology meets vision.",heroTitleAr:"حيث تلتقي التقنية بالرؤية.",
@@ -129,7 +137,7 @@ var SEED={
   mission:"To be the driving force behind brands' packaging evolution.",missionAr:"أن نكون القوة الدافعة وراء تطوّر تغليف العلامات التجارية.",
   vision:"Empowering brands through creative packaging excellence.",visionAr:"تمكين العلامات التجارية عبر التميّز في التغليف الإبداعي.",
   values:"Quality, responsibility, innovation and reliable supply.",valuesAr:"الجودة والمسؤولية والابتكار والتوريد الموثوق.",
-  statOffices:"6",statCountries:"26",statYears:"25",statEmployees:"400",statAvgExp:"14"
+  statOffices:"10",statCountries:"35",statYears:"25",statEmployees:"400",statAvgExp:"14"
  },
  settings:{
   company:"Printopack - Saudi Modern Packaging Factory Co. Ltd.",
@@ -137,50 +145,100 @@ var SEED={
   hours:"9:00 AM to 5:00 PM",address:"Industrial Area 5, Unit 10, 8508, Jeddah 22428, Saudi Arabia"
  }
 };
-function db(){try{return JSON.parse(localStorage.getItem(KEY))||null;}catch(e){return null;}}
-function save(d){localStorage.setItem(KEY,JSON.stringify(d));}
-function ensure(){var d=db();if(!d){save(SEED);return;}if(!d.productGroups){d.productGroups=SEED.productGroups;save(d);}}
-function coll(k){return (db()||{})[k]||[];}
-function setColl(k,a){var d=db()||{};d[k]=a;save(d);}
-function obj(k){return (db()||{})[k]||{};}
-function setObj(k,o){var d=db()||{};d[k]=o;save(d);}
+/* Dual-mode data layer. When the Cloudflare backend is reachable (deployed), reads/writes
+   go to /api. When it is not (local preview, or before the backend is provisioned), it falls
+   back to localStorage so the admin keeps working. Reads are synchronous from an in-memory
+   CACHE; writes update the CACHE immediately (snappy UI) and persist in the background. */
+var API='/api';
+var MODE='local';
+var COLLECTIONS=['news','productGroups','products','team','careers','partners','factory','quality','responsibility','gallery','offices'];
+var CACHE={entries:{},singletons:{}};
+
+function coll(k){return CACHE.entries[k]||(CACHE.entries[k]=[]);}
+function obj(k){return CACHE.singletons[k]||(CACHE.singletons[k]={});}
+function ensure(){} /* boot() loads the CACHE; kept as a no-op so render() stays unchanged */
+
+/* local fallback persistence (flat shape, unchanged localStorage format) */
+function flatDb(){var d={};COLLECTIONS.forEach(function(k){d[k]=CACHE.entries[k]||[];});d.about=CACHE.singletons.about||{};d.settings=CACHE.singletons.settings||{};return d;}
+function persistLocal(){try{localStorage.setItem(KEY,JSON.stringify(flatDb()));}catch(e){}}
+function loadLocal(){
+ var d=null;try{d=JSON.parse(localStorage.getItem(KEY));}catch(e){}
+ if(!d)d=SEED;
+ CACHE.entries={};COLLECTIONS.forEach(function(k){CACHE.entries[k]=(d[k]||[]).slice();});
+ CACHE.singletons={about:d.about||{},settings:d.settings||{}};
+ if(!localStorage.getItem(KEY))persistLocal();
+}
+
+/* api backend calls */
+function apiUploadDataUrls(rec){
+ var jobs=[];Object.keys(rec).forEach(function(k){var v=rec[k];if(typeof v==='string'&&v.slice(0,5)==='data:'){jobs.push(fetch(API+'/upload',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({field:k,dataUrl:v})}).then(function(r){return r.json();}).then(function(o){if(o&&o.url)rec[k]=o.url;}));}});
+ return Promise.all(jobs).then(function(){return rec;});
+}
+function apiSaveRecord(collection,rec){return apiUploadDataUrls(rec).then(function(r){return fetch(API+'/'+collection,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(r)});}).then(function(r){if(!r.ok)throw 0;});}
+function apiDeleteRecord(collection,id){return fetch(API+'/'+collection+'/'+encodeURIComponent(id),{method:'DELETE'}).then(function(r){if(!r.ok)throw 0;});}
+function apiSaveSingleton(key,o){return fetch(API+'/singleton/'+key,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(o)}).then(function(r){if(!r.ok)throw 0;});}
+
+/* unified writes (optimistic: update CACHE now, persist in the background) */
+function saveRecord(collection,rec){
+ var arr=coll(collection);var i=arr.findIndex(function(x){return x.id===rec.id;});
+ if(i>-1)arr[i]=rec;else arr.unshift(rec);
+ if(MODE==='api')apiSaveRecord(collection,rec).catch(function(){toast('Save failed - check your connection','err');});
+ else persistLocal();
+}
+function deleteRecord(collection,id){
+ CACHE.entries[collection]=coll(collection).filter(function(x){return x.id!==id;});
+ if(MODE==='api')apiDeleteRecord(collection,id).catch(function(){toast('Delete failed','err');});
+ else persistLocal();
+}
+function setColl(k,a){CACHE.entries[k]=a;if(MODE!=='api')persistLocal();}
+function setObj(k,o){CACHE.singletons[k]=o;if(MODE==='api')apiSaveSingleton(k,o).catch(function(){toast('Save failed','err');});else persistLocal();}
+
+/* boot: try the backend, else fall back to localStorage, then render */
+function boot(){
+ fetch(API+'/bootstrap',{headers:{'Accept':'application/json'}}).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(d){
+  MODE='api';CACHE.entries=d.entries||{};CACHE.singletons=d.singletons||{};
+  COLLECTIONS.forEach(function(k){if(!CACHE.entries[k])CACHE.entries[k]=[];});
+  try{localStorage.setItem(SKEY,'1');}catch(e){} /* Cloudflare Access already authenticated the user */
+  render();
+ }).catch(function(){MODE='local';loadLocal();render();});
+}
 
 /* ---------------- models ---------------- */
 var sel=function(a){return a;};
 var MODELS={
  news:{label:"News & Events",singular:"Post",icon:"news",group:"Content",hasImport:true,hasCalendar:true,
   columns:[{type:"thumb",field:"image"},{type:"title",field:"title",sub:"category"},{type:"pill",field:"status"},{type:"date",field:"date"}],
-  fields:[{name:"image",type:"image",label:"Cover image"},{name:"category",type:"select",label:"Category",half:true,options:["General","Company News","Sustainability","Certifications","Events","Products"]},{name:"date",type:"date",label:"Date",half:true},{name:"status",type:"select",label:"Status",half:true,options:["draft","published"]},{name:"title",type:"text",label:"Title (English)"},{name:"body",type:"textarea",label:"Body (English)"},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true},{name:"bodyAr",type:"textarea",label:"Body",ar:"Arabic (review before publishing)",rtl:true}]},
+  fields:[{name:"image",type:"image",label:"Cover image",rec:"1200 × 800px (landscape, JPG)"},{name:"category",type:"select",label:"Category",half:true,options:["General","Company News","Sustainability","Certifications","Events","Products"]},{name:"date",type:"date",label:"Date",half:true},{name:"status",type:"select",label:"Status",half:true,options:["draft","published"]},{name:"title",type:"text",label:"Title (English)"},{name:"body",type:"textarea",label:"Body (English)"},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true},{name:"bodyAr",type:"textarea",label:"Body",ar:"Arabic (review before publishing)",rtl:true}]},
  productGroups:{label:"Product Groups",singular:"Group",icon:"products",group:"Content",
   columns:[{type:"thumb",field:"image",contain:true},{type:"title",field:"name",sub:"description"},{type:"text",field:"nameAr"}],
-  fields:[{name:"image",type:"image",label:"Group image",contain:true},{name:"name",type:"text",label:"Name (English)",half:true},{name:"nameAr",type:"text",label:"Name",ar:"Arabic",rtl:true,half:true},{name:"description",type:"textarea",label:"Description (English)"},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
+  fields:[{name:"image",type:"image",label:"Group image",contain:true,rec:"1000 × 750px (transparent PNG)"},{name:"name",type:"text",label:"Name (English)",half:true},{name:"nameAr",type:"text",label:"Name",ar:"Arabic",rtl:true,half:true},{name:"description",type:"textarea",label:"Description (English)"},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
  products:{label:"Products",singular:"Product",icon:"products",group:"Content",
   columns:[{type:"thumb",field:"image",contain:true},{type:"title",field:"name",sub:"category"},{type:"active",field:"active"}],
-  fields:[{name:"image",type:"image",label:"Product image",contain:true},{name:"name",type:"text",label:"Name (English)",half:true},{name:"category",type:"select",label:"Group",half:true,optionsFrom:"productGroups"},{name:"description",type:"textarea",label:"Description (English)"},{name:"nameAr",type:"text",label:"Name",ar:"Arabic",rtl:true,half:true},{name:"active",type:"select",label:"Visible on site",half:true,options:["true","false"]},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
+  fields:[{name:"image",type:"image",label:"Product image",contain:true,rec:"1000 × 750px (transparent PNG)"},{name:"name",type:"text",label:"Name (English)",half:true},{name:"category",type:"select",label:"Group",half:true,optionsFrom:"productGroups"},{name:"description",type:"textarea",label:"Description (English)"},{name:"nameAr",type:"text",label:"Name",ar:"Arabic",rtl:true,half:true},{name:"active",type:"select",label:"Visible on site",half:true,options:["true","false"]},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
  team:{label:"Our Team",singular:"Member",icon:"team",group:"Content",
   columns:[{type:"thumb",field:"photo",round:true},{type:"title",field:"name",sub:"role"},{type:"text",field:"experience",prefix:"",suffix:" yrs"},{type:"text",field:"email"}],
-  fields:[{name:"photo",type:"image",label:"Photo"},{name:"name",type:"text",label:"Name (English)",half:true},{name:"role",type:"text",label:"Role (English)",half:true},{name:"nameAr",type:"text",label:"Name",ar:"Arabic",rtl:true,half:true},{name:"roleAr",type:"text",label:"Role",ar:"Arabic",rtl:true,half:true},{name:"email",type:"text",label:"Email",half:true},{name:"experience",type:"number",label:"Years of experience",half:true},{name:"bio",type:"textarea",label:"Short bio (English)"},{name:"bioAr",type:"textarea",label:"Bio",ar:"Arabic",rtl:true}]},
+  fields:[{name:"photo",type:"image",label:"Photo",rec:"600 × 760px (portrait, JPG)"},{name:"mono",type:"text",label:"Monogram (initials, shown until a photo is added)",half:true},{name:"name",type:"text",label:"Name (English)",half:true},{name:"role",type:"text",label:"Role (English)",half:true},{name:"nameAr",type:"text",label:"Name",ar:"Arabic",rtl:true,half:true},{name:"roleAr",type:"text",label:"Role",ar:"Arabic",rtl:true,half:true},{name:"email",type:"text",label:"Email",half:true},{name:"experience",type:"number",label:"Years of experience",half:true},{name:"bio",type:"textarea",label:"Short note (English)"},{name:"bioAr",type:"textarea",label:"Short note",ar:"Arabic",rtl:true}]},
  careers:{label:"Careers",singular:"Job",icon:"careers",group:"Content",
   columns:[{type:"title",field:"title",sub:"dept"},{type:"text",field:"type"},{type:"text",field:"location"},{type:"pill",field:"status"}],
   fields:[{name:"title",type:"text",label:"Title (English)",half:true},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true,half:true},{name:"dept",type:"select",label:"Department",half:true,options:["Production","Quality","Sales","Engineering","Admin","Logistics","IT"]},{name:"type",type:"select",label:"Type",half:true,options:["Full-time","Part-time","Contract","Internship"]},{name:"location",type:"text",label:"Location",half:true},{name:"status",type:"select",label:"Status",half:true,options:["draft","published"]},{name:"email",type:"text",label:"Application email"},{name:"requirements",type:"textarea",label:"Requirements (English)"},{name:"requirementsAr",type:"textarea",label:"Requirements",ar:"Arabic",rtl:true}]},
  partners:{label:"Success Partners",singular:"Partner",icon:"partners",group:"Content",
   columns:[{type:"thumb",field:"image",contain:true},{type:"title",field:"name",sub:"country",fallback:"country"},{type:"text",field:"country"}],
-  fields:[{name:"image",type:"image",label:"Logo",contain:true},{name:"name",type:"text",label:"Client name",half:true},{name:"country",type:"text",label:"Country",half:true},{name:"link",type:"url",label:"Website (optional)"}]},
+  fields:[{name:"image",type:"image",label:"Logo",contain:true,rec:"480 × 300px (transparent PNG)"},{name:"name",type:"text",label:"Client name (English)",half:true},{name:"nameAr",type:"text",label:"Client name",ar:"Arabic",rtl:true,half:true},{name:"country",type:"text",label:"Country (English)",half:true},{name:"countryAr",type:"text",label:"Country",ar:"Arabic",rtl:true,half:true},{name:"link",type:"url",label:"Website (optional)"}]},
  factory:{label:"Factory Departments",singular:"Department",icon:"factory",group:"Company",
   columns:[{type:"thumb",field:"image"},{type:"title",field:"name",sub:"kind"},{type:"tag",field:"kind"}],
-  fields:[{name:"image",type:"image",label:"Photo"},{name:"name",type:"text",label:"Name (English)",half:true},{name:"kind",type:"select",label:"Type",half:true,options:["Department","Warehouse"]},{name:"nameAr",type:"text",label:"Name",ar:"Arabic",rtl:true},{name:"description",type:"textarea",label:"Description (English)"},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
+  fields:[{name:"image",type:"image",label:"Photo",rec:"1200 × 800px (landscape, JPG)"},{name:"name",type:"text",label:"Name (English)",half:true},{name:"kind",type:"select",label:"Type",half:true,options:["Department","Warehouse"]},{name:"nameAr",type:"text",label:"Name",ar:"Arabic",rtl:true},{name:"description",type:"textarea",label:"Description (English)"},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
  quality:{label:"Quality System",singular:"Item",icon:"quality",group:"Company",
   columns:[{type:"thumb",field:"image"},{type:"title",field:"title",sub:"kind"},{type:"tag",field:"kind"}],
-  fields:[{name:"image",type:"image",label:"Certificate / image"},{name:"title",type:"text",label:"Title (English)",half:true},{name:"kind",type:"select",label:"Type",half:true,options:["Certificate","Assurance","Lab"]},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true},{name:"description",type:"textarea",label:"Description (English)"},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
+  fields:[{name:"image",type:"image",label:"Certificate / image",rec:"1000 × 1400px (portrait, JPG or PNG)"},{name:"title",type:"text",label:"Title (English)",half:true},{name:"kind",type:"select",label:"Type",half:true,options:["Certificate","Assurance","Lab"]},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true},{name:"description",type:"textarea",label:"Description (English)"},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
  responsibility:{label:"Social Responsibility",singular:"Item",icon:"responsibility",group:"Company",
   columns:[{type:"thumb",field:"image"},{type:"title",field:"title",sub:"category"},{type:"tag",field:"category"}],
-  fields:[{name:"image",type:"image",label:"Certificate / image"},{name:"title",type:"text",label:"Title (English)",half:true},{name:"category",type:"select",label:"Area",half:true,options:["Environment","Local Community","International"]},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true},{name:"description",type:"textarea",label:"Description (English)"},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
+  fields:[{name:"image",type:"image",label:"Certificate / image",rec:"1000 × 1400px (portrait, JPG or PNG)"},{name:"title",type:"text",label:"Title (English)",half:true},{name:"category",type:"select",label:"Area",half:true,options:["Environment","Local Community","International"]},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true},{name:"description",type:"textarea",label:"Description (English)"},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
  gallery:{label:"Gallery",singular:"Item",icon:"gallery",group:"Company",
   columns:[{type:"thumb",field:"image"},{type:"title",field:"title",sub:"kind"},{type:"tag",field:"kind"}],
-  fields:[{name:"kind",type:"select",label:"Type",half:true,options:["Photo","Video","Advertisement"]},{name:"title",type:"text",label:"Title (English)",half:true},{name:"image",type:"image",label:"Image / thumbnail"},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true},{name:"url",type:"url",label:"Video / link (for videos & ads)"}]},
+  fields:[{name:"kind",type:"select",label:"Type",half:true,options:["Photo","Video","Advertisement"]},{name:"span",type:"select",label:"Size (photos & ads)",half:true,options:["normal","wide","tall"]},{name:"title",type:"text",label:"Title (English)",half:true},{name:"image",type:"image",label:"Image / thumbnail",rec:"1600 × 1000px (landscape, JPG)"},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true},{name:"url",type:"url",label:"Video / link (for videos & ads)"}]},
  offices:{label:"Offices & Contact",singular:"Office",icon:"offices",group:"Site",
-  columns:[{type:"title",field:"city",sub:"country"},{type:"text",field:"phone"},{type:"text",field:"email"}],
-  fields:[{name:"city",type:"text",label:"City / office",half:true},{name:"country",type:"text",label:"Country",half:true},{name:"phone",type:"text",label:"Phone",half:true},{name:"email",type:"text",label:"Email",half:true},{name:"staff",type:"textarea",label:"Staff / notes"}]}
+  columns:[{type:"title",field:"city",sub:"staffName"},{type:"text",field:"phone"},{type:"text",field:"email"}],
+  fields:[{name:"city",type:"text",label:"Office (English)",half:true},{name:"cityAr",type:"text",label:"Office",ar:"Arabic",rtl:true,half:true},{name:"group",type:"select",label:"Group",half:true,options:["Saudi Arabia","Regional & Export"]},{name:"country",type:"text",label:"Country / area (English)",half:true},{name:"countryAr",type:"text",label:"Country / area",ar:"Arabic",rtl:true,half:true},{name:"staffName",type:"text",label:"Manager name (English)",half:true},{name:"staffNameAr",type:"text",label:"Manager name",ar:"Arabic",rtl:true,half:true},{name:"staffRole",type:"text",label:"Manager title (English)",half:true},{name:"staffRoleAr",type:"text",label:"Manager title",ar:"Arabic",rtl:true,half:true},{name:"phone",type:"text",label:"Phone",half:true},{name:"email",type:"text",label:"Email",half:true}]}
 };
 
 /* ---------------- auth ---------------- */
@@ -260,6 +318,7 @@ function listView(m,key){
  var actions='<button class="btn btn-gold" data-open="'+key+':new">'+svg('plus')+'New '+mdl.singular.toLowerCase()+'</button>';
  var toggle=mdl.hasCalendar?'<div class="seg" id="tg"><button class="on" data-mode="list">List</button><button data-mode="cal">Calendar</button></div>':'';
  m.innerHTML=topbar(mdl.label,'Content · '+mdl.label,actions)+'<div class="view"><div class="toolbar"><div class="search">'+svg('search')+'<input id="q" placeholder="Search '+mdl.label.toLowerCase()+'…"></div>'+toggle+'</div><div id="host"></div></div>';
+ bind(m); // wire the topbar "New" button (rows are bound separately in paint(); #host is empty here so no double-binding)
  function paint(f){
   var list=rows.filter(function(r){return !f||JSON.stringify(r).toLowerCase().indexOf(f.toLowerCase())>-1;});
   if(!list.length){$('#host').innerHTML='<div class="panel"><div class="empty">'+svg(mdl.icon)+'<h3>Nothing here yet</h3><p>Create your first '+mdl.singular.toLowerCase()+' with the button above.</p></div></div>';return;}
@@ -275,7 +334,7 @@ var draft={};
 function fieldHTML(f,val){
  var lab='<label>'+esc(f.label)+(f.ar?' <span class="ar">· '+esc(f.ar)+'</span>':'')+'</label>';
  var rtl=f.rtl?' dir="rtl"':'';
- if(f.type==='image'){var has=val?' has':'';var cn=f.contain?' contain':'';return '<div class="field full"><label>'+esc(f.label)+'</label><div class="imgpick'+has+cn+'" data-imgpick="'+f.name+'"><img src="'+esc(val||'')+'"><div class="ph">'+svg('image')+'Click to upload</div></div><input type="file" accept="image/*" data-imgfile="'+f.name+'" hidden></div>';}
+ if(f.type==='image'){var has=val?' has':'';var cn=f.contain?' contain':'';var rec=f.rec?'<span class="imgrec">'+svg('image')+'Recommended: <b>'+esc(f.rec)+'</b> for a flawless fit</span>':'';return '<div class="field full"><label>'+esc(f.label)+'</label>'+rec+'<div class="imgpick'+has+cn+'" data-imgpick="'+f.name+'"><img src="'+esc(val||'')+'"><div class="ph">'+svg('image')+'Click to upload</div></div><input type="file" accept="image/*" data-imgfile="'+f.name+'" hidden></div>';}
  if(f.type==='textarea')return '<div class="field full">'+lab+'<textarea data-f="'+f.name+'"'+rtl+'>'+esc(val||'')+'</textarea></div>';
  if(f.type==='select'){var src=f.optionsFrom?coll(f.optionsFrom).map(function(g){return g.name;}).filter(Boolean):f.options;var list=f.optionsFrom?[''].concat(src):src;var opts=list.map(function(o){return '<option'+(String(val)===String(o)?' selected':'')+'>'+esc(o)+'</option>';}).join('');return '<div class="field'+(f.half?'':' full')+'">'+lab+'<select data-f="'+f.name+'">'+opts+'</select></div>';}
  var t=f.type==='date'?'date':(f.type==='number'?'number':(f.type==='url'?'url':'text'));
@@ -299,10 +358,11 @@ function openForm(key,id){
  $('#sv',host).addEventListener('click',function(){
   if(key==='products')draft.active=String(draft.active)!=='false';
   if(key==='team'&&draft.experience!=null)draft.experience=parseInt(draft.experience,10)||0;
-  if(!draft.title&&!draft.name&&!draft.city){toast('Add a title/name first','err');return;}
-  var arr=coll(key);
-  if(id==='new'){draft.id=uid();arr.unshift(draft);toast(mdl.singular+' created','ok');}else{var i=arr.findIndex(function(x){return x.id===id;});if(i>-1)arr[i]=draft;toast(mdl.singular+' updated','ok');}
-  setColl(key,arr);close();render();
+  if(!draft.title&&!draft.name&&!draft.city&&!draft.staffName){toast('Add a title/name first','err');return;}
+  if(id==='new')draft.id=uid();
+  saveRecord(key,draft);
+  toast(mdl.singular+(id==='new'?' created':' updated'),'ok');
+  close();render();
  });
 }
 function importLI(host){
@@ -353,8 +413,8 @@ function settingsView(m){
 /* ---------------- shared bindings ---------------- */
 function bind(scope){
  scope.querySelectorAll('[data-open]').forEach(function(el){el.addEventListener('click',function(e){e.stopPropagation();var p=el.getAttribute('data-open').split(':');openForm(p[0],p[1]);});});
- scope.querySelectorAll('[data-del]').forEach(function(el){el.addEventListener('click',function(e){e.stopPropagation();var p=el.getAttribute('data-del').split(':');if(!confirm('Delete this '+MODELS[p[0]].singular.toLowerCase()+'? This cannot be undone.'))return;setColl(p[0],coll(p[0]).filter(function(x){return x.id!==p[1];}));toast(MODELS[p[0]].singular+' deleted');render();});});
+ scope.querySelectorAll('[data-del]').forEach(function(el){el.addEventListener('click',function(e){e.stopPropagation();var p=el.getAttribute('data-del').split(':');if(!confirm('Delete this '+MODELS[p[0]].singular.toLowerCase()+'? This cannot be undone.'))return;deleteRecord(p[0],p[1]);toast(MODELS[p[0]].singular+' deleted');render();});});
  scope.querySelectorAll('[data-nav]').forEach(function(el){el.addEventListener('click',function(){view=el.getAttribute('data-nav');render();});});
 }
-render();
+boot();
 })();

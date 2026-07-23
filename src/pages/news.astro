@@ -1,152 +1,171 @@
 ---
 import Base from '../layouts/Base.astro';
+import Bi from '../components/Bi.astro';
+import { posts } from '../data/news';
 
-// News & Events. The three articles below are the client's real posts (title, date,
-// category from the live site). Excerpts are short editorial summaries and the full
-// articles, plus the exhibition calendar, are managed in the admin CMS.
-const posts = [
-  {
-    date: "10 Feb 2023", cat: "General", img: "/images/lineup.jpg",
-    title: "The Future of Packaging in Saudi Arabia",
-    excerpt: "How local manufacturing, sustainability targets and rising brand expectations are reshaping flexible packaging across the Kingdom.",
-    featured: true,
-  },
-  {
-    date: "06 May 2023", cat: "General", img: "/images/factory.jpg",
-    title: "The Benefits of Flexible Packaging: Durability, Versatility and Eco-Friendliness",
-    excerpt: "Why brands are moving to laminates and pouches: lighter formats, longer shelf life and a smaller material footprint.",
-  },
-  {
-    date: "20 Jun 2022", cat: "General", img: "/images/dept-5.jpg",
-    title: "PVC vs PET-G Shrink Films",
-    excerpt: "A practical comparison of two common shrink-sleeve substrates, and how to choose between them for clarity, cost and recyclability.",
-  },
-];
+// News & Events (Nasser's Page 6, sub-page 1). Daily LinkedIn-style news + exhibitions.
+// Each post links to its source LinkedIn post (admin sets the per-post URL on import; here
+// it falls back to Printopack's LinkedIn company page). Exhibitions are admin-managed; a
+// sample is shown to demonstrate the layout. Bilingual; natural fusha.
+const LINKEDIN = "https://www.linkedin.com/company/80331793/";
+const featured = posts[0];
+const rest = posts.slice(1);
 
-const featured = posts.find((p) => p.featured) ?? posts[0];
-const rest = posts.filter((p) => p !== featured);
+const content = {
+  meta: {
+    title: "News & Events - Printopack",
+    description: "News and insight from Printopack: flexible-packaging trends, capabilities from the Jeddah plant, and the exhibitions where you can meet our team.",
+  },
+  header: {
+    eyebrow: { en: "News & Events", ar: "الأخبار والأحداث" },
+    title: { en: "The latest from Printopack.", ar: "أحدث ما لدى برنتوباك." },
+    lede: {
+      en: "Insight on flexible packaging, updates from the factory floor, and the exhibitions where you can meet our team.",
+      ar: "رؤى حول التغليف المرن، ومستجدات من أرض المصنع، والمعارض التي يمكنكم لقاء فريقنا فيها.",
+    },
+  },
+  featuredLabel: { en: "Featured", ar: "مميّز" },
+  archiveLabel: { en: "All news", ar: "كل الأخبار" },
+  readOn: { en: "Read on LinkedIn", ar: "اقرأ على LinkedIn" },
+  events: {
+    eyebrow: { en: "Exhibitions & Events", ar: "المعارض والفعاليات" },
+    title: { en: "Where to meet us.", ar: "أين تلتقون بنا." },
+    text: {
+      en: "Printopack takes part in regional packaging and food exhibitions through the year. Upcoming fairs and events are announced here.",
+      ar: "تشارك برنتوباك في معارض التغليف والأغذية الإقليمية على مدار العام. تُعلَن المعارض والفعاليات القادمة هنا.",
+    },
+    // Sample exhibition(s) to show the layout; managed by Printopack via the admin.
+    items: [
+      { date: { en: "Nov 2024", ar: "نوفمبر 2024" }, name: { en: "Gulfood Manufacturing", ar: "جلفود للتصنيع" }, place: { en: "Dubai World Trade Centre, UAE", ar: "مركز دبي التجاري العالمي، الإمارات" } },
+      { date: { en: "Feb 2025", ar: "فبراير 2025" }, name: { en: "Saudi Food Expo", ar: "معرض السعودية للأغذية" }, place: { en: "Riyadh Front, Saudi Arabia", ar: "واجهة الرياض، المملكة العربية السعودية" } },
+    ],
+    note: {
+      en: "Exhibitions and events are posted and kept current by Printopack through the site's admin.",
+      ar: "تُنشر المعارض والفعاليات وتُحدَّث من قِبل برنتوباك عبر لوحة تحكم الموقع.",
+    },
+  },
+};
+const c = content;
 ---
-<Base
-  title="News & Events - Printopack"
-  description="News, insight and exhibitions from Printopack: flexible-packaging trends, capabilities and where to meet our team across the region."
->
+<Base title={c.meta.title} description={c.meta.description}>
   <!-- PAGE HEADER -->
   <section class="page-head">
     <div class="wrap-wide">
       <div class="page-head-inner">
-        <span class="eyebrow" data-reveal>News &amp; events</span>
-        <h1 data-reveal>The latest from Printopack.</h1>
-        <p class="lede" data-reveal>
-          Insight on flexible packaging, updates from the factory floor and the exhibitions where
-          you can meet our team.
-        </p>
+        <span class="eyebrow"><Bi en={c.header.eyebrow.en} ar={c.header.eyebrow.ar} /></span>
+        <h1><Bi en={c.header.title.en} ar={c.header.title.ar} /></h1>
+        <p class="lede"><Bi en={c.header.lede.en} ar={c.header.lede.ar} /></p>
       </div>
     </div>
   </section>
 
-  <!-- FEATURED ARTICLE -->
-  <section class="featured-wrap">
+  <!-- FEATURED (newest) -->
+  <section class="feat-wrap">
     <div class="wrap-wide">
-      <a href="/news" class="featured" data-reveal>
-        <span class="featured-media"><img src={featured.img} alt={featured.title} fetchpriority="high" /></span>
-        <span class="featured-body">
-          <span class="post-meta">{featured.cat} · {featured.date}</span>
-          <h2 class="featured-title">{featured.title}</h2>
-          <p class="featured-excerpt">{featured.excerpt}</p>
-          <span class="link-line">Read article</span>
-        </span>
-      </a>
+      <article class="feat">
+        <span class="feat-media"><img src={featured.img} alt={featured.title.en} fetchpriority="high" decoding="async" /></span>
+        <div class="feat-body">
+          <span class="post-meta">
+            <span class="post-flag"><Bi en={c.featuredLabel.en} ar={c.featuredLabel.ar} /></span>
+            <Bi en={featured.cat.en} ar={featured.cat.ar} /> · <span dir="ltr">{featured.date}</span>
+          </span>
+          <h2 class="feat-title"><Bi en={featured.title.en} ar={featured.title.ar} /></h2>
+          <a class="link-line feat-read" href={featured.link ?? LINKEDIN} target="_blank" rel="noopener"><Bi en={c.readOn.en} ar={c.readOn.ar} /></a>
+        </div>
+      </article>
     </div>
   </section>
 
-  <!-- MORE ARTICLES -->
-  <section style="padding-top:0">
+  <!-- ARCHIVE GRID -->
+  <section class="archive">
     <div class="wrap-wide">
       <div class="section-head split-head">
-        <div>
-          <span class="eyebrow" data-reveal>More stories</span>
-          <h2 data-reveal style="margin-top:16px">Recent articles</h2>
-        </div>
+        <span class="eyebrow plain" style="color:var(--gold)"><Bi en={c.archiveLabel.en} ar={c.archiveLabel.ar} /></span>
       </div>
       <div class="news-grid">
-        {rest.map((n) => (
-          <a href="/news" class="card news-card" data-reveal>
-            <span class="card-img news-img"><img src={n.img} alt="" loading="lazy" decoding="async" /></span>
-            <span class="post-meta">{n.cat} · {n.date}</span>
-            <h3 class="news-title">{n.title}</h3>
-            <p class="news-excerpt">{n.excerpt}</p>
-            <span class="link-line news-read">Read more</span>
-          </a>
+        {rest.map((p) => (
+          <article class="ncard">
+            <span class="card-img ncard-img"><img src={p.img} alt={p.title.en} loading="lazy" decoding="async" /></span>
+            <span class="post-meta"><Bi en={p.cat.en} ar={p.cat.ar} /> · <span dir="ltr">{p.date}</span></span>
+            <h3 class="ncard-title"><Bi en={p.title.en} ar={p.title.ar} /></h3>
+            <a class="link-line ncard-read" href={p.link ?? LINKEDIN} target="_blank" rel="noopener"><Bi en={c.readOn.en} ar={c.readOn.ar} /></a>
+          </article>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- EVENTS & EXHIBITIONS -->
+  <!-- EXHIBITIONS & EVENTS -->
   <section class="on-navy events">
-    <div class="wrap">
-      <div class="events-grid">
-        <div class="events-intro" data-reveal>
-          <span class="eyebrow">Events &amp; exhibitions</span>
-          <h2 style="margin:16px 0 18px">Meet us on the show floor.</h2>
-          <p class="lede">
-            Printopack takes part in the region's leading packaging, food and print exhibitions. Our
-            upcoming schedule is published here through the season. To arrange a meeting or a factory
-            visit in the meantime, get in touch.
-          </p>
-          <a href="/contact" class="btn btn-gold" style="margin-top:28px">Arrange a meeting</a>
-        </div>
-        <div class="events-note" data-reveal>
-          <div class="events-card">
-            <span class="events-kicker">Next up</span>
-            <p class="events-empty">No events scheduled at the moment. Check back soon, or follow us on LinkedIn for announcements.</p>
-            <a href="https://www.linkedin.com/company/80331793/" target="_blank" rel="noopener" class="link-line" style="color:var(--gold-bright);border-color:var(--gold-bright)">Follow on LinkedIn</a>
-          </div>
-        </div>
-      </div>
+    <div class="wrap events-inner">
+      <span class="eyebrow"><Bi en={c.events.eyebrow.en} ar={c.events.eyebrow.ar} /></span>
+      <h2 style="margin:14px 0 16px"><Bi en={c.events.title.en} ar={c.events.title.ar} /></h2>
+      <p class="lede"><Bi en={c.events.text.en} ar={c.events.text.ar} /></p>
+
+      <ul class="ex-list">
+        {c.events.items.map((ev) => (
+          <li class="ex">
+            <span class="ex-date"><Bi en={ev.date.en} ar={ev.date.ar} /></span>
+            <span class="ex-body">
+              <span class="ex-name"><Bi en={ev.name.en} ar={ev.name.ar} /></span>
+              <span class="ex-place">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                <Bi en={ev.place.en} ar={ev.place.ar} />
+              </span>
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      <!-- build-only helper: remove before production (see PRODUCTION_TODO.md) -->
+      <p class="evnote"><Bi en={c.events.note.en} ar={c.events.note.ar} /></p>
     </div>
   </section>
 </Base>
 
 <style>
-  /* page header (shared pattern with products) */
   .page-head{padding-block:clamp(56px,8vw,104px) clamp(30px,4vw,52px);background:var(--cream);border-bottom:1px solid var(--line)}
   .page-head-inner{max-width:820px}
   .page-head h1{margin:20px 0 22px;font-size:clamp(40px,6vw,78px)}
-  .page-head .lede{max-width:58ch}
+  .page-head .lede{max-width:60ch}
 
-  .post-meta{display:block;font-family:var(--display);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+  .post-meta{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;font-family:var(--display);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+  .post-flag{background:var(--gold);color:var(--navy);padding:3px 9px;border-radius:var(--radius);font-weight:600;letter-spacing:.1em}
 
-  /* featured article */
-  .featured-wrap{padding-bottom:clamp(48px,6vw,80px)}
-  .featured{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(28px,4vw,64px);align-items:center}
-  .featured-media{display:block;aspect-ratio:16/10;overflow:hidden;background:var(--cream)}
-  .featured-media img{width:100%;height:100%;object-fit:cover}
-  .featured-body{max-width:52ch}
-  .featured-title{font-size:clamp(28px,3.4vw,46px);margin:14px 0 18px}
-  .featured:hover .featured-title{color:var(--gold)}
-  .featured-excerpt{font-size:clamp(16px,1.3vw,18px);color:var(--muted);line-height:1.65;margin-bottom:24px}
+  /* featured */
+  .feat-wrap{padding-block:clamp(44px,6vw,72px) 0}
+  .feat{display:grid;grid-template-columns:1.25fr 1fr;gap:clamp(28px,4vw,56px);align-items:center}
+  .feat-media{display:block;aspect-ratio:3/2;overflow:hidden;background:var(--cream);border:1px solid var(--line)}
+  .feat-media img{width:100%;height:100%;object-fit:cover}
+  .feat-title{font-size:clamp(26px,3.4vw,44px);line-height:1.12;margin-top:16px}
+  .feat-read{margin-top:18px;font-size:12px;width:fit-content}
 
-  /* article grid */
-  .news-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(30px,4vw,54px);align-items:stretch}
-  .news-card{display:flex;flex-direction:column}
-  .news-img{aspect-ratio:16/10}
-  .news-card .post-meta{margin-top:20px}
-  .news-title{margin:10px 0 12px;font-size:clamp(21px,1.9vw,27px)}
-  .news-card:hover .news-title{color:var(--gold)}
-  .news-excerpt{color:var(--muted);font-size:15px;line-height:1.6;margin-bottom:18px}
-  .news-read{font-size:12px;margin-top:auto;align-self:flex-start}
+  /* archive grid */
+  .archive{padding-block:clamp(44px,6vw,80px)}
+  .split-head{display:flex;justify-content:space-between;align-items:flex-end;max-width:none;margin-bottom:clamp(26px,3vw,38px)}
+  .news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(26px,3vw,40px) clamp(20px,2.4vw,34px)}
+  .ncard{display:flex;flex-direction:column}
+  .ncard-img{aspect-ratio:3/2;margin-bottom:16px}
+  .ncard-title{margin-top:10px;font-size:clamp(18px,1.6vw,22px);line-height:1.25}
+  .ncard-read{font-size:11px;margin-top:14px;align-self:flex-start}
 
-  /* events */
-  .events-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(34px,6vw,80px);align-items:center}
-  .events-card{border:1px solid var(--line-dark);padding:clamp(28px,3vw,40px);background:rgba(250,246,238,.03)}
-  .events-kicker{font-family:var(--display);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-bright);display:block;margin-bottom:16px}
-  .events-empty{color:rgba(250,246,238,.72);line-height:1.65;margin-bottom:22px}
+  /* exhibitions */
+  .events-inner{max-width:760px}
+  .events .lede{color:rgba(250,246,238,.72)}
+  .ex-list{display:grid;gap:2px;margin-top:clamp(24px,3vw,34px);border-top:1px solid var(--line-dark)}
+  .ex{display:flex;align-items:baseline;gap:clamp(16px,3vw,36px);padding:18px 0;border-bottom:1px solid var(--line-dark)}
+  .ex-date{flex:none;width:clamp(74px,10vw,110px);font-family:var(--display);font-size:13px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-bright)}
+  .ex-name{display:block;font-family:var(--display);font-size:clamp(19px,1.9vw,24px);color:var(--paper);line-height:1.2}
+  .ex-place{display:inline-flex;align-items:center;gap:8px;margin-top:8px;font-size:13.5px;color:rgba(250,246,238,.66)}
+  .ex-place svg{width:14px;height:14px;color:var(--gold-bright);flex:none}
+  .evnote{margin-top:20px;font-size:13px;font-style:italic;color:rgba(250,246,238,.5)}
 
   @media(max-width:900px){
-    .featured{grid-template-columns:1fr;gap:22px}
-    .featured-media{aspect-ratio:16/9}
-    .news-grid{grid-template-columns:1fr;gap:40px}
-    .events-grid{grid-template-columns:1fr;gap:32px}
+    .feat{grid-template-columns:1fr;gap:22px}
+    .news-grid{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:560px){
+    .news-grid{grid-template-columns:1fr;gap:36px}
+    .ex{flex-direction:column;gap:6px}
   }
 </style>

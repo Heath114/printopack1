@@ -1,56 +1,127 @@
 ---
 import Base from '../layouts/Base.astro';
+import Bi from '../components/Bi.astro';
+import { collection } from '../lib/content';
 
-// Gallery. Photos use the client's real factory images as a starting set. Videos and
-// advertisements are client-gated: the admin adds media and the grid fills out. The
-// tile sizes vary to give the grid an editorial, magazine feel while staying still.
-const media = [
-  { img: "/images/dept-1.jpg", cap: "Rotogravure press", span: "wide" },
-  { img: "/images/dept-4.jpg", cap: "Cylinder engraving" },
-  { img: "/images/dept-2.jpg", cap: "Bag making" },
-  { img: "/images/factory.jpg", cap: "The Jeddah plant", span: "tall" },
-  { img: "/images/dept-3.jpg", cap: "Finishing line" },
-  { img: "/images/lineup.jpg", cap: "Finished product", span: "wide" },
-  { img: "/images/dept-5.jpg", cap: "Solvent recovery" },
-];
+// Gallery items come from the content store, split by kind. `span` drives the masonry layout
+// ("normal" means no span). Videos use their image as the poster.
+const _gal = collection('gallery');
+const _span = (s: string) => (s && s !== 'normal' ? s : undefined);
+const galPhotos = _gal.filter((g) => g.kind === 'Photo').map((g) => ({ img: g.image, cap: { en: g.title, ar: g.titleAr }, span: _span(g.span) }));
+const galVideos = _gal.filter((g) => g.kind === 'Video').map((g) => ({ poster: g.image, cap: { en: g.title, ar: g.titleAr } }));
+const galAds = _gal.filter((g) => g.kind === 'Advertisement').map((g) => ({ img: g.image, cap: { en: g.title, ar: g.titleAr }, span: _span(g.span) }));
+
+// Gallery (Nasser's Page 6, sub-page 2): photos, videos, advertisements. Every item is
+// clickable and opens in an expanded lightbox (click outside to close). Photos use real
+// gallery/factory images. Videos and advertisements are client-gated: sample placeholders
+// are shown here to demonstrate the layout, and the admin swaps in real media. Everything
+// is the editable content surface. Bilingual; still (user-driven only, no auto-motion).
+const content = {
+  meta: {
+    title: "Gallery - Printopack",
+    description: "Inside Printopack: photographs from the Jeddah plant and production lines, with video and campaign material added by the team.",
+  },
+  header: {
+    eyebrow: { en: "Gallery", ar: "معرض الصور" },
+    title: { en: "Inside Printopack.", ar: "من داخل برنتوباك." },
+    lede: {
+      en: "Photographs from the plant floor, our production lines and finished work. Click any item to open it. Videos and campaign material are added by our team.",
+      ar: "صور من أرض المصنع وخطوط الإنتاج وأعمالنا المنجزة. انقر أي عنصر لعرضه. يُضيف فريقنا مقاطع الفيديو والمواد الإعلانية.",
+    },
+  },
+  tabs: [
+    { key: "photos", label: { en: "Photos", ar: "الصور" } },
+    { key: "videos", label: { en: "Videos", ar: "الفيديوهات" } },
+    { key: "ads", label: { en: "Advertisements", ar: "الإعلانات" } },
+  ],
+  photos: galPhotos,
+  videos: galVideos,
+  ads: galAds,
+  sampleNote: {
+    en: "These are sample placeholders. Printopack adds its real videos and advertisements through the site's admin.",
+    ar: "هذه عناصر نموذجية مبدئية. تُضيف برنتوباك مقاطع الفيديو والإعلانات الحقيقية عبر لوحة تحكم الموقع.",
+  },
+  close: { en: "Close", ar: "إغلاق" },
+};
+const c = content;
 ---
-<Base
-  title="Gallery - Printopack"
-  description="A look inside Printopack: photos from the Jeddah plant, our production lines and finished packaging. Videos and campaign work are added regularly."
->
+<Base title={c.meta.title} description={c.meta.description}>
   <!-- PAGE HEADER -->
   <section class="page-head">
     <div class="wrap-wide">
       <div class="page-head-inner">
-        <span class="eyebrow">Gallery</span>
-        <h1>Inside Printopack.</h1>
-        <p class="lede">
-          Photographs from the plant floor, our production lines and finished packaging. Videos and
-          campaign material are added by our team and appear here as they are published.
-        </p>
+        <span class="eyebrow"><Bi en={c.header.eyebrow.en} ar={c.header.eyebrow.ar} /></span>
+        <h1><Bi en={c.header.title.en} ar={c.header.title.ar} /></h1>
+        <p class="lede"><Bi en={c.header.lede.en} ar={c.header.lede.ar} /></p>
       </div>
     </div>
   </section>
 
-  <!-- FILTER TABS (static labels for now) -->
+  <!-- GALLERY -->
   <section class="gal">
     <div class="wrap-wide">
-      <div class="gal-tabs">
-        <span class="gal-tab active">Photos</span>
-        <span class="gal-tab">Videos</span>
-        <span class="gal-tab">Advertisements</span>
-      </div>
-      <div class="gal-grid">
-        {media.map((m) => (
-          <figure class={"gal-item" + (m.span ? " " + m.span : "")}>
-            <span class="card-img"><img src={m.img} alt={m.cap} loading="lazy" /></span>
-            <figcaption>{m.cap}</figcaption>
-          </figure>
+      <div class="gal-tabs" role="tablist">
+        {c.tabs.map((t, i) => (
+          <button class={"gal-tab" + (i === 0 ? " active" : "")} role="tab" aria-selected={i === 0 ? "true" : "false"} data-tab={t.key}>
+            <Bi en={t.label.en} ar={t.label.ar} />
+          </button>
         ))}
       </div>
-      <p class="gal-note">Videos and advertisements are managed by Printopack and appear here once uploaded.</p>
+
+      <!-- PHOTOS -->
+      <div class="gal-panel" data-panel="photos">
+        <div class="media-grid">
+          {c.photos.map((p) => (
+            <button class={"gtile" + (p.span ? " " + p.span : "")} data-type="image" data-full={p.img} data-cap-en={p.cap.en} data-cap-ar={p.cap.ar}>
+              <img src={p.img} alt={p.cap.en} loading="lazy" decoding="async" />
+              <span class="tile-scrim"></span>
+              <span class="tile-cap"><Bi en={p.cap.en} ar={p.cap.ar} /></span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- VIDEOS -->
+      <div class="gal-panel" data-panel="videos" hidden>
+        <div class="media-grid">
+          {c.videos.map((v) => (
+            <button class="gtile" data-type="video" data-full={v.poster} data-cap-en={v.cap.en} data-cap-ar={v.cap.ar}>
+              <img src={v.poster} alt={v.cap.en} loading="lazy" decoding="async" />
+              <span class="tile-scrim"></span>
+              <span class="tile-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+              <span class="tile-cap"><Bi en={v.cap.en} ar={v.cap.ar} /></span>
+            </button>
+          ))}
+        </div>
+        <p class="sample-note"><Bi en={c.sampleNote.en} ar={c.sampleNote.ar} /></p>
+      </div>
+
+      <!-- ADVERTISEMENTS -->
+      <div class="gal-panel" data-panel="ads" hidden>
+        <div class="media-grid">
+          {c.ads.map((a) => (
+            <button class={"gtile" + (a.span ? " " + a.span : "")} data-type="image" data-full={a.img} data-cap-en={a.cap.en} data-cap-ar={a.cap.ar}>
+              <img src={a.img} alt={a.cap.en} loading="lazy" decoding="async" />
+              <span class="tile-scrim"></span>
+              <span class="tile-cap"><Bi en={a.cap.en} ar={a.cap.ar} /></span>
+            </button>
+          ))}
+        </div>
+        <p class="sample-note"><Bi en={c.sampleNote.en} ar={c.sampleNote.ar} /></p>
+      </div>
     </div>
   </section>
+
+  <!-- LIGHTBOX (expanded view; click outside to close) -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" hidden>
+    <button class="lb-close" aria-label={c.close.en}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <figure class="lb-figure">
+      <div class="lb-stage"></div>
+      <figcaption class="lb-cap"></figcaption>
+    </figure>
+  </div>
 </Base>
 
 <style>
@@ -59,17 +130,107 @@ const media = [
   .page-head h1{margin:20px 0 22px;font-size:clamp(40px,6vw,78px)}
   .page-head .lede{max-width:60ch}
 
-  .gal-tabs{display:flex;gap:10px;margin-bottom:36px;flex-wrap:wrap}
-  .gal-tab{font-family:var(--display);font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);padding:11px 22px;border-radius:var(--radius)}
-  .gal-tab.active{background:var(--navy);color:var(--paper);border-color:var(--navy)}
+  .gal-tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:clamp(28px,3.4vw,44px)}
+  .gal-tab{font-family:var(--display);font-size:13px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:14px 20px;border-bottom:2px solid transparent;margin-bottom:-1px}
+  .gal-tab:hover{color:var(--ink)}
+  .gal-tab.active{color:var(--navy);border-bottom-color:var(--gold)}
+  .gal-panel[hidden]{display:none}
 
-  .gal-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:240px;gap:16px}
-  .gal-item{position:relative;overflow:hidden;border-radius:var(--radius)}
-  .gal-item .card-img{width:100%;height:100%}
-  .gal-item.wide{grid-column:span 2}
-  .gal-item.tall{grid-row:span 2}
-  .gal-item figcaption{position:absolute;left:0;right:0;bottom:0;padding:14px 16px;font-family:var(--display);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--paper);background:linear-gradient(transparent,rgba(9,24,41,.72))}
-  .gal-note{margin-top:32px;color:var(--faint);font-size:14px}
-  @media(max-width:820px){.gal-grid{grid-template-columns:1fr 1fr;grid-auto-rows:200px}.gal-item.wide{grid-column:span 2}}
-  @media(max-width:520px){.gal-grid{grid-template-columns:1fr;grid-auto-rows:220px}.gal-item.wide,.gal-item.tall{grid-column:auto;grid-row:auto}}
+  /* editorial media grid: some tiles span wider / taller, stays still */
+  .media-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:clamp(180px,20vw,260px);gap:clamp(12px,1.4vw,20px)}
+  .gtile{position:relative;overflow:hidden;background:var(--cream);border:1px solid var(--line);cursor:pointer;display:block;width:100%;height:100%;padding:0}
+  .gtile.wide{grid-column:span 2}
+  .gtile.tall{grid-row:span 2}
+  .gtile img{width:100%;height:100%;object-fit:cover}
+  .tile-scrim{position:absolute;inset:0;background:linear-gradient(0deg,rgba(9,24,41,.66) 0%,rgba(9,24,41,.12) 34%,transparent 60%)}
+  .gtile:hover img{filter:brightness(1.08)}
+  .gtile::after{content:"";position:absolute;inset:0;border:2px solid transparent}
+  .gtile:hover::after,.gtile:focus-visible::after{border-color:var(--gold)}
+  .tile-cap{position:absolute;inset-inline-start:0;bottom:0;z-index:2;padding:14px 16px;font-family:var(--display);font-size:13px;letter-spacing:.06em;color:var(--paper);text-align:start}
+  .tile-play{position:absolute;inset:0;z-index:2;display:flex;align-items:center;justify-content:center}
+  .tile-play svg{width:54px;height:54px;color:var(--paper);background:rgba(9,24,41,.5);border-radius:50%;padding:15px}
+  .gtile:hover .tile-play svg{color:var(--navy);background:var(--gold)}
+
+  .sample-note{margin-top:22px;font-size:13px;font-style:italic;color:var(--faint);max-width:64ch}
+
+  /* lightbox */
+  .lightbox{position:fixed;inset:0;z-index:200;background:rgba(9,24,41,.9);display:flex;align-items:center;justify-content:center;padding:clamp(20px,5vw,64px)}
+  .lightbox[hidden]{display:none}
+  .lb-close{position:absolute;top:clamp(16px,3vw,28px);inset-inline-end:clamp(16px,3vw,28px);width:46px;height:46px;display:inline-flex;align-items:center;justify-content:center;color:var(--paper);border:1px solid var(--line-dark);border-radius:50%}
+  .lb-close:hover{background:var(--paper);color:var(--navy)}
+  .lb-close svg{width:20px;height:20px}
+  /* image is capped with room reserved so the caption always sits BELOW it, never over
+     it, for any aspect ratio */
+  .lb-figure{max-width:min(1100px,92vw);display:flex;flex-direction:column;align-items:center;margin:0}
+  .lb-stage{display:flex;align-items:center;justify-content:center;width:100%;min-height:0}
+  .lb-stage img{max-width:100%;max-height:76vh;object-fit:contain;display:block}
+  .lb-video{position:relative;display:flex;align-items:center;justify-content:center}
+  .lb-video img{max-width:100%;max-height:76vh;object-fit:contain;display:block}
+  .lb-video .lb-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  .lb-video .lb-play svg{width:74px;height:74px;color:var(--navy);background:var(--gold);border-radius:50%;padding:20px}
+  .lb-video .lb-vnote{position:absolute;bottom:14px;inset-inline:0;text-align:center;font-family:var(--display);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(250,246,238,.85)}
+  .lb-cap{flex:none;margin-top:18px;font-family:var(--display);font-size:14px;letter-spacing:.06em;color:rgba(250,246,238,.85);text-align:center}
+
+  @media(max-width:820px){
+    .media-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:clamp(150px,32vw,220px)}
+    .gtile.wide{grid-column:span 2}
+    .gtile.tall{grid-row:span 1}
+  }
+  @media(max-width:520px){
+    .media-grid{grid-template-columns:1fr;grid-auto-rows:auto}
+    .gtile{aspect-ratio:3/2}
+    .gtile.wide,.gtile.tall{grid-column:auto;grid-row:auto}
+  }
 </style>
+
+<script>
+  // Tabs: switch panels. Instant, no motion, keyboard-friendly.
+  const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.gal-tab'));
+  const panels = Array.from(document.querySelectorAll<HTMLElement>('.gal-panel'));
+  const selectTab = (key: string, tab: HTMLButtonElement) => {
+    tabs.forEach((t) => { t.classList.toggle('active', t === tab); t.setAttribute('aria-selected', String(t === tab)); });
+    panels.forEach((p) => { p.hidden = p.dataset.panel !== key; });
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => selectTab(t.dataset.tab || 'photos', t));
+    t.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault();
+      const next = e.key === 'ArrowRight' ? (i + 1) % tabs.length : (i - 1 + tabs.length) % tabs.length;
+      tabs[next].focus(); selectTab(tabs[next].dataset.tab || 'photos', tabs[next]);
+    });
+  });
+
+  // Lightbox: click a tile to expand; click outside (or ×, or Esc) to close.
+  const lightbox = document.getElementById('lightbox');
+  const stage = lightbox?.querySelector<HTMLElement>('.lb-stage');
+  const cap = lightbox?.querySelector<HTMLElement>('.lb-cap');
+  const isAr = () => document.documentElement.dir === 'rtl';
+  const openLightbox = (tile: HTMLElement) => {
+    if (!lightbox || !stage || !cap) return;
+    const full = tile.dataset.full || '';
+    const capText = (isAr() ? tile.dataset.capAr : tile.dataset.capEn) || '';
+    if (tile.dataset.type === 'video') {
+      stage.innerHTML = `<div class="lb-video"><img src="${full}" alt=""><span class="lb-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span class="lb-vnote">${isAr() ? 'فيديو نموذجي' : 'Sample video'}</span></div>`;
+    } else {
+      stage.innerHTML = `<img src="${full}" alt="">`;
+    }
+    cap.textContent = capText;
+    lightbox.hidden = false;
+    document.body.style.overflow = 'hidden';
+  };
+  const closeLightbox = () => {
+    if (!lightbox || !stage) return;
+    lightbox.hidden = true;
+    stage.innerHTML = '';
+    document.body.style.overflow = '';
+  };
+  document.querySelectorAll<HTMLElement>('.gtile').forEach((tile) => {
+    tile.addEventListener('click', () => openLightbox(tile));
+  });
+  lightbox?.addEventListener('click', (e) => {
+    // close when the click is not on the media itself (backdrop / padding / caption)
+    if (!(e.target as HTMLElement).closest('.lb-stage')) closeLightbox();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lightbox && !lightbox.hidden) closeLightbox(); });
+</script>

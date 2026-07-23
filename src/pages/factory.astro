@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Counter from '../components/Counter.astro';
 import Bi from '../components/Bi.astro';
+import { collection } from '../lib/content';
 const year = new Date().getFullYear();
 
 // ── EDITABLE CONTENT (bilingual) ─────────────────────────────────────────────
@@ -34,13 +35,23 @@ const content = {
       en: "Each stage is a department in its own right, staffed and equipped to hold the Printopack standard.",
       ar: "كل مرحلة قسمٌ قائم بذاته، مجهّز بطاقمه ومعدّاته للحفاظ على معيار برنتوباك.",
     },
+    items: collection('factory').map((d) => ({ img: d.image, name: { en: d.name, ar: d.nameAr }, desc: { en: d.description, ar: d.descriptionAr } })),
+  },
+  // Print & lamination capabilities (from Printopack's own catalogue).
+  capabilities: {
+    eyebrow: { en: "Capabilities", ar: "الإمكانات" },
+    title: { en: "Print and lamination, in-house.", ar: "طباعةٌ وتصفيحٌ داخل المصنع." },
+    lede: {
+      en: "We specialise in rotogravure and flexographic printing on mono and multi-layer laminated film reels, finished with precision on advanced machinery.",
+      ar: "نتخصّص في الطباعة الروتوغرافية والفلكسوغرافية على لفّات أفلام مصفّحة أحادية ومتعددة الطبقات، بتشطيبٍ دقيق على مكائن متقدّمة.",
+    },
     items: [
-      { img: "/images/factory-rotogravure.jpg", name: { en: "Rotogravure", ar: "الطباعة الروتوغرافية" }, desc: { en: "High-volume, multi-colour rotogravure printing from engraved cylinders.", ar: "طباعة روتوغرافية متعددة الألوان وعالية الإنتاجية من أسطوانات محفورة." } },
-      { img: "/images/factory-engraving.jpg", name: { en: "Cylinder Engraving", ar: "حفر الأسطوانات" }, desc: { en: "In-house engraving of the cylinders used on the press.", ar: "حفر الأسطوانات المستخدمة في الطباعة داخل المصنع." } },
-      { img: "/images/factory-bagging.jpg", name: { en: "Bagging Machine", ar: "صناعة الأكياس" }, desc: { en: "Converting printed film into bags and pouches.", ar: "تحويل الأفلام المطبوعة إلى أكياس وعبوات." } },
-      { img: "/images/factory-punching.jpg", name: { en: "Punching Machine", ar: "التخريم والتشطيب" }, desc: { en: "Punching and finishing to final specification.", ar: "التخريم والتشطيب حتى المواصفات النهائية." } },
-      { img: "/images/factory-solvent.jpg", name: { en: "Solvent Recovery", ar: "استرجاع المذيبات" }, desc: { en: "In-line recovery and reuse of solvents.", ar: "استرجاع المذيبات وإعادة استخدامها ضمن الخط." } },
-      { img: "", name: { en: "Warehouses", ar: "المستودعات" }, desc: { en: "Storage for raw material and finished goods.", ar: "تخزين المواد الخام والمنتجات النهائية." } },
+      { en: "Rotogravure & flexographic printing", ar: "طباعة روتوغرافية وفلكسوغرافية" },
+      { en: "High-definition printing, up to 10 colours", ar: "طباعة عالية الدقة حتى 10 ألوان" },
+      { en: "Mono & multi-layer laminate, up to 4 layers", ar: "تصفيح أحادي ومتعدّد الطبقات حتى 4 طبقات" },
+      { en: "Solvent-based, solvent-less & cold lamination", ar: "تصفيح بالمذيبات وبدون مذيبات والتصفيح البارد" },
+      { en: "Cold sealing & waxing solutions", ar: "حلول الإغلاق البارد والتشميع" },
+      { en: "Precision finishing on advanced machinery", ar: "تشطيبٌ دقيق على مكائن متقدّمة" },
     ],
   },
   cta: {
@@ -99,6 +110,27 @@ const c = content;
     </div>
   </section>
 
+  <!-- CAPABILITIES (from the Printopack catalogue) -->
+  <section class="caps" style="background:var(--cream)">
+    <div class="wrap-wide">
+      <div class="section-head">
+        <span class="eyebrow"><Bi en={c.capabilities.eyebrow.en} ar={c.capabilities.eyebrow.ar} /></span>
+        <h2><Bi en={c.capabilities.title.en} ar={c.capabilities.title.ar} /></h2>
+        <p class="lede"><Bi en={c.capabilities.lede.en} ar={c.capabilities.lede.ar} /></p>
+      </div>
+      <ul class="caps-grid">
+        {c.capabilities.items.map((it) => (
+          <li class="cap">
+            <span class="cap-tick" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l4.5 4.5L19 7"/></svg>
+            </span>
+            <Bi en={it.en} ar={it.ar} />
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
   <!-- CTA -->
   <section class="on-navy fac-cta">
     <div class="wrap" style="text-align:center">
@@ -128,4 +160,11 @@ const c = content;
   .dept-body h3{margin:14px 0 16px}
   .dept-body p{color:var(--muted);max-width:52ch}
   @media(max-width:820px){.dept-row,.dept-row.reverse{grid-template-columns:1fr;gap:24px}.dept-row.reverse .dept-media{order:0}}
+
+  .caps{padding-block:clamp(52px,7vw,88px)}
+  .caps-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px 40px;margin-top:clamp(26px,3vw,38px)}
+  .cap{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-top:1px solid var(--line);font-size:clamp(15px,1.5vw,17px);color:var(--ink)}
+  .cap-tick{flex:none;display:inline-flex;color:var(--gold);margin-top:2px}
+  .cap-tick svg{width:18px;height:18px}
+  @media(max-width:640px){.caps-grid{grid-template-columns:1fr;gap:0}}
 </style>
