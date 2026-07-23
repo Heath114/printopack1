@@ -182,6 +182,9 @@ const c = content;
 
   @media(max-width:920px){
     .cat-layout{grid-template-columns:1fr;gap:28px}
+    /* min-width:0 lets the 1fr track shrink to the viewport; without it the
+       no-wrap filter rail forces the whole column (and card grid) ~1022px wide */
+    .cat-rail,.cat-main{min-width:0}
     .cat-rail{position:static}
     .rail-kicker{margin-bottom:12px}
     /* one clean scrollable row of pills, no ragged wrapping */
