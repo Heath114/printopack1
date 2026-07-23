@@ -59,11 +59,11 @@ var SEED={
   {id:uid(),name:"Ice Cream Packaging",nameAr:"تغليف الآيس كريم",category:"Frozen",image:IMG.cat(8),description:"Freezer-grade printed wraps and tubs packaging.",descriptionAr:"أغلفة مطبوعة وتغليف عبوات مقاومة للتجميد.",active:false}
  ],
  team:[
-  {id:uid(),name:"Nasser Nabil",nameAr:"ناصر نبيل",role:"General Manager",roleAr:"المدير العام",email:"gm@printopack.com.sa",experience:20,bio:"Leading Printopack's operations across the region for over two decades.",bioAr:"يقود عمليات برينتوباك في المنطقة منذ أكثر من عقدين."},
-  {id:uid(),name:"Rana Saleh",nameAr:"رنا صالح",role:"Head of Quality",roleAr:"رئيسة الجودة",email:"quality@printopack.com.sa",experience:14,bio:"Owns the certification programme and lab standards.",bioAr:"مسؤولة عن برنامج الشهادات ومعايير المختبر."},
-  {id:uid(),name:"Omar Haddad",nameAr:"عمر حداد",role:"Production Director",roleAr:"مدير الإنتاج",email:"production@printopack.com.sa",experience:18,bio:"Runs the Jeddah plant floor and the engraving studio.",bioAr:"يدير أرضية مصنع جدة واستوديو الحفر."},
-  {id:uid(),name:"Layla Mansour",nameAr:"ليلى منصور",role:"Head of Sales",roleAr:"رئيسة المبيعات",email:"sales@printopack.com.sa",experience:12,bio:"Partners with food and beverage brands across markets.",bioAr:"تتعاون مع علامات الأغذية والمشروبات في مختلف الأسواق."},
-  {id:uid(),name:"Ahmad Rachid",nameAr:"أحمد رشيد",role:"IT Specialist",roleAr:"أخصائي تقنية المعلومات",email:"it@printopack.com.sa",experience:8,bio:"Keeps the plant's systems, network and portals running.",bioAr:"يحافظ على تشغيل أنظمة المصنع وشبكته وبواباته."}
+  {id:uid(),name:"Nasser Nabil",nameAr:"ناصر نبيل",role:"General Manager",roleAr:"المدير العام",email:"gm@printopack.com.sa",experience:0,bio:"",bioAr:""},
+  {id:uid(),name:"",nameAr:"",role:"Head of Quality",roleAr:"رئيس الجودة",email:"quality@printopack.com.sa",experience:0,bio:"",bioAr:""},
+  {id:uid(),name:"",nameAr:"",role:"Production Director",roleAr:"مدير الإنتاج",email:"production@printopack.com.sa",experience:0,bio:"",bioAr:""},
+  {id:uid(),name:"",nameAr:"",role:"Head of Sales",roleAr:"رئيس المبيعات",email:"sales@printopack.com.sa",experience:0,bio:"",bioAr:""},
+  {id:uid(),name:"",nameAr:"",role:"IT Specialist",roleAr:"أخصائي تقنية المعلومات",email:"it@printopack.com.sa",experience:0,bio:"",bioAr:""}
  ],
  careers:[
   {id:uid(),title:"Production Engineer",titleAr:"مهندس إنتاج",dept:"Production",type:"Full-time",location:"Jeddah, KSA",requirements:"BSc in mechanical or industrial engineering, 3+ years on rotogravure lines.",requirementsAr:"بكالوريوس هندسة ميكانيكية أو صناعية، وخبرة 3 سنوات فأكثر على خطوط الروتوغرافير.",email:"careers@printopack.com.sa",status:"published"},

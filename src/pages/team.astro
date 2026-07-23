@@ -36,15 +36,18 @@ const content = {
       en: "Each part of the business is run by a manager with deep experience in flexible packaging.",
       ar: "يدير كل جزء من الأعمال مديرٌ ذو خبرة عميقة في التغليف المرن.",
     },
+    // Each member has a name slot (client-gated, filled via admin) + role, photo/monogram
+    // and a concise note. When `name` is filled it becomes the heading and the role moves
+    // to a subtitle; until then the role heads the card. The admin adds/edits/removes these.
     members: [
-      { mono: "GM", role: { en: "General Management", ar: "الإدارة العامة" }, desc: { en: "Sets direction and holds every run to the Printopack standard.", ar: "يرسم التوجّه ويُخضع كل تشغيلة لمعيار برنتوباك." } },
-      { mono: "OP", role: { en: "Operations", ar: "العمليات" }, desc: { en: "Keeps the plant running to plan, safely and on time.", ar: "يُبقي المصنع يعمل وفق الخطة، بأمانٍ وفي الوقت المحدد." } },
-      { mono: "PR", role: { en: "Production", ar: "الإنتاج" }, desc: { en: "Owns the press floor, from substrate to finished reel.", ar: "مسؤول عن أرضية الطباعة، من المادة الخام إلى اللفّة النهائية." } },
-      { mono: "EP", role: { en: "Engraving & Prepress", ar: "الحفر والتجهيز" }, desc: { en: "Turns artwork into engraved cylinders, ready to print.", ar: "يحوّل التصاميم إلى أسطوانات محفورة جاهزة للطباعة." } },
-      { mono: "QC", role: { en: "Quality & Compliance", ar: "الجودة والامتثال" }, desc: { en: "Guards food safety and quality from incoming goods to dispatch.", ar: "يحمي سلامة الغذاء والجودة من استلام المواد حتى التسليم." } },
-      { mono: "CX", role: { en: "Commercial & Export", ar: "التجارة والتصدير" }, desc: { en: "Partners with brands across 26 countries and beyond.", ar: "يتعاون مع علاماتٍ في أكثر من 26 دولة." } },
-      { mono: "SC", role: { en: "Supply Chain", ar: "سلسلة الإمداد" }, desc: { en: "Plans materials and delivery so orders land on time.", ar: "يخطّط للمواد والتسليم لتصل الطلبات في وقتها." } },
-      { mono: "IT", role: { en: "IT & Systems", ar: "تقنية المعلومات والأنظمة" }, desc: { en: "Runs the systems behind the factory and the customer portal.", ar: "يُدير الأنظمة خلف المصنع وبوابة العملاء." } },
+      { photo: "", mono: "GM", name: { en: "", ar: "" }, role: { en: "General Management", ar: "الإدارة العامة" }, desc: { en: "Direction and the Printopack standard.", ar: "التوجّه ومعيار برنتوباك." } },
+      { photo: "", mono: "OP", name: { en: "", ar: "" }, role: { en: "Operations", ar: "العمليات" }, desc: { en: "Keeps the plant running to plan.", ar: "يُبقي المصنع يعمل وفق الخطة." } },
+      { photo: "", mono: "PR", name: { en: "", ar: "" }, role: { en: "Production", ar: "الإنتاج" }, desc: { en: "Owns the press floor.", ar: "المسؤولية عن أرضية الطباعة." } },
+      { photo: "", mono: "EP", name: { en: "", ar: "" }, role: { en: "Engraving & Prepress", ar: "الحفر والتجهيز" }, desc: { en: "Artwork to engraved cylinders.", ar: "من التصميم إلى الأسطوانات المحفورة." } },
+      { photo: "", mono: "QC", name: { en: "", ar: "" }, role: { en: "Quality & Compliance", ar: "الجودة والامتثال" }, desc: { en: "Food safety and quality, end to end.", ar: "سلامة الغذاء والجودة من البداية للنهاية." } },
+      { photo: "", mono: "CX", name: { en: "", ar: "" }, role: { en: "Commercial & Export", ar: "التجارة والتصدير" }, desc: { en: "Partners with brands across markets.", ar: "التعاون مع العلامات في مختلف الأسواق." } },
+      { photo: "", mono: "SC", name: { en: "", ar: "" }, role: { en: "Supply Chain", ar: "سلسلة الإمداد" }, desc: { en: "Materials and delivery, on time.", ar: "المواد والتسليم في الوقت المحدد." } },
+      { photo: "", mono: "IT", name: { en: "", ar: "" }, role: { en: "IT & Systems", ar: "تقنية المعلومات والأنظمة" }, desc: { en: "The systems behind the plant.", ar: "الأنظمة خلف المصنع." } },
     ],
   },
   culture: {
@@ -93,8 +96,14 @@ const c = content;
       <div class="team-grid">
         {c.leadership.members.map((m) => (
           <div class="member">
-            <span class="avatar" aria-hidden="true">{m.mono}</span>
-            <h3 class="member-role"><Bi en={m.role.en} ar={m.role.ar} /></h3>
+            <span class="avatar">
+              {m.photo
+                ? <img src={m.photo} alt={m.name.en || m.role.en} />
+                : <span class="avatar-mono" aria-hidden="true">{m.mono}</span>}
+            </span>
+            {m.name.en
+              ? <><h3 class="member-name"><Bi en={m.name.en} ar={m.name.ar} /></h3><span class="member-role"><Bi en={m.role.en} ar={m.role.ar} /></span></>
+              : <h3 class="member-name"><Bi en={m.role.en} ar={m.role.ar} /></h3>}
             <p class="member-desc"><Bi en={m.desc.en} ar={m.desc.ar} /></p>
           </div>
         ))}
@@ -136,12 +145,13 @@ const c = content;
   .team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(26px,3vw,44px)}
   .member{text-align:left}
   .avatar{
-    display:grid;place-items:center;width:76px;height:76px;border-radius:50%;
-    background:var(--cream);border:1px solid var(--gold);
-    font-family:var(--display);font-weight:400;font-size:23px;letter-spacing:.04em;
-    color:var(--navy);margin-bottom:20px;
+    display:grid;place-items:center;width:76px;height:76px;border-radius:50%;overflow:hidden;
+    background:var(--cream);border:1px solid var(--gold);margin-bottom:20px;
   }
-  .member-role{font-size:clamp(18px,1.5vw,21px);margin-bottom:10px}
+  .avatar img{width:100%;height:100%;object-fit:cover}
+  .avatar-mono{font-family:var(--display);font-weight:400;font-size:23px;letter-spacing:.04em;color:var(--navy)}
+  .member-name{font-size:clamp(18px,1.5vw,21px);margin-bottom:8px}
+  .member-role{display:block;font-family:var(--display);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
   .member-desc{font-size:14.5px;color:var(--muted);line-height:1.6;max-width:30ch}
 
   .culture{position:relative;color:var(--paper);overflow:hidden;padding-block:clamp(88px,12vw,150px)}
