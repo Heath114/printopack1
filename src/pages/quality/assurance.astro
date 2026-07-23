@@ -48,7 +48,7 @@ const c = content;
       <div class="step-grid">
         {c.steps.items.map((s) => (
           <div class="step">
-            <span class="step-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" set:html={s.icon} /></span>
+            <span class="step-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" set:html={s.icon} /></span>
             <h3><Bi en={s.title.en} ar={s.title.ar} /></h3>
             <p><Bi en={s.desc.en} ar={s.desc.ar} /></p>
           </div>
