@@ -1,74 +1,104 @@
 ---
 import Base from '../layouts/Base.astro';
 import Counter from '../components/Counter.astro';
-// Years in the market: computed live so it is always current (climbs from 1997).
+import Bi from '../components/Bi.astro';
+import { categories, filters } from '../data/products';
 const year = new Date().getFullYear();
-import { categories, groups } from '../data/products';
 
-// Grove catalogue model: browse categories, open a category for detail, enquire
-// for a quote (no cart, no prices). The 20 categories are the client's real list
-// from the live API; copy is category-level and edited via the admin CMS.
-
-const steps = [
-  { n: "01", t: "Share your brief", d: "Format, structure, barrier needs and artwork. We advise on the right laminate from the start." },
-  { n: "02", t: "We develop and proof", d: "Cylinders engraved, structure built and printed, refined until it meets the Printopack standard." },
-  { n: "03", t: "Approve and produce", d: "Sign off the proof and we produce at volume, delivered on time to your line." },
-];
+// Products (Nasser's Page 3). Catalogue-and-enquire model: browse product groups, open
+// one for its products, request a quote (no cart, no prices). The 20 groups are the
+// client's real category list; individual products inside each group are client-added
+// via the admin. Bilingual; page copy below is editable content.
+const content = {
+  meta: {
+    title: "Products - Printopack",
+    description: "Flexible packaging for food, beverage, confectionery and personal-care brands: laminate pouches, films, shrink sleeves and lidding, made to your brief and offered by consultation.",
+  },
+  header: {
+    eyebrow: { en: "Products", ar: "المنتجات" },
+    title: { en: "Packaging, made to your brief.", ar: "تغليفٌ مصنوع وفق موجزكم." },
+    lede: {
+      en: "From snack films to shrink sleeves, every structure is developed for your product, printed in our Jeddah facility and offered by consultation. Browse the groups, open one for detail, then request a quote and we will build to your specification.",
+      ar: "من أفلام الوجبات الخفيفة إلى أكمام الانكماش، يُطوَّر كل تركيبٍ لمنتجكم، ويُطبع في مصنعنا بجدة، ويُقدَّم بالاستشارة. تصفّحوا المجموعات، وافتحوا إحداها للتفاصيل، ثم اطلبوا عرض سعر لنصنعه وفق مواصفاتكم.",
+    },
+  },
+  rail: {
+    kicker: { en: "Browse", ar: "تصفّح" },
+    note: { en: "Catalogue and enquiry only. No online checkout, every order is made to order and priced on request.", ar: "كتالوج واستفسار فقط. لا شراء إلكتروني؛ كل طلبٍ يُصنع حسب الطلب ويُسعَّر عند الطلب." },
+    cta: { en: "Request a quote", ar: "اطلب عرض سعر" },
+  },
+  card: { meta: { en: "Price on request", ar: "السعر عند الطلب" }, link: { en: "View & enquire", ar: "عرض واستفسار" } },
+  empty: { en: "No products in this group yet. Please get in touch and we will scope it with you.", ar: "لا توجد منتجات في هذه المجموعة بعد. يرجى التواصل معنا وسنحدّدها معكم." },
+  howto: {
+    eyebrow: { en: "How we work", ar: "كيف نعمل" },
+    title: { en: "Made to order, offered by consultation.", ar: "يُصنع حسب الطلب، ويُقدَّم بالاستشارة." },
+    steps: [
+      { n: "01", t: { en: "Share your brief", ar: "شاركونا موجزكم" }, d: { en: "Format, structure, barrier needs and artwork. We advise on the right laminate from the start.", ar: "الشكل والتركيب واحتياجات الحاجز والتصميم. ننصحكم بالتصفيح المناسب من البداية." } },
+      { n: "02", t: { en: "We develop and proof", ar: "نطوّر ونجهّز البروفة" }, d: { en: "Cylinders engraved, structure built and printed, refined until it meets the Printopack standard.", ar: "تُحفر الأسطوانات ويُبنى التركيب ويُطبع، ويُنقّح حتى يبلغ معيار برنتوباك." } },
+      { n: "03", t: { en: "Approve and produce", ar: "اعتمدوا وننتج" }, d: { en: "Sign off the proof and we produce at volume, delivered on time to your line.", ar: "اعتمدوا البروفة وننتج بالكميات، ويُسلَّم في وقته إلى خطكم." } },
+    ],
+  },
+  counters: [
+    { from: 1997, value: year, label: { en: "Printing since 1997", ar: "نطبع منذ 1997" } },
+    { prefix: "+", value: 26, label: { en: "Countries served", ar: "دولة نخدمها" } },
+    { prefix: "~", value: 400, label: { en: "Team members", ar: "عضو في الفريق" } },
+    { value: 5, label: { en: "Production departments", ar: "أقسام إنتاجية" } },
+  ],
+  cta: {
+    eyebrow: { en: "Let's talk packaging", ar: "لنتحدّث عن التغليف" },
+    title: { en: "Tell us what you are packing.", ar: "أخبرونا بما تعبّئون." },
+    button: { en: "Request a quote", ar: "اطلب عرض سعر" },
+  },
+};
+const c = content;
 ---
-<Base
-  title="Products - Printopack"
-  description="Flexible packaging for food, beverage, confectionery and personal-care brands: laminate pouches, films, shrink sleeves and lidding, made to your brief and offered by consultation."
->
+<Base title={c.meta.title} description={c.meta.description}>
   <!-- PAGE HEADER -->
   <section class="page-head">
     <div class="wrap-wide">
       <div class="page-head-inner">
-        <span class="eyebrow" data-reveal>Products</span>
-        <h1 data-reveal>Packaging, made to your brief.</h1>
-        <p class="lede" data-reveal>
-          From snack films to shrink sleeves, every structure is developed for your product, printed
-          in our Jeddah facility and offered by consultation. Browse the categories, open one for
-          detail, then request a quote and we will build to your specification.
-        </p>
+        <span class="eyebrow"><Bi en={c.header.eyebrow.en} ar={c.header.eyebrow.ar} /></span>
+        <h1><Bi en={c.header.title.en} ar={c.header.title.ar} /></h1>
+        <p class="lede"><Bi en={c.header.lede.en} ar={c.header.lede.ar} /></p>
       </div>
     </div>
   </section>
 
-  <!-- CATALOGUE: filter rail + grid -->
+  <!-- CATALOGUE: filter rail + group grid -->
   <section class="catalogue">
     <div class="wrap-wide cat-layout">
       <aside class="cat-rail">
-        <span class="rail-kicker">Browse</span>
+        <span class="rail-kicker"><Bi en={c.rail.kicker.en} ar={c.rail.kicker.ar} /></span>
         <ul class="rail-list">
-          {groups.map((g, i) => (
-            <li><button class={"rail-btn" + (i === 0 ? " active" : "")} data-filter={g.key}>{g.label}</button></li>
+          {filters.map((f, i) => (
+            <li><button class={"rail-btn" + (i === 0 ? " active" : "")} data-filter={f.key}><Bi en={f.label.en} ar={f.label.ar} /></button></li>
           ))}
         </ul>
         <div class="rail-note">
-          <p>Catalogue and enquiry only. No online checkout, every order is made to order and priced on request.</p>
-          <a href="/contact" class="btn btn-solid rail-cta">Request a quote</a>
+          <p><Bi en={c.rail.note.en} ar={c.rail.note.ar} /></p>
+          <a href="/contact" class="btn btn-solid rail-cta"><Bi en={c.rail.cta.en} ar={c.rail.cta.ar} /></a>
         </div>
       </aside>
 
       <div class="cat-main">
         <div class="cat-grid">
-          {categories.map((c) => (
-            <article class="prod2" data-group={c.group} data-reveal>
-              <a href={`/products/${c.slug}`} class="prod2-img" aria-label={`View ${c.name}`}>
-                <img src={c.img} alt={c.name} loading="lazy" decoding="async" />
+          {categories.map((cat) => (
+            <article class="prod2" data-group={cat.group}>
+              <a href={`/products/${cat.slug}`} class="prod2-img" aria-label={cat.name.en}>
+                <img src={cat.img} alt={cat.name.en} loading="lazy" decoding="async" />
               </a>
               <div class="prod2-body">
-                <h3 class="prod2-name"><a href={`/products/${c.slug}`}>{c.name}</a></h3>
-                <p class="prod2-desc">{c.desc}</p>
+                <h3 class="prod2-name"><a href={`/products/${cat.slug}`}><Bi en={cat.name.en} ar={cat.name.ar} /></a></h3>
+                <p class="prod2-desc"><Bi en={cat.desc.en} ar={cat.desc.ar} /></p>
                 <div class="prod2-foot">
-                  <span class="prod2-meta">Price on request</span>
-                  <a href={`/products/${c.slug}`} class="link-line prod2-link">View &amp; enquire</a>
+                  <span class="prod2-meta"><Bi en={c.card.meta.en} ar={c.card.meta.ar} /></span>
+                  <a href={`/products/${cat.slug}`} class="link-line prod2-link"><Bi en={c.card.link.en} ar={c.card.link.ar} /></a>
                 </div>
               </div>
             </article>
           ))}
         </div>
-        <p class="cat-empty" hidden>No products in this category yet. Please <a href="/contact">get in touch</a> and we will scope it with you.</p>
+        <p class="cat-empty" hidden><Bi en={c.empty.en} ar={c.empty.ar} /></p>
       </div>
     </div>
   </section>
@@ -76,16 +106,16 @@ const steps = [
   <!-- HOW WE WORK -->
   <section class="on-navy howto">
     <div class="wrap">
-      <div class="section-head" data-reveal>
-        <span class="eyebrow">How we work</span>
-        <h2 style="margin-top:16px">Made to order, offered by consultation.</h2>
+      <div class="section-head">
+        <span class="eyebrow"><Bi en={c.howto.eyebrow.en} ar={c.howto.eyebrow.ar} /></span>
+        <h2 style="margin-top:16px"><Bi en={c.howto.title.en} ar={c.howto.title.ar} /></h2>
       </div>
       <div class="steps">
-        {steps.map((s) => (
-          <div class="step" data-reveal>
+        {c.howto.steps.map((s) => (
+          <div class="step">
             <span class="step-n">{s.n}</span>
-            <h3 class="step-t">{s.t}</h3>
-            <p class="step-d">{s.d}</p>
+            <h3 class="step-t"><Bi en={s.t.en} ar={s.t.ar} /></h3>
+            <p class="step-d"><Bi en={s.d.en} ar={s.d.ar} /></p>
           </div>
         ))}
       </div>
@@ -95,31 +125,26 @@ const steps = [
   <!-- STATS -->
   <section class="on-deep prod-stats">
     <div class="wrap-wide counters-row">
-      <Counter from="1997" value={year} label="Printing since 1997" />
-      <Counter prefix="+" value="26" label="Countries served" />
-      <Counter prefix="~" value="400" label="Team members" />
-      <Counter value="5" label="Production departments" />
+      {c.counters.map((n) => <Counter from={n.from} prefix={n.prefix} value={n.value} label={n.label.en} labelAr={n.label.ar} />)}
     </div>
   </section>
 
   <!-- CTA -->
   <section class="cta">
     <div class="wrap" style="text-align:center">
-      <span class="eyebrow plain" data-reveal style="color:var(--gold)">Let's talk packaging</span>
-      <h2 data-reveal style="margin:16px 0 26px">Tell us what you are packing.</h2>
-      <a href="/contact" class="btn btn-gold" data-reveal>Request a quote</a>
+      <span class="eyebrow plain" style="color:var(--gold)"><Bi en={c.cta.eyebrow.en} ar={c.cta.eyebrow.ar} /></span>
+      <h2 style="margin:16px 0 26px"><Bi en={c.cta.title.en} ar={c.cta.title.ar} /></h2>
+      <a href="/contact" class="btn btn-gold"><Bi en={c.cta.button.en} ar={c.cta.button.ar} /></a>
     </div>
   </section>
 </Base>
 
 <style>
-  /* page header */
   .page-head{padding-block:clamp(56px,8vw,104px) clamp(30px,4vw,52px);background:var(--cream);border-bottom:1px solid var(--line)}
   .page-head-inner{max-width:820px}
   .page-head h1{margin:20px 0 22px;font-size:clamp(40px,6vw,78px)}
   .page-head .lede{max-width:60ch}
 
-  /* catalogue layout */
   .cat-layout{display:grid;grid-template-columns:260px 1fr;gap:clamp(30px,5vw,64px);align-items:start}
   .cat-rail{position:sticky;top:150px;align-self:start}
   .rail-kicker{font-family:var(--display);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:18px}
@@ -131,10 +156,8 @@ const steps = [
   .rail-note p{font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:18px;max-width:34ch}
   .rail-cta{width:100%;justify-content:center}
 
-  /* product cards */
   .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,2.4vw,34px)}
   .prod2{display:flex;flex-direction:column;border:1px solid var(--line);background:var(--paper)}
-  /* [hidden] must beat the .prod2 class selector, or filtered-out cards stay visible */
   .prod2[hidden]{display:none}
   .prod2:hover{border-color:var(--sand);box-shadow:0 24px 44px rgba(14,35,64,.07)}
   .prod2-img{display:block;aspect-ratio:4/3;background:var(--cream);overflow:hidden}
@@ -147,16 +170,13 @@ const steps = [
   .prod2-meta{font-family:var(--display);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
   .prod2-link{font-size:11.5px!important}
   .cat-empty{margin-top:30px;color:var(--muted)}
-  .cat-empty a{color:var(--gold);border-bottom:1px solid currentColor}
 
-  /* how we work */
   .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(28px,4vw,56px);margin-top:clamp(30px,4vw,48px)}
   .step{border-top:1px solid var(--line-dark);padding-top:24px}
   .step-n{font-family:var(--display);font-size:14px;font-weight:500;letter-spacing:.1em;color:var(--gold-bright)}
   .step-t{font-size:clamp(21px,2vw,26px);margin:14px 0 12px;color:var(--paper)}
   .step-d{font-size:15px;color:rgba(250,246,238,.72);line-height:1.65;max-width:36ch}
 
-  /* stats */
   .prod-stats{padding-block:clamp(52px,6vw,78px)}
   .counters-row{display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
 
@@ -179,12 +199,10 @@ const steps = [
 </style>
 
 <script>
-  // Catalogue filter: toggle category cards by group. No page reload, no motion
-  // beyond the existing reveal. Falls back to showing everything if JS is off.
+  // Group filter: toggle group cards by filter. No reload.
   const buttons = document.querySelectorAll<HTMLButtonElement>('.rail-btn');
   const cards = document.querySelectorAll<HTMLElement>('.prod2');
   const empty = document.querySelector<HTMLElement>('.cat-empty');
-
   const apply = (filter: string) => {
     let shown = 0;
     cards.forEach((card) => {
@@ -194,7 +212,6 @@ const steps = [
     });
     if (empty) empty.hidden = shown !== 0;
   };
-
   buttons.forEach((btn) => {
     btn.addEventListener('click', () => {
       buttons.forEach((b) => b.classList.remove('active'));

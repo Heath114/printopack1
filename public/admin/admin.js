@@ -48,6 +48,14 @@ var SEED={
   {id:uid(),title:"PVC vs PET-G Shrink Films",titleAr:"أفلام الانكماش: PVC مقابل PET-G",category:"General",date:"2022-06-20",image:"/images/dept-5.jpg",body:"A practical comparison for brand owners choosing shrink sleeves.",bodyAr:"مقارنة عملية لأصحاب العلامات عند اختيار أكمام الانكماش.",status:"published"},
   {id:uid(),title:"In-house Cylinder Engraving",titleAr:"حفر الأسطوانات داخلياً",category:"General",date:"2022-04-04",image:"/images/dept-4.jpg",body:"From artwork to press, faster, with engraving done under our own roof.",bodyAr:"من التصميم إلى الطباعة، وبسرعة أكبر، عبر الحفر داخل مصنعنا.",status:"draft"}
  ],
+ productGroups:[
+  {id:uid(),name:"Snacks",nameAr:"الوجبات الخفيفة",image:IMG.cat(1),description:"Chips, nuts and savoury snack ranges.",descriptionAr:"الشيبس والمكسّرات والوجبات الخفيفة المالحة."},
+  {id:uid(),name:"Confectionery",nameAr:"الحلويات",image:IMG.cat(2),description:"Chocolate, wafers and candy.",descriptionAr:"الشوكولاتة والويفر والحلوى."},
+  {id:uid(),name:"Bakery",nameAr:"المخابز",image:IMG.cat(3),description:"Bread, biscuits and cakes.",descriptionAr:"الخبز والبسكويت والكيك."},
+  {id:uid(),name:"Beverage",nameAr:"المشروبات",image:IMG.cat(6),description:"Bottles, sleeves and liquid packs.",descriptionAr:"القوارير والأكمام وعبوات السوائل."},
+  {id:uid(),name:"Dairy",nameAr:"الألبان",image:IMG.cat(7),description:"Lidding and packs for dairy and desserts.",descriptionAr:"أغطية وعبوات لمنتجات الألبان والحلويات."},
+  {id:uid(),name:"Frozen",nameAr:"المجمّدات",image:IMG.cat(8),description:"Cold-chain wraps and packaging.",descriptionAr:"أغلفة وتغليف لسلسلة التبريد."}
+ ],
  products:[
   {id:uid(),name:"Chips & Snacks Packaging",nameAr:"تغليف الشيبس والوجبات الخفيفة",category:"Snacks",image:IMG.cat(1),description:"High-barrier printed films and bags that keep snacks fresh and crisp.",descriptionAr:"أفلام وأكياس مطبوعة عالية الحاجز تحافظ على نضارة الوجبات الخفيفة.",active:true},
   {id:uid(),name:"Chocolate & Wafer Packaging",nameAr:"تغليف الشوكولاتة والويفر",category:"Confectionery",image:IMG.cat(2),description:"Vivid rotogravure wraps and flow-pack for chocolate and wafers.",descriptionAr:"أغلفة روتوغرافيّة زاهية وتغليف انسيابي للشوكولاتة والويفر.",active:true},
@@ -131,7 +139,7 @@ var SEED={
 };
 function db(){try{return JSON.parse(localStorage.getItem(KEY))||null;}catch(e){return null;}}
 function save(d){localStorage.setItem(KEY,JSON.stringify(d));}
-function ensure(){if(!db())save(SEED);}
+function ensure(){var d=db();if(!d){save(SEED);return;}if(!d.productGroups){d.productGroups=SEED.productGroups;save(d);}}
 function coll(k){return (db()||{})[k]||[];}
 function setColl(k,a){var d=db()||{};d[k]=a;save(d);}
 function obj(k){return (db()||{})[k]||{};}
@@ -143,9 +151,12 @@ var MODELS={
  news:{label:"News & Events",singular:"Post",icon:"news",group:"Content",hasImport:true,hasCalendar:true,
   columns:[{type:"thumb",field:"image"},{type:"title",field:"title",sub:"category"},{type:"pill",field:"status"},{type:"date",field:"date"}],
   fields:[{name:"image",type:"image",label:"Cover image"},{name:"category",type:"select",label:"Category",half:true,options:["General","Company News","Sustainability","Certifications","Events","Products"]},{name:"date",type:"date",label:"Date",half:true},{name:"status",type:"select",label:"Status",half:true,options:["draft","published"]},{name:"title",type:"text",label:"Title (English)"},{name:"body",type:"textarea",label:"Body (English)"},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true},{name:"bodyAr",type:"textarea",label:"Body",ar:"Arabic (review before publishing)",rtl:true}]},
+ productGroups:{label:"Product Groups",singular:"Group",icon:"products",group:"Content",
+  columns:[{type:"thumb",field:"image",contain:true},{type:"title",field:"name",sub:"description"},{type:"text",field:"nameAr"}],
+  fields:[{name:"image",type:"image",label:"Group image",contain:true},{name:"name",type:"text",label:"Name (English)",half:true},{name:"nameAr",type:"text",label:"Name",ar:"Arabic",rtl:true,half:true},{name:"description",type:"textarea",label:"Description (English)"},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
  products:{label:"Products",singular:"Product",icon:"products",group:"Content",
   columns:[{type:"thumb",field:"image",contain:true},{type:"title",field:"name",sub:"category"},{type:"active",field:"active"}],
-  fields:[{name:"image",type:"image",label:"Product image",contain:true},{name:"name",type:"text",label:"Name (English)",half:true},{name:"category",type:"text",label:"Category",half:true},{name:"description",type:"textarea",label:"Description (English)"},{name:"nameAr",type:"text",label:"Name",ar:"Arabic",rtl:true,half:true},{name:"active",type:"select",label:"Visible on site",half:true,options:["true","false"]},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
+  fields:[{name:"image",type:"image",label:"Product image",contain:true},{name:"name",type:"text",label:"Name (English)",half:true},{name:"category",type:"select",label:"Group",half:true,optionsFrom:"productGroups"},{name:"description",type:"textarea",label:"Description (English)"},{name:"nameAr",type:"text",label:"Name",ar:"Arabic",rtl:true,half:true},{name:"active",type:"select",label:"Visible on site",half:true,options:["true","false"]},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
  team:{label:"Our Team",singular:"Member",icon:"team",group:"Content",
   columns:[{type:"thumb",field:"photo",round:true},{type:"title",field:"name",sub:"role"},{type:"text",field:"experience",prefix:"",suffix:" yrs"},{type:"text",field:"email"}],
   fields:[{name:"photo",type:"image",label:"Photo"},{name:"name",type:"text",label:"Name (English)",half:true},{name:"role",type:"text",label:"Role (English)",half:true},{name:"nameAr",type:"text",label:"Name",ar:"Arabic",rtl:true,half:true},{name:"roleAr",type:"text",label:"Role",ar:"Arabic",rtl:true,half:true},{name:"email",type:"text",label:"Email",half:true},{name:"experience",type:"number",label:"Years of experience",half:true},{name:"bio",type:"textarea",label:"Short bio (English)"},{name:"bioAr",type:"textarea",label:"Bio",ar:"Arabic",rtl:true}]},
@@ -266,7 +277,7 @@ function fieldHTML(f,val){
  var rtl=f.rtl?' dir="rtl"':'';
  if(f.type==='image'){var has=val?' has':'';var cn=f.contain?' contain':'';return '<div class="field full"><label>'+esc(f.label)+'</label><div class="imgpick'+has+cn+'" data-imgpick="'+f.name+'"><img src="'+esc(val||'')+'"><div class="ph">'+svg('image')+'Click to upload</div></div><input type="file" accept="image/*" data-imgfile="'+f.name+'" hidden></div>';}
  if(f.type==='textarea')return '<div class="field full">'+lab+'<textarea data-f="'+f.name+'"'+rtl+'>'+esc(val||'')+'</textarea></div>';
- if(f.type==='select'){var opts=f.options.map(function(o){return '<option'+(String(val)===String(o)?' selected':'')+'>'+esc(o)+'</option>';}).join('');return '<div class="field'+(f.half?'':' full')+'">'+lab+'<select data-f="'+f.name+'">'+opts+'</select></div>';}
+ if(f.type==='select'){var src=f.optionsFrom?coll(f.optionsFrom).map(function(g){return g.name;}).filter(Boolean):f.options;var list=f.optionsFrom?[''].concat(src):src;var opts=list.map(function(o){return '<option'+(String(val)===String(o)?' selected':'')+'>'+esc(o)+'</option>';}).join('');return '<div class="field'+(f.half?'':' full')+'">'+lab+'<select data-f="'+f.name+'">'+opts+'</select></div>';}
  var t=f.type==='date'?'date':(f.type==='number'?'number':(f.type==='url'?'url':'text'));
  return '<div class="field'+(f.half?'':' full')+'">'+lab+'<input type="'+t+'" data-f="'+f.name+'"'+rtl+' value="'+esc(val==null?'':val)+'"></div>';
 }
