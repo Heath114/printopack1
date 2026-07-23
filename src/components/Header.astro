@@ -19,7 +19,20 @@ const nav = [
     },
   },
   { label: { en: "Products", ar: "المنتجات" }, href: "/products" },
-  { label: { en: "Quality System", ar: "نظام الجودة" }, href: "/quality" },
+  {
+    label: { en: "Quality System", ar: "نظام الجودة" }, href: "/quality",
+    mega: {
+      links: [
+        { label: { en: "Quality Certificates", ar: "شهادات الجودة" }, href: "/quality/certificates" },
+        { label: { en: "Quality Assurance", ar: "ضمان الجودة" }, href: "/quality/assurance" },
+        { label: { en: "Lab & Testing", ar: "المختبر والفحص" }, href: "/quality/lab" },
+      ],
+      featured: [
+        { img: "/images/factory-solvent.jpg", label: { en: "Certified", ar: "معتمدون" }, href: "/quality/certificates" },
+        { img: "/images/dept-3.jpg", label: { en: "Tested", ar: "مفحوص" }, href: "/quality/lab" },
+      ],
+    },
+  },
   { label: { en: "Success Partners", ar: "شركاء النجاح" }, href: "/partners" },
   { label: { en: "Careers", ar: "الوظائف" }, href: "/careers" },
   {

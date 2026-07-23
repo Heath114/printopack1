@@ -1,0 +1,104 @@
+---
+import Base from '../../layouts/Base.astro';
+import Bi from '../../components/Bi.astro';
+
+// ── EDITABLE CONTENT (bilingual) ─────────────────────────────────────────────
+// Quality Certificates (Nasser's Page 2, subsection 1). The certificate slot is a
+// content-editable template (admin adds any number of certificate images of any shape),
+// seeded with the real BRCGS certificate from the live site. Arabic is natural fusha.
+const content = {
+  meta: {
+    title: "Quality Certificates - Printopack",
+    description: "Printopack's quality certificates: packaging produced to internationally recognised, independently audited standards.",
+  },
+  header: {
+    eyebrow: { en: "Quality system", ar: "نظام الجودة" },
+    title: { en: "Quality certificates.", ar: "شهادات الجودة." },
+    lede: {
+      en: "Our packaging is produced to internationally recognised standards, audited and certified by independent bodies.",
+      ar: "يُنتَج تغليفنا وفق معايير معترف بها دولياً، تُدقّقها وتعتمدها جهاتٌ مستقلة.",
+    },
+  },
+  certs: {
+    note: {
+      en: "More certificates are published here as they are issued and renewed.",
+      ar: "تُنشر المزيد من الشهادات هنا عند إصدارها وتجديدها.",
+    },
+    items: [
+      {
+        name: { en: "BRCGS Global Standard for Packaging Materials", ar: "معيار BRCGS العالمي لمواد التغليف" },
+        note: { en: "Grade A, issued by SGS", ar: "الدرجة A، صادرة عن SGS" },
+        image: "/images/cert-brcgs.jpg",
+      },
+    ],
+  },
+};
+const c = content;
+---
+<Base title={c.meta.title} description={c.meta.description}>
+  <!-- PAGE HEADER -->
+  <section class="page-head">
+    <div class="wrap-wide">
+      <div class="page-head-inner">
+        <span class="eyebrow"><Bi en={c.header.eyebrow.en} ar={c.header.eyebrow.ar} /></span>
+        <h1><Bi en={c.header.title.en} ar={c.header.title.ar} /></h1>
+        <p class="lede"><Bi en={c.header.lede.en} ar={c.header.lede.ar} /></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATES (content-editable slot; seeded with the real BRCGS certificate) -->
+  <section class="certs">
+    <div class="wrap-wide">
+      <div class="cert-grid">
+        {c.certs.items.map((cert) => (
+          <a class="cert-card" href={cert.image} target="_blank" rel="noopener">
+            <span class="cert-thumb"><img src={cert.image} alt={cert.name.en} loading="lazy" /></span>
+            <span class="cert-body">
+              <span class="cert-name"><Bi en={cert.name.en} ar={cert.name.ar} /></span>
+              <span class="cert-note"><Bi en={cert.note.en} ar={cert.note.ar} /></span>
+            </span>
+          </a>
+        ))}
+      </div>
+      <p class="cert-foot"><Bi en={c.certs.note.en} ar={c.certs.note.ar} /></p>
+    </div>
+  </section>
+
+  <!-- SUBSECTION NAV -->
+  <section class="qnav on-deep">
+    <div class="wrap-wide qnav-inner">
+      <a class="qnav-link" href="/quality"><Bi en="All of Quality System" ar="كل نظام الجودة" /></a>
+      <div class="qnav-sub">
+        <a href="/quality/assurance"><Bi en="Quality Assurance" ar="ضمان الجودة" /> &rarr;</a>
+        <a href="/quality/lab"><Bi en="Lab & Testing" ar="المختبر والفحص" /> &rarr;</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head{padding-block:clamp(56px,8vw,104px) clamp(30px,4vw,52px);background:var(--cream);border-bottom:1px solid var(--line)}
+  .page-head-inner{max-width:820px}
+  .page-head h1{margin:20px 0 22px;font-size:clamp(40px,6vw,78px)}
+  .page-head .lede{max-width:62ch}
+
+  /* certificate slots: auto-fill grid holds any number, any shape, without breaking */
+  .cert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px}
+  .cert-card{display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .cert-card:hover{border-color:var(--navy);box-shadow:0 18px 36px rgba(14,35,64,.08)}
+  .cert-thumb{background:var(--white);aspect-ratio:3/4;display:grid;place-items:center;overflow:hidden;padding:14px;border-bottom:1px solid var(--line)}
+  .cert-thumb img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+  .cert-body{padding:16px 18px}
+  .cert-name{display:block;font-family:var(--display);font-size:16px;color:var(--ink);line-height:1.3}
+  .cert-note{display:block;margin-top:6px;font-size:13px;color:var(--muted)}
+  .cert-foot{margin-top:clamp(28px,4vw,44px);color:var(--faint);font-size:14px}
+  @media(max-width:520px){.cert-grid{grid-template-columns:1fr}}
+
+  .qnav{padding-block:clamp(40px,5vw,60px)}
+  .qnav-inner{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+  .qnav-link{font-family:var(--display);font-size:clamp(18px,2vw,24px);font-weight:var(--w-light);color:var(--paper)}
+  .qnav-link:hover{color:var(--gold-bright)}
+  .qnav-sub{display:flex;gap:26px;flex-wrap:wrap}
+  .qnav-sub a{font-family:var(--display);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-bright)}
+</style>

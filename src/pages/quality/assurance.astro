@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import Bi from '../../components/Bi.astro';
+
+// Quality Assurance (Page 2, subsection 2). Minimal for now; to be finalised next.
+const c = {
+  meta: { title: "Quality Assurance - Printopack", description: "Quality is built into every Printopack run, not inspected in at the end." },
+  header: {
+    eyebrow: { en: "Quality system", ar: "نظام الجودة" },
+    title: { en: "Quality assurance.", ar: "ضمان الجودة." },
+    lede: {
+      en: "Quality is built into every run, not inspected in at the end: controls at incoming goods, on press, and at dispatch.",
+      ar: "الجودة مدمجة في كل تشغيلة، لا تُفحص في النهاية فقط: ضوابط عند استلام المواد، وعلى الطباعة، وعند التسليم.",
+    },
+  },
+};
+---
+<Base title={c.meta.title} description={c.meta.description}>
+  <section class="page-head">
+    <div class="wrap-wide">
+      <div class="page-head-inner">
+        <span class="eyebrow"><Bi en={c.header.eyebrow.en} ar={c.header.eyebrow.ar} /></span>
+        <h1><Bi en={c.header.title.en} ar={c.header.title.ar} /></h1>
+        <p class="lede"><Bi en={c.header.lede.en} ar={c.header.lede.ar} /></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="qnav on-deep">
+    <div class="wrap-wide qnav-inner">
+      <a class="qnav-link" href="/quality"><Bi en="All of Quality System" ar="كل نظام الجودة" /></a>
+      <div class="qnav-sub">
+        <a href="/quality/certificates"><Bi en="Quality Certificates" ar="شهادات الجودة" /> &rarr;</a>
+        <a href="/quality/lab"><Bi en="Lab & Testing" ar="المختبر والفحص" /> &rarr;</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head{padding-block:clamp(56px,8vw,104px) clamp(30px,4vw,52px);background:var(--cream);border-bottom:1px solid var(--line)}
+  .page-head-inner{max-width:820px}
+  .page-head h1{margin:20px 0 22px;font-size:clamp(40px,6vw,78px)}
+  .page-head .lede{max-width:62ch}
+  .qnav{padding-block:clamp(40px,5vw,60px)}
+  .qnav-inner{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+  .qnav-link{font-family:var(--display);font-size:clamp(18px,2vw,24px);font-weight:var(--w-light);color:var(--paper)}
+  .qnav-link:hover{color:var(--gold-bright)}
+  .qnav-sub{display:flex;gap:26px;flex-wrap:wrap}
+  .qnav-sub a{font-family:var(--display);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-bright)}
+</style>
