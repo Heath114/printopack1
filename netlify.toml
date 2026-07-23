@@ -1,0 +1,8 @@
+# Netlify build config for the Astro static site.
+# Netlify auto-deploys this repo on every push to main.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
