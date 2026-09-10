@@ -623,7 +623,7 @@ var MODELS={
   fields:[{name:"image",type:"image",label:"Cover image",frame:"3/2",rec:"1200 × 800px (landscape, JPG)"},{name:"category",type:"select",label:"Category",half:true,options:["General","Company News","Sustainability","Certifications","Events","Products"]},{name:"date",type:"date",label:"Date",half:true},{name:"status",type:"select",label:"Status",half:true,options:["draft","published"]},{name:"title",type:"text",label:"Title (English)"},{name:"body",type:"textarea",label:"Body (English)"},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true},{name:"bodyAr",type:"textarea",label:"Body",ar:"Arabic (review before publishing)",rtl:true}]},
  productGroups:{label:"Product Groups",singular:"Group",icon:"products",group:"Content",
   columns:[{type:"thumb",field:"image",contain:true},{type:"title",field:"name",sub:"description"},{type:"text",field:"nameAr"}],
-  fields:[{name:"image",type:"image",label:"Group image",contain:true,frame:"4/3",rec:"1000 × 750px (transparent PNG)"},{name:"name",type:"text",label:"Name (English)",half:true},{name:"nameAr",type:"text",label:"Name",ar:"Arabic",rtl:true,half:true},{name:"kind",type:"select",label:"Type",half:true,options:["Group","Measurements"],rec:"A Measurements group is a size chart rather than a product range: its page shows the drawing at full page width."},{name:"filter",type:"select",label:"Browse family",half:true,options:["snacks","confectionery","bakery","staples","beverage","chilled","specialty"],rec:"Which heading this group sits under in the Browse list on the products page. Snacks · Confectionery · Bakery & Breads · Pantry Staples · Bottles & Liquids · Frozen & Chilled · Specialty."},{name:"description",type:"textarea",label:"Description (English)"},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
+  fields:[{name:"image",type:"image",label:"Group image",contain:true,frame:"4/3",rec:"1000 × 750px (transparent PNG)"},{name:"name",type:"text",label:"Name (English)",half:true},{name:"nameAr",type:"text",label:"Name",ar:"Arabic",rtl:true,half:true},{name:"kind",type:"select",label:"Type",half:true,options:["Group","Measurements"],rec:"A Measurements group is a size chart rather than a product range: its page shows the drawing at full page width."},{name:"filter",type:"select",label:"Browse family",half:true,options:["snacks","nuts","confectionery","bakery","staples","beverage","chilled","specialty"],rec:"Which heading this group sits under in the Browse list on the products page. Snacks · Nuts · Confectionery · Bakery & Breads · Pantry Staples · Bottles & Liquids · Frozen & Chilled · Specialty."},{name:"description",type:"textarea",label:"Description (English)"},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
  products:{label:"Products",singular:"Product",icon:"products",group:"Content",
   columns:[{type:"thumb",field:"image",contain:true},{type:"title",field:"name",sub:"category"},{type:"active",field:"active"}],
   fields:[{name:"image",type:"image",label:"Product image",frame:"4/3",rec:"1000 × 750px (landscape photo, JPG)"},{name:"name",type:"text",label:"Name (English)",half:true},{name:"category",type:"select",label:"Group",half:true,optionsFrom:"productGroups"},{name:"kind",type:"select",label:"Type",half:true,options:["Product","Measurements"],rec:"A Measurements section is shown differently: full width, the chart uncropped, and openable at full size, because the sizes printed on it have to be readable."},{name:"description",type:"textarea",label:"Description (English)"},{name:"nameAr",type:"text",label:"Name",ar:"Arabic",rtl:true,half:true},{name:"active",type:"select",label:"Visible on site",half:true,options:["true","false"]},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
@@ -647,7 +647,7 @@ var MODELS={
   fields:[{name:"image",type:"image",label:"Certificate / image",contain:true,frame:"3/4",rec:"1050 × 1400px (portrait, JPG or PNG)"},{name:"title",type:"text",label:"Title (English)",half:true},{name:"category",type:"select",label:"Area",half:true,options:["Environment","Local Community","International"]},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true},{name:"description",type:"textarea",label:"Description (English)"},{name:"descriptionAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
  gallery:{label:"Gallery",singular:"Item",icon:"gallery",group:"Company",
   columns:[{type:"thumb",field:"image"},{type:"title",field:"title",sub:"kind"},{type:"tag",field:"kind"}],
-  fields:[{name:"kind",type:"select",label:"Type",half:true,options:["Photo","Video","Advertisement"]},{name:"span",type:"select",label:"Size (photos & ads)",half:true,options:["normal","wide","tall"]},{name:"title",type:"text",label:"Title (English)",half:true},{name:"image",type:"image",label:"Image / thumbnail",frame:"8/5",rec:"1600 × 1000px JPG/WebP. Wide and tall tiles crop more; use Focus point. For videos, upload only a poster image."},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true},{name:"url",type:"url",label:"External video / campaign link",rec:"Paste a YouTube or Vimeo link. Do not upload video files."}]},
+  fields:[{name:"kind",type:"select",label:"Type",half:true,options:["Photo","Video","Advertisement"]},{name:"span",type:"select",label:"Size (photos & ads)",half:true,options:["normal","wide"],rec:"Wide takes two columns. Both are the same shape, so this changes size only, never cropping."},{name:"title",type:"text",label:"Title (English)",half:true},{name:"image",type:"image",label:"Image / thumbnail",frame:"8/5",frameBy:{field:"kind",map:{Video:"16/9"}},rec:"1600 × 1000px JPG/WebP. That is exactly the shape of the tile, so a file at this size is not cropped at all. For a video, upload the poster only, at 1600 × 900px (16:9, the YouTube and Vimeo shape). Uploading a different shape is fine: set Focus point, or choose Show whole image."},{name:"titleAr",type:"text",label:"Title",ar:"Arabic",rtl:true},{name:"url",type:"url",label:"External video / campaign link",rec:"Paste a YouTube or Vimeo link. Do not upload video files."}]},
  values:{label:"Our Values",singular:"Value",icon:"about",group:"Company",
   columns:[{type:"title",field:"title",sub:"text"},{type:"text",field:"titleAr"}],
   fields:[{name:"title",type:"text",label:"Value (English)",half:true},{name:"titleAr",type:"text",label:"Value",ar:"Arabic",rtl:true,half:true},{name:"text",type:"textarea",label:"Description (English)"},{name:"textAr",type:"textarea",label:"Description",ar:"Arabic",rtl:true}]},
@@ -1276,6 +1276,10 @@ function listView(m,key){
 
 /* ---------------- form drawer ---------------- */
 var draft={};
+/* Beside `draft`, and for the same reason: the drawer is not the only thing that fills a form.
+   importLI writes into the open drawer from a top-level function, so a `dirty` scoped to the
+   drawer was invisible to it. Reset on every open, below. */
+var dirty=false;
 // A required field's name for the "please fill…" message: the label without the language/optional tag.
 function reqName(f){return String(f.label).replace(/\s*\((English|optional)\)/gi,'').trim();}
 function fieldHTML(f,val){
@@ -1297,10 +1301,18 @@ function fieldHTML(f,val){
   var rec=f.rec?'<span class="imgrec">'+svg('image')+T('Recommended: {x} for a flawless fit',{x:'<b>'+esc(T(f.rec))+'</b>'})+'</span>':'';
   // The preview box mirrors the real frame on the site (its aspect ratio), so what she sees
   // here is exactly what visitors get. Fields without a defined frame keep the neutral box.
-  var frameStyle=f.frame?' style="aspect-ratio:'+f.frame+'"':'';
+  //
+  // `frameBy` lets that frame follow another field: a gallery VIDEO's poster is 16:9 on the
+  // site (the YouTube and Vimeo shape) while a photo or advert is 8/5, so previewing all three
+  // kinds at one shape would put the preview back out of step with the page. The map is also
+  // written onto the element so `bind` can keep it current when that other field changes.
+  var frameVal=f.frame;
+  if(f.frameBy&&draft&&f.frameBy.map[draft[f.frameBy.field]])frameVal=f.frameBy.map[draft[f.frameBy.field]];
+  var frameStyle=frameVal?' style="aspect-ratio:'+frameVal+'"':'';
+  var frameByAttr=f.frameBy?' data-frameby="'+esc(JSON.stringify(f.frameBy))+'" data-frame-default="'+esc(f.frame||'')+'"':'';
   // Two-button chooser, shown only for framed fields. "Fill" crops to fill the frame; "Show
   // whole" letterboxes on the frame's own colour so nothing (a logo, a QR code) is cut.
-  var toggle=f.frame?'<div class="fitrow" data-fitrow="'+f.name+'">'
+  var toggle=frameVal?'<div class="fitrow" data-fitrow="'+f.name+'">'
     +'<button type="button" class="fitbtn'+(fit==='cover'?' on':'')+'" data-fit="cover">'+svg('cover')+esc(T('Fill frame'))+'</button>'
     +'<button type="button" class="fitbtn'+(fit==='contain'?' on':'')+'" data-fit="contain">'+svg('contain')+esc(T('Show whole image'))+'</button>'
     +'</div>':'';
@@ -1310,13 +1322,13 @@ function fieldHTML(f,val){
   var focus=draft[f.name+'Focus']||'';
   var POS=[['left top','Top left'],['center top','Top'],['right top','Top right'],['left center','Left'],['center','Centre'],['right center','Right'],['left bottom','Bottom left'],['center bottom','Bottom'],['right bottom','Bottom right']];
   var fsel=focus||'center';
-  var focusEl=f.frame?'<div class="focusrow" data-focusrow="'+f.name+'"'+(fit==='cover'?'':' hidden')+'>'
+  var focusEl=frameVal?'<div class="focusrow" data-focusrow="'+f.name+'"'+(fit==='cover'?'':' hidden')+'>'
     +'<span class="focuslabel">'+esc(T('Keep this part in view'))+'</span>'
     +'<div class="focusgrid">'+POS.map(function(p){return '<button type="button" class="focusdot'+(fsel===p[0]?' on':'')+'" data-focus="'+p[0]+'" title="'+esc(T(p[1]))+'" aria-label="'+esc(T(p[1]))+'"></button>';}).join('')+'</div>'
     +'</div>':'';
   var posStyle=focus?' style="object-position:'+focus+'"':'';
   return '<div class="field full"><label>'+esc(T(f.label))+req+'</label>'+rec
-    +'<div class="imgpick'+has+cn+'" data-imgpick="'+f.name+'"'+frameStyle+' data-box="'+recBox(f.rec)+'"><img src="'+esc(imgSrc(val))+'"'+posStyle+'><div class="ph">'+svg('image')+esc(T('Click to upload'))+'</div></div>'
+    +'<div class="imgpick'+has+cn+'" data-imgpick="'+f.name+'"'+frameStyle+frameByAttr+' data-box="'+recBox(f.rec)+'"><img src="'+esc(imgSrc(val))+'"'+posStyle+'><div class="ph">'+svg('image')+esc(T('Click to upload'))+'</div></div>'
     +toggle
     +focusEl
     +'<input type="file" accept="image/*" data-imgfile="'+f.name+'" hidden></div>';
@@ -1345,7 +1357,7 @@ function openForm(key,id){
  host.innerHTML='<div class="overlay" id="ov"></div><div class="drawer" id="dw"><div class="drawer-head"><h2>'+esc(T(id==='new'?'New {x}':'Edit {x}',{x:T(mdl.singular)}))+'</h2><button class="x" id="xc">✕</button></div><div class="drawer-body">'+imp+body+'</div><div class="drawer-foot"><button class="btn btn-ghost" id="cx">'+esc(T('Cancel'))+'</button><button class="btn btn-ok" id="sv">'+esc(T('Save {x}',{x:sing(mdl)}))+'</button></div></div>';
  document.body.appendChild(host);
  requestAnimationFrame(function(){$('#ov',host).classList.add('show');$('#dw',host).classList.add('show');});
- var dirty=false,saving=false;
+ dirty=false;var saving=false;
  function close(){$('#ov',host).classList.remove('show');$('#dw',host).classList.remove('show');setTimeout(function(){host.remove();},350);}
  /* Clicking the dark area beside the drawer used to throw away everything typed, instantly
     and without asking. An accidental click while writing a long Arabic description cost the
@@ -1357,6 +1369,17 @@ function openForm(key,id){
  $('#xc',host).addEventListener('click',closeGuarded);$('#cx',host).addEventListener('click',closeGuarded);$('#ov',host).addEventListener('click',closeGuarded);
  host.querySelectorAll('[data-f]').forEach(function(el){el.addEventListener('input',function(){dirty=true;draft[el.getAttribute('data-f')]=el.value;var fl=el.closest('.field');if(fl&&String(el.value).trim()!=='')fl.classList.remove('missing');});});
  host.querySelectorAll('select[data-f]').forEach(function(el){el.addEventListener('change',function(){dirty=true;});});
+ // A preview whose frame follows another field (a gallery poster's 16:9 vs a photo's 8/5).
+ // The drawer does not re-render on a select change, so the box is updated in place.
+ host.querySelectorAll('[data-frameby]').forEach(function(p){
+  var cfg;try{cfg=JSON.parse(p.getAttribute('data-frameby'));}catch(e){return;}
+  var src=host.querySelector('[data-f="'+cfg.field+'"]');if(!src)return;
+  var dflt=p.getAttribute('data-frame-default')||'';
+  src.addEventListener('change',function(){
+   var v=(cfg.map&&cfg.map[src.value])||dflt;
+   if(v)p.style.aspectRatio=v;
+  });
+ });
  host.querySelectorAll('[data-imgpick]').forEach(function(p){var name=p.getAttribute('data-imgpick');var file=host.querySelector('[data-imgfile="'+name+'"]');p.addEventListener('click',function(){file.click();});file.addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;prepImage(f,+p.getAttribute('data-box')||IMG_BOX,function(out,kb){dirty=true;draft[name]=out;p.classList.add('has');$('img',p).src=out;var fl=p.closest('.field');if(fl)fl.classList.remove('missing');toast(T('Picture ready, {kb} KB',{kb:kb}),'ok');});file.value='';});});
  // Fit chooser: records the per-image choice on the draft and shows it live in the preview,
  // so the box mirrors exactly how the site will place the picture inside its fixed frame.
@@ -1455,16 +1478,80 @@ function openForm(key,id){
 }
 function importLI(host){
  var url=$('#liu',host).value.trim();if(!url){toast(T('Paste a link first'),'err');return;}if(!/^https?:\/\//.test(url))url='https://'+url;
- var st=$('#lis',host),tx=$('#lit',host);st.className='li-status show';tx.textContent=T('Fetching the post…');$('#lib',host).disabled=true;
- var ctrl=new AbortController();var to=setTimeout(function(){ctrl.abort();},28000);
- fetch('https://r.jina.ai/'+url,{headers:{'Accept':'application/json'},signal:ctrl.signal}).then(function(r){return r.json();}).then(function(res){
-  var d=(res&&res.data)||{},meta=d.metadata||{};var title=meta['og:title']||d.title||'';var desc=meta['og:description']||d.description||'';if(!desc&&d.content)desc=String(d.content).replace(/\s+/g,' ').slice(0,320).trim()+'…';var img=meta['og:image']||meta['twitter:image']||'';
-  if(!title&&!desc)throw 0;
-  setV(host,'title',title.trim());setV(host,'body',desc.trim());if(img){draft.image=img;var p=host.querySelector('[data-imgpick="image"]');if(p){p.classList.add('has');$('img',p).src=img;}}
-  st.className='li-status show done';tx.textContent=T('Imported. Review the text and Arabic, then save.');
- }).catch(function(){st.className='li-status show err';tx.textContent=T('Could not read that link (login wall or blocked). Type the details below.');}).finally(function(){$('#lib',host).disabled=false;clearTimeout(to);});
+ var st=$('#lis',host),tx=$('#lit',host);st.className='li-status show';tx.textContent=T('Reading the post\u2026');$('#lib',host).disabled=true;
+ var done=function(cls,msg){st.className='li-status show '+cls;tx.textContent=msg;$('#lib',host).disabled=false;};
+ /* The fetch happens on OUR server (functions/api/li-import.js), not here. The browser cannot
+    fetch linkedin.com at all, which is why this used to go through the free r.jina.ai reader;
+    that reader is periodically abuse-blocked for the whole linkedin.com domain because of other
+    people's traffic, and that block was the outage the client reported. The server also reads
+    LinkedIn's schema.org block instead of its og: tags, so the headline is the post's opening
+    line rather than its hashtag block. */
+ apiSend(API+'/li-import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:url})})
+  .then(function(r){return r.json();})
+  .then(function(res){
+   if(!res||!res.ok){done('err',T(res&&res.message?res.message:'That link could not be read. Type the details below.'));return;}
+   /* The same post imported twice used to make a second news item with no hint that the first
+      existed. The canonical link is stored on every import now, so a repeat is recognisable. */
+   var already=coll('news').filter(function(n){return n.link&&n.link===res.link&&n.id!==draft.id;})[0];
+   if(already&&!confirm(T('\u201c{name}\u201d was already imported from this post. Import it again as a second item?',{name:already.title||T('An item')}))){
+    done('err',T('Import cancelled: that post is already on the site.'));return;
+   }
+   if(res.title)setV(host,'title',res.title);
+   if(res.body)setV(host,'body',res.body);
+   /* The post's own date, so the item is filed on the day it was published rather than today. */
+   if(res.date)setV(host,'date',res.date);
+   /* Kept so an imported item can always be traced back to its source. Every item imported
+      before this change stored an empty link. */
+   if(res.link)setV(host,'link',res.link);
+   var pick=host.querySelector('[data-imgpick="image"]');
+   if(res.image&&pick){
+    /* Straight through the ordinary upload path: resized and re-encoded here, then stored in
+       the database on save by apiUploadDataUrls. The old importer assigned LinkedIn's CDN URL
+       to the record, so every imported picture was hotlinked to media.licdn.com, skipped the
+       WebP re-encode and the size cap, and was never stored at all. */
+    var blob=dataUrlToBlob(res.image);
+    if(blob){
+     prepImage(blob,+pick.getAttribute('data-box')||IMG_BOX,function(out,kb){
+      dirty=true;draft.image=out;pick.classList.add('has');$('img',pick).src=out;
+      var fl=pick.closest('.field');if(fl)fl.classList.remove('missing');
+      done('done',T(res.textMissing
+       ? 'Picture {kb} KB and the date came through. This post has no text on LinkedIn, so type a headline.'
+       : 'Imported, picture {kb} KB. Review the text and Arabic, then save.',{kb:kb}));
+     });
+     return;
+    }
+   }
+   done('done',T(res.textMissing
+    ? 'This post has no text on LinkedIn, so type a headline. The date and picture came through.'
+    : (res.imageFailed
+      ? 'Imported, but the picture could not be fetched. Add one below, then save.'
+      : 'Imported. Review the text and Arabic, then save.')));
+  })
+  .catch(function(e){
+   done('err',T(e&&e.status===401
+    ? 'Your session has expired. Sign in again, then import.'
+    : 'That link could not be read. Type the details below.'));
+  });
 }
-function setV(host,n,v){draft[n]=v;var el=host.querySelector('[data-f="'+n+'"]');if(el)el.value=v;}
+/* A data URL from the server, turned into a Blob so it can go through prepImage exactly like a
+   picture chosen from the disk. Returns null rather than throwing on anything malformed. */
+function dataUrlToBlob(d){
+ try{
+  var m=/^data:([^;,]+);base64,(.*)$/.exec(String(d||''));if(!m)return null;
+  var bin=atob(m[2]),n=bin.length,u8=new Uint8Array(n);
+  for(var i=0;i<n;i++)u8[i]=bin.charCodeAt(i);
+  return new Blob([u8],{type:m[1]});
+ }catch(e){return null;}
+}
+function setV(host,n,v){
+ draft[n]=v;dirty=true;
+ var el=host.querySelector('[data-f="'+n+'"]');
+ if(!el)return;
+ el.value=v;
+ /* The drawer listens for `input` to clear a field's "missing" mark; dispatching it keeps a
+    filled-in field from still looking empty after an import. */
+ el.dispatchEvent(new Event('input',{bubbles:true}));
+}
 
 /* ---------------- calendar ---------------- */
 function renderCal(hostEl){

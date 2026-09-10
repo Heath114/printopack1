@@ -7,8 +7,12 @@ export type Bi = { en: string; ar: string };
 
 export const filters: { key: string; label: Bi }[] = [
   { key: "all", label: { en: "All products", ar: "كل المنتجات" } },
-  // "Nuts" left the label with the group: Amal's approved taxonomy has no Nuts section.
   { key: "snacks", label: { en: "Snacks", ar: "الوجبات الخفيفة" } },
+  // Nuts is absent from Amal's approved taxonomy and was originally folded into Snacks. The
+  // client's content note (2026-09-10) asked for it back as a family of its own, so it is one
+  // here AND an option in the admin's "Browse family" select. The two lists must stay in step:
+  // a group filed under a key with no matching filter here would never appear in Browse.
+  { key: "nuts", label: { en: "Nuts", ar: "المكسّرات" } },
   { key: "confectionery", label: { en: "Confectionery", ar: "الحلويات" } },
   { key: "bakery", label: { en: "Bakery & Breads", ar: "المخابز والخبز" } },
   { key: "staples", label: { en: "Pantry Staples", ar: "المؤن الأساسية" } },

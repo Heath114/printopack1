@@ -83,11 +83,18 @@ const c = content;
       <div class="team-grid">
         {c.leadership.members.map((m) => (
           <div class="member">
-            <span class="avatar">
-              {m.photo
-                ? <img src={m.photo} alt={m.name.en || m.role.en} data-fit={m.fit || undefined} style={m.focus ? `object-position:${m.focus}` : undefined} />
-                : <span class="avatar-mono" aria-hidden="true">{m.mono}</span>}
-            </span>
+            {m.photo
+              ? <button
+                  type="button"
+                  class="avatar avatar-zoom"
+                  data-full={m.photo}
+                  data-cap-en={m.name.en || m.role.en}
+                  data-cap-ar={m.name.ar || m.role.ar || m.name.en || m.role.en}
+                  aria-label={`Enlarge the photo of ${m.name.en || m.role.en}`}
+                >
+                  <img src={m.photo} alt={m.name.en || m.role.en} data-fit={m.fit || undefined} style={m.focus ? `object-position:${m.focus}` : undefined} />
+                </button>
+              : <span class="avatar"><span class="avatar-mono" aria-hidden="true">{m.mono}</span></span>}
             {m.name.en
               ? <><h3 class="member-name"><Bi en={m.name.en} ar={m.name.ar} /></h3><span class="member-role"><Bi en={m.role.en} ar={m.role.ar} /></span></>
               : <h3 class="member-name"><Bi en={m.role.en} ar={m.role.ar} /></h3>}
@@ -116,6 +123,19 @@ const c = content;
       <a href="/contact" class="btn btn-gold"><Bi en={c.cta.button.en} ar={c.cta.button.ar} /></a>
     </div>
   </section>
+
+  <!-- PORTRAIT LIGHTBOX. Same shape as the gallery's, but the stage holds ONE static <img>
+       whose src the script sets, rather than assembling markup: a team photo needs nothing
+       else, and it keeps this page clear of the innerHTML pattern. -->
+  <div class="lightbox" id="portrait-lightbox" role="dialog" aria-modal="true" hidden>
+    <button class="lb-close" type="button" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <figure class="lb-figure">
+      <img class="lb-photo" src="" alt="" />
+      <figcaption class="lb-cap"></figcaption>
+    </figure>
+  </div>
 </Base>
 
 <style>
@@ -129,12 +149,31 @@ const c = content;
   .leadership .lede{margin-top:18px}
   .team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(26px,3vw,44px)}
   .member{text-align:start}
+  /* The portrait carries this grid, so the circle scales with its column and caps at 180px.
+     It was a fixed 76px, which cropped the 600x600 the admin asks for down to the head alone
+     and showed far less than the dashboard preview (client content note, 2026-09-10). */
   .avatar{
-    display:grid;place-items:center;width:76px;height:76px;border-radius:50%;overflow:hidden;
-    background:var(--cream);border:1px solid var(--gold);margin-bottom:20px;
+    display:grid;place-items:center;width:100%;max-width:180px;aspect-ratio:1;border-radius:50%;
+    overflow:hidden;background:var(--cream);border:1px solid var(--gold);margin-bottom:20px;
   }
+  /* The photo is a <button>, so the UA's own box has to be cleared. No transition: the site
+     is deliberately motion-free, the cue is the cursor plus the border. */
+  .avatar-zoom{padding:0;font:inherit;color:inherit;cursor:zoom-in}
+  .avatar-zoom:hover,.avatar-zoom:focus-visible{border-color:var(--navy)}
   .avatar img{width:100%;height:100%;object-fit:cover}
-  .avatar-mono{font-family:var(--display);font-weight:400;font-size:23px;letter-spacing:.04em;color:var(--navy)}
+  .avatar-mono{font-family:var(--display);font-weight:400;font-size:clamp(23px,4vw,46px);letter-spacing:.04em;color:var(--navy)}
+
+  /* Portrait lightbox, matching the gallery's treatment. */
+  .lightbox{position:fixed;inset:0;z-index:200;background:rgba(9,24,41,.9);display:flex;align-items:center;justify-content:center;padding:clamp(20px,5vw,64px)}
+  .lightbox[hidden]{display:none}
+  .lb-close{position:absolute;top:clamp(16px,3vw,28px);inset-inline-end:clamp(16px,3vw,28px);width:46px;height:46px;display:inline-flex;align-items:center;justify-content:center;color:var(--paper);border:1px solid var(--line-dark);border-radius:50%}
+  .lb-close:hover{background:var(--paper);color:var(--gold-bright)}
+  .lb-close svg{width:20px;height:20px}
+  .lb-figure{max-width:min(760px,92vw);display:flex;flex-direction:column;align-items:center;margin:0}
+  /* contain, never cover: the whole portrait has to be visible, which is the entire point of
+     opening it. Capped so the caption always sits below the photo, never over it. */
+  .lb-photo{max-width:100%;max-height:76vh;object-fit:contain;display:block}
+  .lb-cap{flex:none;margin-top:18px;font-family:var(--display);font-size:14px;letter-spacing:.06em;color:rgba(250,246,238,.85);text-align:center}
   .member-name{font-size:clamp(18px,1.5vw,21px);margin-bottom:8px}
   .member-role{display:block;font-family:var(--display);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
   .member-desc{font-size:14.5px;color:var(--muted);line-height:1.6;max-width:30ch}
@@ -153,3 +192,40 @@ const c = content;
     .team-grid{grid-template-columns:1fr}
   }
 </style>
+
+<script>
+  // Click a portrait to see it whole. Click the backdrop, the x, or press Esc to close.
+  const lightbox = document.getElementById('portrait-lightbox');
+  const photo = lightbox?.querySelector('.lb-photo') as HTMLImageElement | null;
+  const cap = lightbox?.querySelector('.lb-cap') as HTMLElement | null;
+  const isAr = () => document.documentElement.dir === 'rtl';
+
+  const close = () => {
+    if (!lightbox || !photo || !cap) return;
+    lightbox.hidden = true;
+    // Dropped so a reopen never flashes the previous portrait while the new one loads.
+    photo.removeAttribute('src');
+    cap.textContent = '';
+    document.body.style.overflow = '';
+  };
+
+  document.querySelectorAll<HTMLElement>('.avatar-zoom').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (!lightbox || !photo || !cap) return;
+      const label = (isAr() ? btn.dataset.capAr : btn.dataset.capEn) || '';
+      photo.src = btn.dataset.full || '';
+      photo.alt = label;
+      cap.textContent = label;
+      lightbox.hidden = false;
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  lightbox?.addEventListener('click', (e) => {
+    // Anywhere that is not the photo itself closes: backdrop, padding, caption, the x.
+    if (!(e.target as HTMLElement).closest('.lb-photo')) close();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox && !lightbox.hidden) close();
+  });
+</script>

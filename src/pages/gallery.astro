@@ -3,11 +3,17 @@ import Base from '../layouts/Base.astro';
 import Bi from '../components/Bi.astro';
 import { collection } from '../lib/content';
 
-// Gallery items come from the content store, split by kind. `span` drives the masonry layout
-// ("normal" means no span). Videos are external only: the admin stores a YouTube/Vimeo
-// URL and a poster image; the site embeds that remote player without hosting video files.
+// Gallery items come from the content store, split by kind. Videos are external only: the
+// admin stores a YouTube/Vimeo URL and a poster image; the site embeds that remote player
+// without hosting video files.
+//
+// `span` is emphasis only, never shape. It was three values and the grid gave each a
+// DIFFERENT aspect (normal ~1.95:1, wide ~3.98:1, tall ~0.94:1), so the 1600x1000 the admin
+// asks for matched none of them and every correctly prepared file was cropped again on the
+// page (client content note, 2026-09-10). Now every tile is 8/5 and `wide` only makes the
+// tile bigger. `tall` is retired; any record still carrying it renders at normal size.
 const _gal = collection('gallery');
-const _span = (s: string) => (s && s !== 'normal' ? s : undefined);
+const _span = (s: string) => (s === 'wide' ? 'wide' : undefined);
 const safeVideoUrl = (url = '') => {
   try {
     const u = new URL(url);
@@ -171,10 +177,17 @@ const c = content;
   .gal-panel[hidden]{display:none}
 
   /* editorial media grid: some tiles span wider / taller, stays still */
-  .media-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:clamp(180px,20vw,260px);gap:clamp(12px,1.4vw,20px)}
-  .gtile{position:relative;overflow:hidden;background:var(--cream);border:1px solid var(--line);cursor:pointer;display:block;width:100%;height:100%;padding:0}
+  /* Rows are auto and the shape lives on the tile, so the rendered aspect is the 8/5 that the
+     dashboard recommends (1600x1000) rather than whatever a fixed row height happened to make. */
+  .media-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:auto;gap:clamp(12px,1.4vw,20px)}
+  .gtile{position:relative;overflow:hidden;background:var(--cream);border:1px solid var(--line);cursor:pointer;display:block;width:100%;aspect-ratio:8/5;padding:0}
+  /* Two columns at the same 8/5, so the editorial rhythm survives without a second shape. */
   .gtile.wide{grid-column:span 2}
-  .gtile.tall{grid-row:span 2}
+  /* A poster on YouTube or Vimeo is 16:9 with no say in the matter, and all of the client's
+     posters are 1600x900, so the poster tile takes the platform's shape instead of trimming a
+     tenth off every thumbnail. Derived from the item's kind, never a choice in the dashboard.
+     Videos have their own grid (their own tab), so this never sits in a row beside an 8/5 tile. */
+  .gtile.video-tile{aspect-ratio:16/9}
   .gtile img{width:100%;height:100%;object-fit:cover}
   .tile-scrim{position:absolute;inset:0;background:linear-gradient(0deg,rgba(9,24,41,.66) 0%,rgba(9,24,41,.12) 34%,transparent 60%)}
   .gtile:hover img{filter:brightness(1.08)}
@@ -218,14 +231,13 @@ const c = content;
   .lb-cap{flex:none;margin-top:18px;font-family:var(--display);font-size:14px;letter-spacing:.06em;color:rgba(250,246,238,.85);text-align:center}
 
   @media(max-width:820px){
-    .media-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:clamp(150px,32vw,220px)}
+    .media-grid{grid-template-columns:repeat(2,1fr)}
     .gtile.wide{grid-column:span 2}
-    .gtile.tall{grid-row:span 1}
   }
   @media(max-width:520px){
-    .media-grid{grid-template-columns:1fr;grid-auto-rows:auto}
-    .gtile{aspect-ratio:3/2}
-    .gtile.wide,.gtile.tall{grid-column:auto;grid-row:auto}
+    .media-grid{grid-template-columns:1fr}
+    /* One column: a wide tile has nothing to span, and the shape is already the tile's own. */
+    .gtile.wide{grid-column:auto}
     /* Three tabs at 20px of side padding came to 400px, which was the one thing on the site
        pushing a phone sideways. Sharing the width equally was not enough on a 320px screen:
        "ADVERTISEMENTS" needs 111px and a third of that screen is 93px, so it either clipped
