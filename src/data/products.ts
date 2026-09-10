@@ -7,12 +7,13 @@ export type Bi = { en: string; ar: string };
 
 export const filters: { key: string; label: Bi }[] = [
   { key: "all", label: { en: "All products", ar: "كل المنتجات" } },
+  // Nuts is deliberately NOT a family. Amal's approved taxonomy has no Nuts section, and the
+  // client's content note (2026-09-10, "the programmer did not add the Nuts group") asks for a
+  // GROUP, which is admin-managed: it can be created in the dashboard and filed under Snacks,
+  // where the old live site kept it as "Crisps, Snacks & Nuts". Do not promote it to a family
+  // on that note alone. Families are hardcoded here AND in the admin's "Browse family" select,
+  // so unlike a group, one added by mistake cannot be removed by the client.
   { key: "snacks", label: { en: "Snacks", ar: "الوجبات الخفيفة" } },
-  // Nuts is absent from Amal's approved taxonomy and was originally folded into Snacks. The
-  // client's content note (2026-09-10) asked for it back as a family of its own, so it is one
-  // here AND an option in the admin's "Browse family" select. The two lists must stay in step:
-  // a group filed under a key with no matching filter here would never appear in Browse.
-  { key: "nuts", label: { en: "Nuts", ar: "المكسّرات" } },
   { key: "confectionery", label: { en: "Confectionery", ar: "الحلويات" } },
   { key: "bakery", label: { en: "Bakery & Breads", ar: "المخابز والخبز" } },
   { key: "staples", label: { en: "Pantry Staples", ar: "المؤن الأساسية" } },
