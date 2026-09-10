@@ -351,6 +351,38 @@ calling it "partly migrated."
 The promise to the client is no fees, ever, and no payment card. This phase is about proving that
 holds once the real domain is attached.
 
+- [ ] **Move the site to a Cloudflare account of its own, BEFORE the domain (decided 2026-09-10).**
+      The site currently shares a Cloudflare account with other work (see `CLAUDE.md` for which;
+      this file is public, so it is not named here). The promise
+      is that it is never billed, so it has to sit alone in an account with nothing else in it and
+      no card on file. Pages, D1 and Turnstile are all free without a card (the card requirement
+      was only ever Zero Trust/Access and R2, both already ruled out), so this is about not sharing
+      an account with something else that IS billed.
+
+      Order matters: doing it before the custom domain means only `pages.dev` URLs churn, which
+      nobody has bookmarked. Afterwards it would mean moving DNS, the custom domain and the
+      Turnstile hostname together.
+
+      **Nothing transfers between Cloudflare accounts.** Pages projects and D1 databases are
+      recreated in the new account, not moved. So:
+      - [ ] Decide whose name the account is in. The client's makes the no-bill promise enforce
+            itself and makes handover clean, but Cloudflare's mail goes to them; ours keeps
+            operational control. This decides who creates the account, so settle it first.
+      - [ ] Copy D1. It holds all the content AND every uploaded picture as a BLOB in `media`.
+            `wrangler d1 export --remote` writes SQL; confirm the BLOBs survive that round trip
+            before relying on it. Fallback if they do not: `/content` and `/media/<key>` are both
+            public HTTP, and `scripts/fetch-content.mjs` already pulls every `/uploads/<key>` that
+            way on each build, so the pictures can be re-fetched over HTTP regardless.
+      - [ ] Recreate the Pages project and its git connection to `The-Office-Development/printopack1`.
+      - [ ] Re-set the build vars (`CONTENT_URL`, `NODE_VERSION`) and re-create the Deploy Hook.
+      - [ ] Re-set all six secrets: `SESSION_SECRET`, `ADMIN_PASS_HASH`, `TURNSTILE_SECRET`,
+            `TURNSTILE_SITE_KEY`, `DEPLOY_HOOK_URL`, `CONTENT_URL`.
+      - [ ] Create a NEW Turnstile widget in the new account: new sitekey and new secret, both of
+            which are stored as secrets. Allowed domains follow the new hostname.
+      - [ ] Update `wrangler.toml`'s D1 `database_id`. This one is a commit, not dashboard work.
+      - [ ] Expect the `pages.dev` hostname to change. `CONTENT_URL` points at the site's own
+            `/content` and Turnstile lists the hostname, so both follow it.
+
 - [ ] Confirm Cloudflare Pages free tier covers the finished site: build minutes, bandwidth, and
       the 500 builds per month cap against how often the admin's Publish button rebuilds.
 - [ ] Confirm D1 free tier covers the content at the caps already set in `db/CAPS.md`
